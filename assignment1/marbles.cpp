@@ -1,59 +1,137 @@
 #include <iostream>
 #include <stdlib.h>
+#include <vector>
+#include <iomanip>
 
 using namespace std;
 
 
-class Marble {
-    public:
-        int r;
-        int g;
-        int b;
-        string pattern;
-
-        Marble(int _r, int _g, int _b, string _pattern = "solid") {
-            r = _r;
-            g = _g;
-            b = _b;
-            pattern = _pattern;
+// EXCEPTIONS
+class BagFullException : public std::exception {
+    public: 
+        string what() {
+            return "Cannot add a marble to the bag: bag is full.";
         };
 };
 
+class BagEmptyException : public std::exception {
+    public: 
+        string what() {
+            return "Cannot remove a marble from the bag: bag is empty.";
+        }
+};
+
+// BAG CLASS
 class Bag {
     private:
-        int capacity;
-        Marble contents[];
+        const int EMPTY = -1;
+
+        vector<int> contents;
+
+        void shuffle() {
+            // shuffles the bag
+        }
 
     public:
-        Bag(int _capacity) {
+        int capacity;
+
+        Bag(int _capacity) : contents(_capacity) {
             capacity = _capacity;
-            contents[_capacity] = {0};
-        };
 
-        ~Bag();
+            for (int i = 0; i < contents.size(); i++) {
+                contents[i] = EMPTY;
+            }
+        }
 
-        void addMarble(Marble marble) {
+        void addMarble(int marble) {
             // adds a marble to the bag.
-        };
+            for (int i = 0; i < capacity; i++) {
+                if (contents[i] == EMPTY) {
+                    contents[i] = marble;
+                    return;
+                }
+            }
 
-        Marble pullMarble() {
-            // pulls a random marble from the bag.
-            int idx = rand() % capacity;
-            Marble marble(30, 20, 3);
-            return contents[idx];
-        };
+            // no marble has been added
+            throw BagFullException();
+        }
 
-        void shake() {
-            // shuffles the bag
-        };
+        int drawMarble() {
+            // raising 
+            if (isEmpty()) {
+                throw BagEmptyException();
+            }
 
+            int idx;
+            do {
+                idx = rand() % capacity;
+            } while (contents[idx] == EMPTY);
+            
+            int marble = contents[idx];
+            contents[idx] = EMPTY;
+
+            return marble;
+        }
+
+        int currentFill() {
+            int filledSpaces = 0;
+            
+            for (int i = 0; i < capacity; i++) {
+                if (contents[i] != EMPTY) {
+                    filledSpaces ++;
+                }
+            }
+
+            return filledSpaces;
+        }
+
+        bool isFull() {
+            return currentFill() == capacity;
+        }
+
+        bool isEmpty() {
+            return currentFill() == 0;
+        }
+        
+        void peek() {
+            const string sep = ", ";
+
+            cout << "Bag contents: ";
+
+            for (int i = 0; i < contents.size(); i++) {
+                int marbleSpace = contents[i];
+
+                if (marbleSpace != EMPTY) {
+                    cout << "Marble (#" << setw(6) << setfill('0') << hex << marbleSpace<< ")" << sep;
+                } else {
+                    cout << "Empty space" << sep;
+                }
+            }
+            
+            cout << endl;
+        }
 };
 
 int main() {
-    Marble marble1(40, 40, 40);
+    // bag test
+    Bag bag(5);
+    bag.peek();
 
-    cout << marble1.pattern << endl;
-    cout << marble1.r << marble1.g << marble1.b << endl;
+    try {
+        bag.drawMarble();
+    } catch (BagEmptyException bee) {
+        cout << "uh oh! bag empty" << endl;
+    } catch (BagFullException bfe) {
+        cout << "this is not gonna hpeppn!" << endl;
+    }
+    
+    int pretendMarbles[3] = {0xFF0000, 0x0000FF, 0xFF00FF};
+    
+    for (int i = 0; i <= 3; i++) {
+        bag.addMarble(pretendMarbles[i]);
+    }
+
+    bag.peek();
 
     return 0;
 }
