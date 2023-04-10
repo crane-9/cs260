@@ -1,167 +1,139 @@
+/**
+ * Implements the classes and functions declared in 'marbles.h'.
+ * 
+ * Documentation in 'marbles.h'.
+*/
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
 #include <iterator>
 #include <random>
 #include <stdlib.h>
-#include <time.h>
+#include <string>
 #include <vector>
+
+#include "marbles.h"
+using namespace marbles;
 
 using namespace std;
 
-// EXCEPTIONS
-class FullBagError : public std::exception {
-    public: 
-        string what() {
-            return "Cannot add a marble to the bag: bag is full.";
-        };
-};
 
-class EmptyBagError : public std::exception {
-    public: 
-        string what() {
-            return "Cannot remove a marble from the bag: bag is empty.";
-        }
-};
+string FullBagError::what() {
+    return "Cannot add a marble to the bag: bag is full.";
+}
 
-// BAG CLASS
-class Bag {
-    private:
-        const int EMPTY = -1;  // a  semi-arbitrary value that will indicate "empty"
-        vector<int> contents;
 
-        int removeMarble(int idx) {
-            int marble = contents[idx];
-            contents[idx] = EMPTY;
-            
-            return marble;
+string EmptyBagError::what() {
+    return "Cannot remove a marble from the bag: bag is empty.";
+}
+
+
+string BagCapacityError::what() {
+    return "A bag's capacity must be a positive integer.";
+}
+
+
+Bag::Bag(int _capacity): contents(_capacity) {
+        if (_capacity < 1) {
+            throw BagCapacityError();
         }
 
-    public:
-        int capacity;
+        capacity = _capacity;
 
-        Bag(int _capacity) : contents(_capacity) {
-            capacity = _capacity;
-
-            // initialize contents to 'EMPTY'
-            for (int i = 0; i < contents.size(); i++) {
-                contents[i] = EMPTY;
-            }
+        for (int i = 0; i < contents.size(); i++) {
+            contents[i] = EMPTY;
         }
+}
 
-        void addMarble(int marble) {
-            // adds a marble to the bag.
-            for (int i = 0; i < capacity; i++) {
-                if (contents[i] == EMPTY) {
-                    contents[i] = marble;
-                    return;
-                }
-            }
 
-            // no marble has been added
-            throw FullBagError();
-        }
-
-        int drawMarble() {
-            // raising 
-            if (isEmpty()) {
-                throw EmptyBagError();
-            } else if (currentFill() == 1) {
-                for (int i = 0; i < capacity; i++) {
-                    if (contents[i] != EMPTY) {
-                        return removeMarble(i);
-                    }
-                }
-            }
-
-            int idx;
-            do {
-                idx = rand() % capacity;
-                cout << "loop. idx value: " << idx << endl;
-            } while (contents[idx] == EMPTY);
-
-            return removeMarble(idx);
-        }
-
-        int currentFill() {
-            int filledSpaces = 0;
-            
-            for (int i = 0; i < capacity; i++) {
-                if (contents[i] != EMPTY) {
-                    filledSpaces ++;
-                }
-            }
-
-            return filledSpaces;
-        }
-
-        bool isFull() {
-            return currentFill() == capacity;
-        }
-
-        bool isEmpty() {
-            return currentFill() == 0;
-        }
-        
-        void peek() {
-            const string sep = ", ";
-
-            cout << "Bag contents: ";
-
-            for (int i = 0; i < contents.size(); i++) {
-                int marbleSpace = contents[i];
-
-                if (marbleSpace != EMPTY) {
-                    cout << "Marble (#" << setw(6) << setfill('0') << hex << marbleSpace << ")" << sep;
-                } else {
-                    cout << "Empty space" << sep;
-                }
-            }
-            
-            cout << endl;
-        }
-
-        void shake() {
-            // give the bag a shake!
-            random_device randomDevice;
-            mt19937 gen(randomDevice());
- 
-            shuffle(contents.begin(), contents.end(), gen);
-        }
-
-        const vector<int>& getContents() const {
-            return contents;
-        }
-};
-
-int main() {
-    srand(time(NULL));  // ensure results will differ every time.
+int Bag::removeMarble(int idx) {
+    int marble = contents[idx];
+    contents[idx] = EMPTY;
     
-    // BAG TESTING
-    Bag bag(5);
+    return marble;
+}
 
-    // try {
-    //     bag.drawMarble();
-    // } catch (BagEmptyException bee) {
-    //     cout << "uh oh! bag empty" << endl;
-    // } catch (BagFullException bfe) {
-    //     cout << "this is not gonna hpeppn!" << endl;
-    // }
-    
-    int pretendMarbles[3] = {0xFF0000, 0x0000FF, 0xFFFFFF};
-    
-    for (int i = 0; i <= 3; i++) {
-        bag.addMarble(pretendMarbles[i]);
+
+void Bag::addMarble(int marble) {
+    for (int i = 0; i < capacity; i++) {
+        if (contents[i] == EMPTY) {
+            contents[i] = marble;
+            return;
+        }
     }
 
-    bag.peek();
+    // If reached, no marble has been added.
+    throw FullBagError();
+}
+
+
+int Bag::drawMarble() {
+    // Preliminary checks make life a little easier.
+    if (isEmpty()) {
+        throw EmptyBagError();
+    } else if (currentFill() == 1) {
+        for (int i = 0; i < capacity; i++) {
+            if (contents[i] != EMPTY) {
+                return removeMarble(i);
+            }
+        }
+    }
+
+    // If there are two or more marbles in the bag, selection is random.
+    int idx;
+    do {
+        idx = rand() % capacity;
+    } while (contents[idx] == EMPTY);
+
+    return removeMarble(idx);
+}
+
+
+int Bag::currentFill() {
+    int filledSpaces = 0;
     
+    for (int i = 0; i < capacity; i++) {
+        if (contents[i] != EMPTY) {
+            filledSpaces ++;
+        }
+    }
 
-    int marble = bag.drawMarble();
-    cout << "Marble (#" << setw(6) << setfill('0') << hex << marble << ")" << endl;
-
-    bag.peek(); bag.shake(); bag.peek();
+    return filledSpaces;
+}
 
 
-    return 0;
+bool Bag::isFull() {
+    return currentFill() == capacity;
+}
+
+
+bool Bag::isEmpty() {
+    return currentFill() == 0;
+}
+
+
+void Bag::peek() {
+    const string sep = ", ";  // character separating each marble space
+    cout << "Bag contents: ";
+
+    for (int i = 0; i < contents.size(); i++) {
+        int marbleSpace = contents[i];
+
+        if (marbleSpace != EMPTY) {
+            printMarble(marbleSpace);
+        } else {
+            cout << "Empty space";
+        }
+        cout << sep;
+    }
+    
+    cout << endl;
+}
+
+
+void Bag::shake() {
+    random_device randomDevice;
+    mt19937 gen(randomDevice());
+
+    shuffle(contents.begin(), contents.end(), gen);
 }

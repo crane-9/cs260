@@ -39,12 +39,16 @@ I have some additional methods I'd like to implement in order to enhance a bag's
 + `void peek()`: Prints the current contents to the terminal (namely for ease of testing).
 + `void shake()`: Shuffles the order of the contents.
     * Not a very important method, as `drawMarble()` is already random.
++ `vector<int> getContents()`: Returns a read-only `contents`.
 
 **Public attributes:**
 + `int capacity`: Total capacity, regardless of empty spaces.
 
+**Private methods:**
+- `int removeMarble(int)`: Removes a marble from a bag at the desired index, replacing it with an empty space. Returns the desired marble.
+
 **Private attributes:**
-- `vector contents`: Holds the marbles.
+- `vector<int> contents`: Holds the marbles.
     * Empty spaces in the bag will be represented by the value -1 in the vector, as it cannot be translated into a valid hex color. Example contents (`int`s inconsistently formatted for conceptual clarity):
     ```cpp
     {0x000000, 0xFF00FF, 0xFFFFFF, -1, -1, -1}
