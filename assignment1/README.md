@@ -37,15 +37,18 @@ I have some additional methods I'd like to implement in order to enhance a bag's
 + `bool isFull()`
 + `int currentFill()`:  Returns the current number of non-empty spaces.
 + `void peek()`: Prints the current contents to the terminal (namely for ease of testing).
++ `void shake()`: Shuffles the order of the contents.
+    * Not a very important method, as `drawMarble()` is already random.
 
 **Public attributes:**
 + `int capacity`: Total capacity, regardless of empty spaces.
 
-**Private methods:**
-- `void shuffle()`: Shuffles the contents of the bag.
-
 **Private attributes:**
 - `vector contents`: Holds the marbles.
+    * Empty spaces in the bag will be represented by the value -1 in the vector, as it cannot be translated into a valid hex color. Example contents (`int`s inconsistently formatted for conceptual clarity):
+    ```cpp
+    {0x000000, 0xFF00FF, 0xFFFFFF, -1, -1, -1}
+    ```
 
 
 ---
@@ -53,8 +56,8 @@ I have some additional methods I'd like to implement in order to enhance a bag's
 
 There are two custom exceptions I intend to implement:
 
-1. `BagFullException`, which will be thrown on `Bag::addMarble()` if the bag is already full.
-2. `BagEmptyException`, which will be thrown on `Bag::drawMarble()` if the bag is already empty.
+1. `FullBagError`, which will be thrown on `Bag::addMarble()` if the bag is already full.
+2. `EmptyBagError`, which will be thrown on `Bag::drawMarble()` if the bag is already empty.
 
 
 ---

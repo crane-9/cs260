@@ -8,12 +8,14 @@
 #include <random>
 #include <vector>
 
+#include <time.h>
+
 using namespace std;
 
 // 04 07 2023
 void hexTest() {
     // learning how hex values operate in c++
-    int value = 0xFF00FF;
+    int value = -1;
     cout << "value is: " << hex << value << endl;
 }
 
@@ -50,10 +52,12 @@ void customShuffleVector() {
 }
 
 int main() {
-    // hexTest();
+    // srand(time(NULL));
 
-    shuffleVector();
-    customShuffleVector();
+    hexTest();
+
+    // shuffleVector();
+    // customShuffleVector();
 
     return 0;
 }
