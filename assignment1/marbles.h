@@ -8,6 +8,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -45,13 +46,17 @@ namespace marbles {
     };
 
 
-   /**
-    * Formats and prints a marble -- no `endl`.
-    * 
-    * @param marble The `int` representing the marble. Expected in the range 0 - 16777215 [0x0 - 0xFFFFFF], however this is not enforced.
-    * @return No return value. 
-   */
-   inline void printMarble(int marble) { std::cout << "Marble (#" << std::setw(6) << std::setfill('0') << std::hex << marble << ")"; };
+    /**
+     * Formats a marble for printing. Example output: "Marble (#00FFFF)"
+     * 
+     * @param marble The `int` representing the marble. Expected in the range 0 - 16777215 [0x0 - 0xFFFFFF], however this is not enforced.
+     * @return The marble
+    */
+    inline std::string printMarble(int _marble) { 
+        std::stringstream marble;
+        marble << "Marble (#" << std::setw(6) << std::setfill('0') << std::hex << _marble << ")";
+        return marble.str();
+    };
 
     /**
      * The bag class emulates a bag of marbles with a limited size.
@@ -60,7 +65,7 @@ namespace marbles {
         private: 
             const int EMPTY = -1;
 
-            // Represents the bag's contents.
+            // Represents the bag's marble contents.
             std::vector<int> contents;
 
             /**
@@ -120,11 +125,11 @@ namespace marbles {
             bool isEmpty();
 
             /**
-             * Formats and prints the contents of the bag to the console on a single line.
+             * Formats the bag's contents to a string.
              * 
-             * @return No return value. For read-only contents, use `Bag::getContents()`.
+             * @return A string listing each marble. For read-only contents, use `Bag::getContents()`.
             */
-            void peek();
+            std::string peek();
 
             /**
              * Shuffles the contents of the bag. Arbitrary, as `Bag::drawMarble()` already uses random chance.

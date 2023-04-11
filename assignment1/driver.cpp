@@ -1,6 +1,6 @@
 /**
  * Driver file for `marbles.cpp`.
- * Runs a series of fun tests :]
+ * NOTE! Compile with `g++ driver.cpp marbles.cpp -o driver` from terminal.
 */
 #include <iostream>
 #include <vector>
@@ -13,31 +13,45 @@ using namespace std;
 
 /**
  * Places a single marble in an empty bag and retrieves it.
- * 
- * @return True if passed.
+ * @return Pass/fail message.
 */
-bool singleMarbleTest() {
-    const int testValue = 0xFFFF00;
+string singleMarbleTest() {
+    const int testMarble = 0xFFFF00;
+    int drawnMarble;
+
     Bag testBag(5);
 
-    int myMarble = testValue;
-    testBag.addMarble(myMarble);
+    testBag.addMarble(testMarble);
 
-    int drawnMarble = testBag.drawMarble();
-    return drawnMarble == testValue; 
+    try {
+        drawnMarble = testBag.drawMarble();
+    } catch (EmptyBagError) {
+        return "FAILED Marble not found.";
+    }
+
+    if (drawnMarble == testMarble) {
+        return "PASSED Marble retrieved successfully.";
+    } else {
+        return "FAILED Retrieved marble does not match.";
+    }
 }
 
 
 /**
  * Places three marbles in an empty bag, and retrieves three marbles.
+ * @return Pass/fail message.
 */
-bool threeMarbleTest() {
+string threeMarbleTest() {
     Bag testBag(3);
 
     int sampleMarbles[3] = {0x5BCEFA, 0xF5A9B8, 0xFFFFFF};
 
-    for (int i; i < testBag.capacity; i++) {
-        testBag.addMarble(sampleMarbles[i]);
+    try {
+        for (int i; i < testBag.capacity; i++) {
+            testBag.addMarble(sampleMarbles[i]);
+        }
+    } catch (FullBagError) {
+        return "FAILED Bag could not fit three marbles.";
     }
 
     try {
@@ -45,19 +59,18 @@ bool threeMarbleTest() {
             testBag.drawMarble();
         }
     } catch (EmptyBagError) {
-        return false;
+        return "FAILED Less than three marbles drawn from the bag.";
     }
 
-    return true;
+    return "PASSED Three marbles drawn from the bag.";
 }
 
 
 /**
  * Attempts to add a marble to a full bag; catches the error.
- * 
- * @return True if passed. 
+ * @return Pass/fail message. 
 */
-bool catchFullErrorTest() {
+string catchFullErrorTest() {
     Bag testBag(1);
 
     testBag.addMarble(0xC6D4FF);
@@ -65,37 +78,35 @@ bool catchFullErrorTest() {
     try {
         testBag.addMarble(0x2DC2BD);
     } catch (FullBagError) {
-        return true;
+        return "PASSED FullBagError caught.";
     }
 
-    return false;
+    return "FAILED FullBagError not thrown.";
 }
 
 
 /**
  * Attempts to draw from an empty bag; catches the error.
- * 
- * @return True if passed.
+ * @return Pass/fail message.
 */
-bool catchEmptyErrorTest() {
+string catchEmptyErrorTest() {
     Bag testBag(5);
 
     try {
         testBag.drawMarble();
     } catch (EmptyBagError) {
-        return true;
+        return "PASSED EmptyBagError caught.";
     }
 
-    return false;
+    return "FAILED EmptyBagError not thrown.";
 }
 
 
 /**
  * Compares contents before and after shuffling to prove functionality.
- * 
- * @return True if passed.
+ * @return Pass/fail message.
 */
-bool shakeTest() {
+string shakeTest() {
     Bag testBag(10);
     int testMarbles[10] = {0X321325, 0X491133, 0X5F0F40, 0X7D092F, 0X9A031E, 0XB33E2C, 0XBF5C33, 0XCB793A, 0XE4AB44, 0XFCDC4D};
 
@@ -103,46 +114,30 @@ bool shakeTest() {
         testBag.addMarble(testMarbles[i]);
     }
 
-    const vector<int> stageOne = testBag.getContents();
+    string before = testBag.peek();
 
     testBag.shake();
 
-    const vector<int> stageTwo = testBag.getContents();
-
-    for (int i; i < testBag.capacity; i++) {
-        if (stageOne[i] != stageTwo[i]) {
-            return true;
-        }
+    string after = testBag.peek();
+    
+    if (before == after) {
+        return "FAILED Contents identical before and after shuffle.";
+    } else {
+        return "PASSED Contents changed before and after shuffle.";
     }
-
-    return false;
 }
 
 
 int main() {
-    Bag bag(3);
+    srand(time(NULL));
 
-    int testMarbles[10] = {0X321325, 0X491133, 0X5F0F40, 0X7D092F, 0X9A031E, 0XB33E2C, 0XBF5C33, 0XCB793A, 0XE4AB44, 0XFCDC4D};
-
-    for (int i; i < bag.capacity; i++) {
-        bag.addMarble(testMarbles[i]);
-    }
-
-    try {
-        cout << bag.drawMarble();
-    } catch (exception e) {
-        cout << e.what() << endl;
-    } 
+    cout << "Single marble test: " << singleMarbleTest() << endl;
+    cout << "Three marble test: " << threeMarbleTest() << endl;
+    cout << "Full bag test: " << catchFullErrorTest() << endl;
+    cout << "Empty bag test: " << catchEmptyErrorTest() << endl;
+    cout << "Shake test: " << shakeTest() << endl;
     
-    
-    // temporary test outputs
-    // cout << singleMarbleTest();
-    // cout << threeMarbleTest();
-    // cout << catchFullErrorTest();
-    // cout << catchEmptyErrorTest();
-    // cout << shakeTest();
-    
-    // cout << endl;
+    cout << endl;
 
     return 0;
 }
