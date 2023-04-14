@@ -9,6 +9,7 @@
 #include <iterator>
 #include <random>
 #include <stdlib.h>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -55,6 +56,7 @@ int Bag::removeMarble(int idx) {
 
 
 void Bag::addMarble(int marble) {
+    // Search for an empty space, and fill it.
     for (int i = 0; i < capacity; i++) {
         if (contents[i] == EMPTY) {
             contents[i] = marble;
@@ -90,8 +92,8 @@ int Bag::drawMarble() {
 
 
 int Bag::currentFill() {
+    // Count filled non-empty spaces.
     int filledSpaces = 0;
-    
     for (int i = 0; i < capacity; i++) {
         if (contents[i] != EMPTY) {
             filledSpaces ++;
@@ -112,28 +114,29 @@ bool Bag::isEmpty() {
 }
 
 
-void Bag::peek() {
-    const string sep = ", ";  // character separating each marble space
-    cout << "Bag contents: ";
+string Bag::peek() {
+    stringstream contentList;
 
     for (int i = 0; i < contents.size(); i++) {
         int marbleSpace = contents[i];
 
         if (marbleSpace != EMPTY) {
-            printMarble(marbleSpace);
+            contentList << printMarble(marbleSpace);
         } else {
-            cout << "Empty space";
+            contentList << "Empty space";
         }
-        cout << sep;
+        contentList << ", ";
     }
     
-    cout << endl;
+    return contentList.str();
 }
 
 
 void Bag::shake() {
+    // Construct random devices.
     random_device randomDevice;
     mt19937 gen(randomDevice());
 
+    // Call the shuffle function.
     shuffle(contents.begin(), contents.end(), gen);
 }

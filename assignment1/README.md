@@ -1,6 +1,6 @@
 # CS260 Assignment 1: Bag of Marbles
 
-Below are my preliminary plans for `marbles.cpp`.
+Documentation for `marbles.cpp`, updated throughout the process.
 
 ## Marble Representation
 
@@ -36,7 +36,7 @@ I have some additional methods I'd like to implement in order to enhance a bag's
 + `int drawMarble()`
 + `bool isFull()`
 + `int currentFill()`:  Returns the current number of non-empty spaces.
-+ `void peek()`: Prints the current contents to the terminal (namely for ease of testing).
++ `string peek()`: Returns the current contents as a string (namely for ease of testing).
 + `void shake()`: Shuffles the order of the contents.
     * Not a very important method, as `drawMarble()` is already random.
 + `vector<int> getContents()`: Returns a read-only `contents`.
@@ -82,3 +82,23 @@ A handful of brainstormed tests, and their goal:
     - Ensures that the shuffle algorithm works.
 
 I intend to write and run these tests in a separate file, `driver.cpp`.
+
+
+---
+## Completed
+
+My first two tests show the basic functionality for the assignment--adding and removing marbles from a bag (lines 18 and 44 of `driver.cpp`)
+
+![Snapshot of lines 32-36 of `driver.cpp`](https://cdn.discordapp.com/attachments/799704269787496518/1095240133118267423/image.png)
+
+The next two tests prove the error functionality.
+
+On line 73's `catchFullErrorTest()`:
+
+![Snapshot of lines 78-82 of `driver.cpp`](https://cdn.discordapp.com/attachments/799704269787496518/1095240834733064192/image.png)
+
+And line 92's `catchEmptyErrorTest()`:
+
+![Snapshot of lines 95-99 of `driver.cpp`](https://cdn.discordapp.com/attachments/799704269787496518/1095241221577908244/image.png)
+
+I was able to implement bags with a functional capacity, and functional content management.
