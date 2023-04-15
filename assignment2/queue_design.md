@@ -11,9 +11,13 @@
 ---
 ## Queue Design
 
-The queue I've designed has two main methods: `enqueue()` and `next()`. `enqueue()` adds a new value to the end of the queue, while `next()` gets the value at the front of the queue. A queue has a `capacity`, set upon construction, and a private array of values (`items`) that holds the enqueued values. A private attribute, `frontIndex` defines the current "front" of the queue, and `tailIndex` defines the current "back" of the queue.
+The queue I've designed has two main methods: `enqueue()` and `next()`. `enqueue()` adds a new value to the end of the queue, while `next()` gets the value at the front of the queue.
 
-I also have a handful of helper methods and attributes, included below.
+A queue has a `capacity`, set upon construction, and a private array of values (`items`) that holds the enqueued values. 
+
+A private attribute, `frontIndex` defines the current "front" of the queue, and `tailIndex` defines the current "back" of the queue.
+
+I also have a handful of other helper methods and attributes, included below.
 
 ### Methods
 | Scope      | Name                    | Purpose                              |
@@ -77,11 +81,11 @@ On construction:
 | Index             |  0  |  1  |  2  |  3  |  4  |  ...                  |
 |------------------:|:---:|:---:|:---:|:---:|:---:|:----------------------|
 |                   |  _  |  _  |  _  |  _  |  _  |                       |
-|                   |  F  |     |     |     |     | `isEmpty`: true       |
+|                   |  F  |     |     |     |     | `isEmpty`: *true*     |
 |                   |  T  |     |     |     |     | `isFull`: false       |
 
-(Empty -- `next()` and `peek()` raise an error.)
-(Note that F and T are in the same position.)
+(Note that F and T are in the same position.) 
+(Empty -- using `next()` or `peek()` would raise an error.)
 
 After `enqueue(8)`:
 
@@ -121,10 +125,10 @@ After `enqueue(3)`:
 |------------------:|:---:|:---:|:---:|:---:|:---:|:----------------------|
 |                   |  3  |  7  |  6  |  5  |  4  |                       |
 |                   |     |  F  |     |     |     | `isEmpty`: false      |
-|                   |     |  T  |     |     |     | `isFull`: true        |
+|                   |     |  T  |     |     |     | `isFull`: *true*      |
 
-(Full -- `enqueue()` raises an error.)
 (Note that F and T are again in the same position.)
+(Full -- another `enqueue()` would raise an error.)
 
 After `next()` (returns `7`):
 
@@ -132,4 +136,4 @@ After `next()` (returns `7`):
 |------------------:|:---:|:---:|:---:|:---:|:---:|:----------------------|
 |                   |  3  |  _  |  6  |  5  |  4  |                       |
 |                   |     |     |  F  |     |     | `isEmpty`: false      |
-|                   |     |  T  |     |     |     | `isFull`: true        |
+|                   |     |  T  |     |     |     | `isFull`: false       |
