@@ -11,7 +11,7 @@
 ---
 ## Queue Design
 
-The queue I've designed has two main methods: `enqueue()` and `next()`. `enqueue()` adds a new value to the end of the queue, while `next()` gets the value at the front of the queue.
+The queue I've designed has two main methods: `enqueue()` and `dequeue()`. `enqueue()` adds a new value to the end of the queue, while `dequeue()` gets the value at the front of the queue.
 
 A queue has a `capacity`, set upon construction, and a private array of values (`items`) that holds the enqueued values. 
 
@@ -24,7 +24,7 @@ I also have a handful of other helper methods and attributes, included below.
 |------------|-------------------------|--------------------------------------|
 | Public     | `void enqueue(int)`     | Add an item to the end of the queue.
 | Public     | `int length()`          | Calculate and return the filled positions in the queue.
-| Public     | `int next()`            | Get the next item of the queue. Removes the item from the queue.
+| Public     | `int dequeue()`         | Get the next item of the queue. Removes the item from the queue.
 | Public     | `int peek()`            | Peek at the next item of the queue. Does not remove the item from the queue.
 | Private    | `int advanceIndex(int)` | Utility/helper method. Calculates the next index down the queue. Loops back around to index 0 when the time comes.
 
@@ -35,7 +35,7 @@ I also have a handful of other helper methods and attributes, included below.
 | Private    | `int tailIndex`   | The index of the next position to be filled.
 | Private    | `int frontIndex`  | The index of the next item to come off the queue.
 | Private    | `bool isEmpty`    | Set to `true` when the list is emptied, and back to `false` once `enqueue()` is called.
-| Private    | `bool isFull`     | Set to `true` when the list is filled, and back to `false` once `next()` is called.
+| Private    | `bool isFull`     | Set to `true` when the list is filled, and back to `false` once `dequeue()` is called.
 | Private    | `int items[]`     | Array of items in the queue.
 
 
@@ -46,9 +46,9 @@ Below is a simulation of queue usage. First, basic visualization. Then expected 
 
 ### Queue visualization
 
-| Index             |  0  |  1  |  2  |  3  |  4  |  ...                  |
-|------------------:|:---:|:---:|:---:|:---:|:---:|:----------------------|
-|      `next()` <-- |  8  |  7  |  6  |  _  |  _  | <-- `enqueue(int)`    |
+| Index              |  0  |  1  |  2  |  3  |  4  |  ...                  |
+|-------------------:|:---:|:---:|:---:|:---:|:---:|:----------------------|
+|    `dequeue()` <-- |  8  |  7  |  6  |  _  |  _  | <-- `enqueue(int)`    |
 
 In which:
 * `capacity == 5`
@@ -64,9 +64,9 @@ Notes on queue function:
 * The two final spaces have been left blank for visualization. In reality, they could be any value: the use of `frontIndex` and `tailIndex` allow these values to be ignored and overwritten.
     * There is no value indicative of an "empty" space, meaning any and all integers may be enqueued.
 
-* `enqueue()` shifts the position of `tailIndex` (using `advanceIndex()`). `next()` shifts the position of `frontIndex` (also using `advanceIndex()`).
+* `enqueue()` shifts the position of `tailIndex` (using `advanceIndex()`). `dequeue()` shifts the position of `frontIndex` (also using `advanceIndex()`).
 
-* `isEmpty` and `isFalse` are set on construction, and altered conditionally on `next()` and `enqueue()`, respectively.
+* `isEmpty` and `isFalse` are set on construction, and altered conditionally on `dequeue()` and `enqueue()`, respectively.
     * These are treated as flags to clarify the queue's status in the case that `frontIndex == tailIndex`.
 
 * `length()` is calculated using `frontIndex` and `tailIndex`, unless either `isEmpty` or `isFull` are `true`.
@@ -85,7 +85,7 @@ On construction:
 |                   |  T  |     |     |     |     | `isFull`: false       |
 
 (Note that F and T are in the same position.) 
-(Empty -- using `next()` or `peek()` would raise an error.)
+(Empty -- using `dequeue()` or `peek()` would raise an error.)
 
 After `enqueue(8)`:
 
@@ -103,7 +103,7 @@ After `enqueue(7)`, `enqueue(6)`, `enqueue(5)`:
 |                   |  F  |     |     |     |     | `isEmpty`: false      |
 |                   |     |     |     |     |  T  | `isFull`: false       |
 
-After `next()` (returns `8`):
+After `dequeue()` (returns `8`):
 
 | Index             |  0  |  1  |  2  |  3  |  4  |  ...                  |
 |------------------:|:---:|:---:|:---:|:---:|:---:|:----------------------|
@@ -130,7 +130,7 @@ After `enqueue(3)`:
 (Note that F and T are again in the same position.)
 (Full -- another `enqueue()` would raise an error.)
 
-After `next()` (returns `7`):
+After `dequeue()` (returns `7`):
 
 | Index             |  0  |  1  |  2  |  3  |  4  |  ...                  |
 |------------------:|:---:|:---:|:---:|:---:|:---:|:----------------------|
