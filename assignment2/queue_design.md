@@ -11,11 +11,11 @@
 ---
 ## Queue Design
 
-The queue I've designed has two main methods: `enqueue()` and `dequeue()`. `enqueue()` adds a new value to the end of the queue, while `dequeue()` gets the value at the front of the queue.
+The queue I've designed has two main methods: `enqueue()` and `dequeue()`. `enqueue()` adds a new value to the end of the queue, while `dequeue()` removes and returns the value at the front of the queue.
 
 A queue has a `capacity`, set upon construction, and a private array of values (`items`) that holds the enqueued values. 
 
-A private attribute, `frontIndex` defines the current "front" of the queue, and `tailIndex` defines the current "back" of the queue.
+A private attribute, `frontIndex` defines the current "front" of the queue, and `tailIndex` defines the current "back" of the queue (or, the next space an enqueued value will take).
 
 I also have a handful of other helper methods and attributes, included below.
 
@@ -59,7 +59,7 @@ In which:
 * `isFull == false`
 
 
-Notes on queue function:
+> Notes on queue function:
 
 * The two final spaces have been left blank for visualization. In reality, they could be any value: the use of `frontIndex` and `tailIndex` allow these values to be ignored and overwritten.
     * There is no value indicative of an "empty" space, meaning any and all integers may be enqueued.
