@@ -64,12 +64,12 @@ In which:
 * The two final spaces have been left blank for visualization. In reality, they could be any value: the use of `frontIndex` and `tailIndex` allow these values to be ignored and overwritten.
     * There is no value indicative of an "empty" space, meaning any and all integers may be enqueued.
 
-* `enqueue()` shifts the position of `tailIndex` (using `advanceIndex()`). `dequeue()` shifts the position of `frontIndex` (also using `advanceIndex()`).
+- `enqueue()` shifts the position of `tailIndex` (using `advanceIndex()`). `dequeue()` shifts the position of `frontIndex` (also using `advanceIndex()`).
 
 * `isEmpty` and `isFalse` are set on construction, and altered conditionally on `dequeue()` and `enqueue()`, respectively.
     * These are treated as flags to clarify the queue's status in the case that `frontIndex == tailIndex`.
 
-* `length()` is calculated using `frontIndex` and `tailIndex`, unless either `isEmpty` or `isFull` are `true`.
+- `length()` is calculated using `frontIndex` and `tailIndex`, unless either `isEmpty` or `isFull` are `true`.
 
 In the following examples, these notes may be clarified and visualized. "F" will mark the location of `frontIndex`, and "T" will mark the location of `tailIndex`. Additionally, `isEmpty` and `isFull` are displayed.
 
