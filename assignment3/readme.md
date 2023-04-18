@@ -10,7 +10,7 @@ My queue will consist of linked nodes. Nodes will be a simple structure as so:
 ```cpp
 struct Node {
     int value;
-    Node *next;
+    Node* next;
 }
 ```
 
@@ -19,8 +19,8 @@ A queue will keep track of the front and back nodes, as well as the total length
 ### Attributes
 | Scope      | Name                    | Purpose                              |
 |------------|-------------------------|--------------------------------------|
-| Private    | `Node *backNode`        | Pointer to the end of the line.
-| Private    | `Node *frontNode`       | Pointer to the front of the line.    
+| Private    | `Node* backPtr`         | Pointer to the end of the line.
+| Private    | `Node* frontPtr`        | Pointer to the front of the line.    
 | Private    | `int _length`           | Counts every value in line.
 
 ### Methods

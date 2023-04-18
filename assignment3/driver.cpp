@@ -1,9 +1,49 @@
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include "queue.h"
 
 using namespace std;
+
+/**
+ * Tests a single value in and out of a queue.
+ * 
+ * @return Success/fail message
+*/
+string singleTest() {
+    int testValue = 5;
+    LinkedQueue testQueue;
+
+    testQueue.enqueue(testValue);
+
+    int value = testQueue.dequeue();
+
+    if (value == testValue) {
+        return "SUCCESS Dequeue returned desired test value.";
+    } else {
+        stringstream message;
+        message << "FAILURE Dequeue returned: " << value;
+        return message.str();
+    }
+}
+
+
+string doubleTest() {
+    int valueOne = 7; int valueTwo = 3;
+    LinkedQueue testQueue;
+
+    testQueue.enqueue(valueOne);
+    testQueue.enqueue(valueTwo);
+    cout << testQueue.dequeue() << endl;
+
+    cout << testQueue.length() << endl;
+
+    cout << testQueue.dequeue() << endl;
+
+    return " who knows!";
+
+}
 
 
 /**
@@ -61,8 +101,31 @@ string threeTest() {
 }
 
 
+/// @brief Tests EmptyQueueError
+string emptyTest() {
+    LinkedQueue testQueue;
+
+    int mysteryValue;
+    try {
+        mysteryValue = testQueue.dequeue();
+    } catch (EmptyQueueError e) {
+        return "SUCCESS Dequeuing empty queue raised the appropriate error.";
+    }
+
+    stringstream message;
+
+    message << "FAILURE Dequeuing empty queue was fine. Returned: " << mysteryValue; 
+
+    return message.str();
+
+}
+
+
 int main() {
-    cout << basicQueueTest() << endl;
+    cout << singleTest() << endl;
+    cout << emptyTest() << endl;
+    cout << doubleTest() << endl;
+    // cout << basicQueueTest() << endl;
 
     return 0;
 }

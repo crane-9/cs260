@@ -14,15 +14,15 @@ class EmptyQueueError : public std::exception {
 /// @brief Single-linked node.
 struct Node {
     int value;
-    Node *next;
+    Node* next;
 };
 
 
 /// @brief A queue designed in the spirit of linked lists. 
 class LinkedQueue {
     private:
-        Node *frontNode;
-        Node *backNode;
+        Node* frontPtr;
+        Node* backPtr;
         int _length;
 
     public:

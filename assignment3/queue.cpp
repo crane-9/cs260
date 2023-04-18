@@ -12,8 +12,8 @@ string EmptyQueueError::what() {
 
 
 LinkedQueue::LinkedQueue() {
-    frontNode = nullptr;
-    backNode = nullptr;
+    frontPtr = nullptr;
+    backPtr = nullptr;
     _length = 0;
 }
 
@@ -24,12 +24,16 @@ int LinkedQueue::dequeue() {
     }
 
     // Retrieve value, set new front node.
-    int value = frontNode->value;
+    int value = frontPtr->value;
 
-    cout << value << endl;
-    frontNode = frontNode->next;
+    frontPtr = frontPtr->next;
 
     _length --;
+
+    if (isEmpty()) {
+        frontPtr = nullptr;
+        backPtr = nullptr;
+    }
 
     return value;
 }
@@ -42,14 +46,14 @@ void LinkedQueue::enqueue(int newValue) {
 
     if (isEmpty()) {
         // In a queue of one, the front and back are the same.
-        frontNode = &newNode;
-        backNode = &newNode; 
+        frontPtr = &newNode;
+        backPtr = &newNode; 
     } else {
         // The end of the queue references the new node.
-        backNode->next = &newNode;
+        backPtr->next = &newNode;
 
         // New end of the queue.
-        backNode = &newNode;
+        backPtr = &newNode;
     }
 
     _length ++;
@@ -60,5 +64,5 @@ int LinkedQueue::peek() {
     if (isEmpty()) {
         throw EmptyQueueError();        
     }
-    return frontNode->value; 
+    return frontPtr->value; 
 }
