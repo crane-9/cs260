@@ -29,24 +29,6 @@ string singleTest() {
 }
 
 
-string doubleTest() {
-    int valueOne = 7; int valueTwo = 3;
-    LinkedQueue testQueue;
-
-    testQueue.enqueue(valueOne);
-    testQueue.enqueue(valueTwo);
-    testQueue.dequeue();
-    testQueue.dequeue();
-
-    if (testQueue.isEmpty()) {
-        // actually this is not enough of a signifier, but it will work for now.
-        return "SUCCESS Two values added to queue, two values removed from queue.";
-    } 
-    return "FAILED Queue not emptied.";
-
-}
-
-
 /**
  * Places three known values in the queue, and retrieves them.
  * 
@@ -74,28 +56,6 @@ string tripleTest() {
 }
 
 
-string threeTest() {
-    // LinkedQueue testQueue;
-
-    // for (int i = 4; i < 40; i += 3) {
-    //     testQueue.enqueue(i);
-    // }
-
-    // cout << testQueue.length() << endl;
-
-
-    // while (!testQueue.isEmpty()) {
-    //     try {
-    //         cout << testQueue.dequeue() << endl;
-    //     } catch (EmptyQueueError) {
-    //         cout << "uh oh. queue length? " << testQueue.length() << endl;
-    //         break;
-    //     }
-    // }
-    return "not implemented, ding dong";
-}
-
-
 /// @brief Tests EmptyQueueError
 string emptyTest() {
     LinkedQueue testQueue;
@@ -118,9 +78,8 @@ string emptyTest() {
 
 int main() {
     cout << singleTest() << endl;
-    cout << emptyTest() << endl;
-    cout << doubleTest() << endl;
     cout << tripleTest() << endl;
+    cout << emptyTest() << endl;
 
     return 0;
 }

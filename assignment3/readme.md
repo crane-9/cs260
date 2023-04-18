@@ -5,14 +5,7 @@ Documentation design and plan for `queue.h`/`queue.cpp`.
 ---
 ## Linked Queue
 
-My queue will consist of linked nodes. Nodes will be a simple structure as so:
-
-```cpp
-struct Node {
-    int value;
-    Node* next;
-}
-```
+My queue will consist of linked nodes. Nodes will be a simple `struct` with a `value` and a `next` pointer.
 
 A queue will keep track of the front and back nodes, as well as the total length of the queue. The length attribute will assist in the pre-conditions for `dequeue()`, `enqueue()`, and `peek()`.
 
@@ -41,3 +34,21 @@ I'll have a single error to throw on `dequeue()` and `peek()`, in the case of th
 ## Tests
 
 I want to test every public method and attempt to show their approrpriate function.
+
+1. **Single in/out test.**
+    Test that a single value can be added to the queue, and retrieved as expected. The queue should then have a length of 0.
+
+2. **Triple in/out test.**
+    Test that three values can be added to the queue, and all retrieved as expected. The queue should return them in the expected order, and then have a length of 0.
+
+3. **Empty queue test.**
+    Tests that dequeuing an empty queue throws and error. Catch that error.
+
+4. **Length test.**
+    Enqueue a given number of values, and check that the length updates as expected. Dequeue, and check that the length updates as expected.
+
+5. **Peek test.**
+    Enqueue a known value. Peek, and ensure the given value is as expected. Then test that the value is still in the queue.
+
+6. **Wiggle test.**
+    Enqueue four items. Dequeue one. Enqueue two. Dequeue three. Enqueue one. Dequeue the rest. General functionality crash test.
