@@ -50,7 +50,7 @@ namespace marbles {
      * Formats a marble for printing. Example output: "Marble (#00FFFF)"
      * 
      * @param marble The `int` representing the marble. Expected in the range 0 - 16777215 [0x0 - 0xFFFFFF], however this is not enforced.
-     * @return The marble
+     * @return The marble.
     */
     inline std::string printMarble(int _marble) { 
         std::stringstream marble;
@@ -137,7 +137,7 @@ namespace marbles {
             void shake();
 
             /**
-             * Read-only contents
+             * Read-only contents.
              * 
              * @return Read-only vector for the bag's contents.
             */
