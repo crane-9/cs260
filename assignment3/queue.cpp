@@ -24,9 +24,11 @@ int LinkedQueue::dequeue() {
     }
 
     // Retrieve value, set new front node.
-    int value = frontPtr->value;
+    Node* previous = frontPtr;
+    int value = previous->value;
+    frontPtr = previous->next;
 
-    frontPtr = frontPtr->next;
+    delete previous;
 
     _length --;
 
@@ -40,20 +42,18 @@ int LinkedQueue::dequeue() {
 
 
 void LinkedQueue::enqueue(int newValue) {
-    Node newNode;
-    newNode.value = newValue;
-    newNode.next = nullptr;
+    Node* newNode = new Node{newValue, nullptr};
 
     if (isEmpty()) {
         // In a queue of one, the front and back are the same.
-        frontPtr = &newNode;
-        backPtr = &newNode; 
+        frontPtr = newNode;
+        backPtr = newNode; 
     } else {
         // The end of the queue references the new node.
-        backPtr->next = &newNode;
+        backPtr->next = newNode;
 
         // New end of the queue.
-        backPtr = &newNode;
+        backPtr = newNode;
     }
 
     _length ++;

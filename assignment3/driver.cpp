@@ -35,13 +35,14 @@ string doubleTest() {
 
     testQueue.enqueue(valueOne);
     testQueue.enqueue(valueTwo);
-    cout << testQueue.dequeue() << endl;
+    testQueue.dequeue();
+    testQueue.dequeue();
 
-    cout << testQueue.length() << endl;
-
-    cout << testQueue.dequeue() << endl;
-
-    return " who knows!";
+    if (testQueue.isEmpty()) {
+        // actually this is not enough of a signifier, but it will work for now.
+        return "SUCCESS Two values added to queue, two values removed from queue.";
+    } 
+    return "FAILED Queue not emptied.";
 
 }
 
@@ -51,31 +52,25 @@ string doubleTest() {
  * 
  * @return Fail/success message.
 */
-string basicQueueTest() {
+string tripleTest() {
     LinkedQueue testQueue;
 
     testQueue.enqueue(1);
     testQueue.enqueue(2);
     testQueue.enqueue(3);
 
-    int result;
-    try {
-        result = testQueue.dequeue();
-    } catch (exception e) {
-        return e.what();
+    bool trialOne, trialTwo, trialThree;
+
+    trialOne = testQueue.dequeue() == 1;
+    trialTwo = testQueue.dequeue() == 2;
+    trialThree = testQueue.dequeue() == 3;
+
+    if (trialOne and trialTwo and trialThree) {
+        return "SUCCESS Three values queued and retrieved as expected.";
+    } else {
+        return "FAILURE Not all values enqueued were retrieved as expected.";
+        // give more info!
     }
-    return "bruh";
-    // bool trialOne, trialTwo, trialThree;
-
-    // trialOne = testQueue.dequeue() == 1;
-    // trialTwo = testQueue.dequeue() == 2;
-    // trialThree = testQueue.dequeue() == 3;
-
-    // if (trialOne, trialTwo, trialThree) {
-    //     return "ALL trials succeeded!";
-    // } else {
-    //     return "Uh ohOh";
-    // }
 }
 
 
@@ -125,7 +120,7 @@ int main() {
     cout << singleTest() << endl;
     cout << emptyTest() << endl;
     cout << doubleTest() << endl;
-    // cout << basicQueueTest() << endl;
+    cout << tripleTest() << endl;
 
     return 0;
 }
