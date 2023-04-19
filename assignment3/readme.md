@@ -51,4 +51,4 @@ I want to test every public method and attempt to show their approrpriate functi
     Enqueue a known value. Peek, and ensure the given value is as expected. Then test that the value is still in the queue.
 
 6. **Wiggle test.**
-    Enqueue four items. Dequeue one. Enqueue two. Dequeue three. Enqueue one. Dequeue the rest. General functionality crash test.
+    Enqueue four items. Dequeue one. Enqueue two. Dequeue three. Enqueue one. Dequeue the rest. Crash test to test with a handful of queue states (ex: enqueuing on a just-dequeued, non-empty queue).
