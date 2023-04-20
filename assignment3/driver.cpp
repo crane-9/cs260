@@ -1,36 +1,52 @@
+// EVIL EXPERIMENTAL DRIVER!!!!!!!!!!!!!
 #include "array_queue.h"
+#include "linked_queue.h"
+#include "queue_errors.h"
 
+#include <iostream>
 #include <sstream>
 #include <string>
-#include <iostream>
 
 using namespace std;
 
 
+/**
+ * Tests a single value in and out of a queue.
+ * 
+ * @return Pass/fail message
+*/
+template<class Queue>
 string singleTest() {
-    int testValue = 2;
-    ArrayQueue testQueue;
+    Queue testQueue;
+    int testValue = 5;
 
     testQueue.enqueue(testValue);
 
-    int value = testQueue.dequeue();
-    if (value == testValue) {
-        return "SUCCESS Returned expected value.";
+    int value;
+
+    try {
+        value = testQueue.dequeue();
+    } catch (EmptyQueueError) {
+        return "FAILED Dequeue failed, threw EmptyQueueError.";
     }
-    stringstream message;
-    message << "FAILED returned unexpected value: " << value;
 
-    return message.str();
+    if (value == testValue) {
+        return "SUCCESS Dequeue returned desired test value.";
+    } else {
+        stringstream message;
+        message << "FAILED Dequeue returned " << value << " instead of desired value: " << testValue;
+        return message.str();
+    }
 }
-
 
 /**
  * Places three known values in the queue, and retrieves them.
  * 
  * @return Pass/fail message.
 */
+template <class Queue>
 string tripleTest() {
-    ArrayQueue testQueue;
+    Queue testQueue;
 
     testQueue.enqueue(1);
     testQueue.enqueue(2);
@@ -68,8 +84,13 @@ string tripleTest() {
 }
 
 
+/**
+ * Tests EmptyQueueError and catching it.
+ * @return Pass/Fail message.
+*/
+template <class Queue>
 string emptyTest() {
-    ArrayQueue testQueue;
+    Queue testQueue;
 
     int mysteryValue;
     try {
@@ -85,25 +106,13 @@ string emptyTest() {
 }
 
 
-string fullTest() {
-    ArrayQueue testQueue;
-
-    for (int i = 1; testQueue.length() < 10; i++) {
-        testQueue.enqueue(i^2);
-    }
-
-    try {
-        testQueue.enqueue(9);
-    } catch (FullQueueError) {
-        return "SUCCESS FullQueueError thrown.";
-    }
-
-    return "FAIL FullQueueError not thrown.";
-}
-
-
+/**
+ * Test the length attribute's accuracy.
+ * @return Pass/Fail message.
+*/
+template <class Queue>
 string lengthTest() {
-    ArrayQueue testQueue;
+    Queue testQueue;
 
     // Flag to check after loops.
     bool failed = false;
@@ -138,8 +147,13 @@ string lengthTest() {
 }
 
 
+/**
+ * Test that .peek() acts as expected.
+ * @return Pass/Fail message.
+*/
+template <class Queue>
 string peekTest() {
-    ArrayQueue testQueue;
+    Queue testQueue;
     int testValue = 9;
 
     testQueue.enqueue(testValue);
@@ -162,8 +176,15 @@ string peekTest() {
 }
 
 
+/**
+ * Test a handful of queue states.
+ * @return Pass/Fail message.
+*/
+template <class Queue>
 string wiggleTest() {
-    ArrayQueue testQueue;
+    Queue testQueue;
+
+    bool test;
 
     // Enqueue 4
     for (int i = 1; i < 5; i ++) {
@@ -171,7 +192,7 @@ string wiggleTest() {
     }
 
     // Dequeue 1
-    cout << testQueue.dequeue() << endl;
+    testQueue.dequeue();
 
     // Enqueue 2
     for (int i = 1; i < 3; i++) {
@@ -180,7 +201,7 @@ string wiggleTest() {
 
     // Dequeue 3
     for (int i = 1; i < 4; i++) {
-        cout << testQueue.dequeue() << endl;
+        testQueue.dequeue();
     }
 
     // Enqueue 1
@@ -188,21 +209,73 @@ string wiggleTest() {
 
     // Dequeue until empty
     while (!testQueue.isEmpty()) {
-        cout << testQueue.dequeue() << endl;
+        testQueue.dequeue();
     }
 
-    return "presumably SUCCESS!";  // dynamic message needed
+    return "SUCCESS Queue survived a series of enqueuing and dequeueing.";  // dynamic message needed
+}
+
+// Array-queue test ONLY
+string fullTest() {
+    ArrayQueue testQueue;
+
+    for (int i = 1; testQueue.length() < 10; i++) {
+        testQueue.enqueue(i^2);
+    }
+
+    try {
+        testQueue.enqueue(9);
+    } catch (FullQueueError) {
+        return "SUCCESS FullQueueError thrown.";
+    }
+
+    return "FAIL FullQueueError not thrown.";
 }
 
 
-int main() {
-    cout << singleTest() << endl;
-    cout << tripleTest() << endl;
-    cout << emptyTest() << endl;
-    cout << fullTest() << endl;
-    cout << lengthTest() << endl;
-    cout << peekTest() << endl;
-    cout << wiggleTest() << endl;
+// run all tests for a given class
+template <class Queue>
+void runTests(string queueName) {
+    cout << queueName << ":" << endl;
+    cout << "\t" << singleTest<Queue>() << endl;
+    cout << "\t" << tripleTest<Queue>() << endl;
+    cout << "\t" << emptyTest<Queue>() << endl;
+    
+    if (is_same<Queue, ArrayQueue>::value) {
+        cout << "\t" << fullTest() << endl;
+    }
+    
+    cout << "\t" << lengthTest<Queue>() << endl;
+    cout << "\t" << peekTest<Queue>() << endl;
+    cout << "\t" << wiggleTest<Queue>() << endl;
+    
+    cout << endl;
+}
+
+
+int main(int argc, char* argv[]) {
+    // Parse arguments, run both tests by default.
+    bool printLinked, printArray;
+    if (argc == 2) {
+        string arg = argv[1];
+
+        if (arg != "linked" && arg != "array") {
+            cout << "Nonsense argument: accept 'linked' and 'array' only." << endl;
+            return -1;
+        }
+        
+        printLinked = arg == "linked";
+        printArray = arg == "array";
+    } else if (argc != 1) {
+        cout << "Arguments not understood." << endl;
+    } else {
+        printLinked = printArray = true;
+    }
+
+    // Run tests.
+    if (printLinked) { runTests<LinkedQueue>("LINKED QUEUE"); }
+    
+    if (printArray) { runTests<ArrayQueue>("ARRAY QUEUE"); }
 
     return 0;
 }

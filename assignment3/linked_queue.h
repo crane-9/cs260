@@ -4,13 +4,6 @@
 #include <string>
 
 
-/// @brief Raise on `LinkedQueue::dequeue()` and `LinkedQueue::peek()` when operating on an empty queue.
-class EmptyQueueError : public std::exception {
-    public:
-        std::string what();
-};
-
-
 /// @brief Single-linked node.
 struct Node {
     int value;

@@ -1,14 +1,10 @@
 #include <iostream>
-
 #include <string>
+
+#include "queue_errors.h"
 #include "linked_queue.h"
 
 using namespace std;
-
-
-string EmptyQueueError::what() {
-    return "Queue is empty: cannot peek or dequeue";
-}
 
 
 LinkedQueue::LinkedQueue() {

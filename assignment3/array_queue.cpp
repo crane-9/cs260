@@ -1,17 +1,9 @@
-#include "array_queue.h"
-
 #include <string>
 
+#include "queue_errors.h"
+#include "array_queue.h"
+
 using namespace std;
-
-
-string EmptyQueueError::what() {
-    return "ArrayQueue is empty, cannot dequeue or peek.";
-}
-
-string FullQueueError::what() {
-    return "ArrayQueue is full, cannot enqueue.";
-}
 
 
 ArrayQueue::ArrayQueue() {

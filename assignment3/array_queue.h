@@ -4,18 +4,6 @@
 #include <string>
 
 
-/// Indicates an empty queue.
-class EmptyQueueError : public std::exception {
-    std::string what();
-};
-
-
-/// Indicates a full queue.
-class FullQueueError : public std::exception {
-    std::string what();
-};
-
-
 /// Array-based queue. 
 class ArrayQueue {
     private:
@@ -72,5 +60,6 @@ class ArrayQueue {
         /// @return True if no items in the queue.
         bool isFull() const { return _isFull; }
 };
+
 
 #endif

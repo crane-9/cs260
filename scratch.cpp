@@ -66,15 +66,58 @@ void randomFromVector() {
     cout << things[idx] << endl;
 }
 
-int main() {
-    srand(time(NULL));
+
+// 04 20 2023
+void parseArgs(int argc, char* argv[]) {
+    bool testOne, testTwo;
+    if (argc == 2) {
+        string arg = string(argv[1]);
+
+        if (arg != "one" && arg != "two") {
+            cout << "Nonsense argument: accept 'one' and 'two'. Not \"" << arg << "\"" << endl;
+            return;
+        }
+
+        testOne = arg == "one";
+        testTwo = arg == "two";
+    } else {
+        testOne = testTwo = true;
+    }
+
+    cout << "One: " << testOne << endl; 
+    cout << "Two: " << testTwo << endl;
+}
+
+
+void parseInput() {
+    /// taken from https://www.digitalocean.com/community/tutorials/compare-strings-in-c-plus-plus
+    string str_inp1;
+	string str_inp2;
+
+	cout << "Enter the String 1:\n";
+	cin >> str_inp1;
+	cout << "Enter the String 2:\n";
+	cin >> str_inp2;
+
+	if (str_inp1 == str_inp2)
+		cout << "Strings are equal" << endl;
+	else
+		cout << "Strings are not equal" << endl;
+}
+
+
+int main(int argc, char* argv[]) {
+    // srand(time(NULL));
 
     // hexTest();
 
     // shuffleVector();
     // customShuffleVector();
 
-    randomFromVector();
+    // randomFromVector();
+
+    parseArgs(argc, argv);
+    // parseInput();
 
     return 0;
 }

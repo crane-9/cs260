@@ -10,14 +10,8 @@
 
 ### Summary
 
-This README contains documentation for two separate queue designs: a linked queue and a bonus array queue. 
+This README contains documentation for two separate queue designs: a linked queue and a bonus array queue. Each queue design has its own chapter of documentation, and a clearly named `.h` and `.cpp` file. They share an error file, `queue_errors.h`, and a driver file, `driver.cpp`.
 
-Along with a chapter of documentation below, each design has the following files:
-- `DESIGN_queue.h` containing declarations.
-- `DESIGN_queue.cpp` containing definitions.
-- `DESIGN_driver.cpp` containing tests.
-
-(Wherein 'DESIGN' is a placeholder for 'array' or 'linked'.)
 
 ---
 ## Linked Queue
@@ -88,7 +82,7 @@ I'll have two exceptions:
 ---
 ## Tests
 
-Both queue designs will go through the same tests, as they should have the same functionality. These tests will be separated into their own drivers, however, as that is most straightforward. I want to test every public method and attempt to show their approrpriate function.
+Both queue designs will go through the same tests, as they should have the same functionality. These tests will be the same template functions.
 
 1. **Single in/out test.**
     Test that a single value can be added to the queue, and retrieved as expected. The queue should then have a length of 0.
@@ -107,6 +101,18 @@ Both queue designs will go through the same tests, as they should have the same 
 
 6. **Wiggle test.**
     Enqueue four items. Dequeue one. Enqueue two. Dequeue three. Enqueue one. Dequeue the rest. Crash test to test with a handful of queue states (ex: enqueuing on a just-dequeued, non-empty queue).
+
+### `driver.cpp`/`driver.exe`
+
+Compiling and running `driver.cpp` will run tests for both `LinkedQueue` and `ArrayQueue` by default. If desired, "linked" or "array" may be passed as a command-line argument in order to *only* run tests for the corresponding model.
+
+```ps
+PS ...\cs260\assignment3> g++ driver.cpp array_queue.cpp linked_queue.cpp -o driver
+PS ...\cs260\assignment3> .\driver
+    * results *
+PS ...\cs260\assignment3> .\driver linked
+    * half the results :] *
+```
 
 
 ---
