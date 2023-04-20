@@ -4,6 +4,7 @@
 ### Shortcuts
 * [Linked Queue Design](#linked-queue)
 * [Array Queue Design](#array-queue)
+* [Tests](#tests)
 
 
 ### Summary
@@ -42,31 +43,9 @@ A queue will keep track of the nodes at the front and back of the queue, as well
 
 Nodes are a simple structure, consisting of a `value` and `next` pointer.
 
-## EmptyQueueError
+## Exceptions
 
-I'll have a single error to throw on `dequeue()` and `peek()`, in the case of these methods being called on an empty queue.
-
-## Tests
-
-I want to test every public method and attempt to show their approrpriate function.
-
-1. **Single in/out test.**
-    Test that a single value can be added to the queue, and retrieved as expected. The queue should then have a length of 0.
-
-2. **Triple in/out test.**
-    Test that three values can be added to the queue, and all retrieved as expected. The queue should return them in the expected order, and then have a length of 0.
-
-3. **Empty queue test.**
-    Tests that dequeuing an empty queue throws and error. Catch that error.
-
-4. **Length test.**
-    Enqueue a given number of values, and check that the length updates as expected. Dequeue, and check that the length updates as expected.
-
-5. **Peek test.**
-    Enqueue a known value. Peek, and ensure the given value is as expected. Then test that the value is still in the queue.
-
-6. **Wiggle test.**
-    Enqueue four items. Dequeue one. Enqueue two. Dequeue three. Enqueue one. Dequeue the rest. Crash test to test with a handful of queue states (ex: enqueuing on a just-dequeued, non-empty queue).
+I'll have a single error to throw on `dequeue()` and `peek()`: `EmptyQueueError`.
 
 
 ---
@@ -88,11 +67,11 @@ The main adjustment I have made is setting a pre-defined capacity, 10. I've also
 | Private    | `int advanceIndex(int)` | Utility/helper method. Calculates the next index down the queue. Loops back around to index 0 when the time comes.
 
 ### Attributes
-| Scope      | Definition           | Purpose                                    |
+| Scope      | Definition           | Purpose                                 |
 |------------|----------------------|-----------------------------------------|
 | Public     | `const int CAPACITY` | The maximum capacity of the queue, or the length of the array.
-| Private    | `bool _isEmpty`       | Set to `true` when the list is emptied, and back to `false` once `enqueue()` is called.
-| Private    | `bool _isFull`        | Set to `true` when the list is filled, and back to `false` once `dequeue()` is called.
+| Private    | `bool _isEmpty`      | Set to `true` when the list is emptied, and back to `false` once `enqueue()` is called.
+| Private    | `bool _isFull`       | Set to `true` when the list is filled, and back to `false` once `dequeue()` is called.
 | Private    | `int frontIndex`     | The index of the next item to come off the queue.
 | Private    | `int tailIndex`      | The index of the next position to be filled.
 | Private    | `int items[]`        | Array of items in the queue.
@@ -104,6 +83,27 @@ I'll have two exceptions:
 1. `EmptyQueueError` thrown on `peek()` and `dequeue()`.
 2. `FullQueueError` thrown on `enqueue()`. 
 
+
+---
 ## Tests
 
+Both queue designs will go through the same tests, as they should have the same functionality. These tests will be separated into their own drivers, however, as that is most straightforward. I want to test every public method and attempt to show their approrpriate function.
+
+1. **Single in/out test.**
+    Test that a single value can be added to the queue, and retrieved as expected. The queue should then have a length of 0.
+
+2. **Triple in/out test.**
+    Test that three values can be added to the queue, and all retrieved as expected. The queue should return them in the expected order, and then have a length of 0.
+
+3. **Empty queue test.**
+    Tests that dequeuing an empty queue throws and error. Catch that error.
+
+4. **Length test.**
+    Enqueue a given number of values, and check that the length updates as expected. Dequeue, and check the length.
+
+5. **Peek test.**
+    Enqueue a known value. Peek, and ensure the given value is as expected. Then test that the value is still in the queue.
+
+6. **Wiggle test.**
+    Enqueue four items. Dequeue one. Enqueue two. Dequeue three. Enqueue one. Dequeue the rest. Crash test to test with a handful of queue states (ex: enqueuing on a just-dequeued, non-empty queue).
 

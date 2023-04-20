@@ -138,7 +138,6 @@ string lengthTest() {
     } else {
         return "SUCCESS .length() behaved as expected.";
     }
-
 }
 
 
