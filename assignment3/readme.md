@@ -5,6 +5,7 @@
 * [Linked Queue Design](#linked-queue)
 * [Array Queue Design](#array-queue)
 * [Tests](#tests)
+* [Complexity Analysis](#complexity-analysis)
 
 
 ### Summary
@@ -107,3 +108,56 @@ Both queue designs will go through the same tests, as they should have the same 
 6. **Wiggle test.**
     Enqueue four items. Dequeue one. Enqueue two. Dequeue three. Enqueue one. Dequeue the rest. Crash test to test with a handful of queue states (ex: enqueuing on a just-dequeued, non-empty queue).
 
+
+---
+## Complexity Analysis
+
+Below are attempted complexity analyses for both `linked_queue.cpp` and `array_queue.cpp`. 
+
+To summarize, neither file uses a loop or recursion at any point, and I believe the time and space complexity for all methods/functions in both are **O(1)**.
+
+### For `linked_queue.cpp`
+
+Generally, the time and space complexity of all methods in `linked_queue.cpp` is theoretically O(1), as there is little input, and it never affects the time/space of a function.
+
+The one method that takes input (comments removed): 
+
+```cpp
+void LinkedQueue::enqueue(int newValue) {
+    Node* newNode = new Node{newValue, nullptr};
+
+    if (isEmpty()) {
+        frontPtr = backPtr = newNode; 
+    } else {
+        backPtr->next = newNode;
+
+        backPtr = newNode;
+    }
+
+    _length ++;
+}
+```
+
+At no point does `newValue` have an effect on the time or space of the method.
+
+
+### For `array_queue.cpp`
+
+Similarly, the time and space complexity both are consistently O(1) for the methods of `array_queue.cpp`.
+
+For example, the one method that takes input (comments replaced):
+
+```cpp
+void ArrayQueue::enqueue(int value) {
+    if (_isFull) { throw FullQueueError(); }
+    
+    if (_isEmpty) { _isEmpty = false; } 
+    
+    items[tailIndex] = value;
+    tailIndex = advanceIndex(tailIndex);  // advanceIndex is a mathematic function
+
+    if (tailIndex == frontIndex) { _isFull = true; }
+}
+```
+
+`enqueue()` and `advanceIndex()` both only use basic operations, and zero loops. At no point is this method's time or space affected by the size of input.
