@@ -2,7 +2,7 @@
 #include <sstream>
 #include <string>
 
-#include "queue.h"
+#include "linked_queue.h"
 
 using namespace std;
 
@@ -18,13 +18,19 @@ string singleTest() {
 
     testQueue.enqueue(testValue);
 
-    int value = testQueue.dequeue();
+    int value;
+
+    try {
+        value = testQueue.dequeue();
+    } catch (EmptyQueueError) {
+        return "FAILED Dequeue failed, threw EmptyQueueError.";
+    }
 
     if (value == testValue) {
         return "SUCCESS Dequeue returned desired test value.";
     } else {
         stringstream message;
-        message << "FAILURE Dequeue returned: " << value;
+        message << "FAILED Dequeue returned " << value << " instead of desired value: " << testValue;
         return message.str();
     }
 }
@@ -44,16 +50,33 @@ string tripleTest() {
 
     bool trialOne, trialTwo, trialThree;
 
-    trialOne = testQueue.dequeue() == 1;
-    trialTwo = testQueue.dequeue() == 2;
-    trialThree = testQueue.dequeue() == 3;
+    try {
+        trialOne = testQueue.dequeue() == 1;
+        trialTwo = testQueue.dequeue() == 2;
+        trialThree = testQueue.dequeue() == 3;
+    } catch (EmptyQueueError) {
+        return "FAILED Dequeue threw error.";
+    }
 
     if (trialOne and trialTwo and trialThree) {
         return "SUCCESS Three values queued and retrieved as expected.";
-    } else {
-        return "FAILURE Not all values enqueued were retrieved as expected.";
-        // give more info!
     }
+
+    stringstream message;
+    message << "FAILED Not all values enqueued were retrieved as expected.";
+
+    // Provide details. None are mutually exclusive, hence "if, if, if".
+    if (!trialOne) {
+        message << " First dequeue failed.";
+    }
+    if (!trialTwo) {
+        message << " Second dequeue failed.";
+    }
+    if (!trialThree) {
+        message << " Third dequeue failed.";
+    }
+
+    return message.str();
 }
 
 
@@ -72,7 +95,6 @@ string emptyTest() {
     }
 
     stringstream message;
-
     message << "FAILURE Dequeuing empty queue returned: " << mysteryValue; 
 
     return message.str();
@@ -86,6 +108,7 @@ string emptyTest() {
 string lengthTest() {
     LinkedQueue testQueue;
 
+    // Flag to check after loops.
     bool failed = false;
 
     // Test that length grows.
@@ -113,7 +136,7 @@ string lengthTest() {
     if (failed) {
         return "FAILED .length() did not return as expected during dequeuing.";
     } else {
-        return "PASSED .length() behaved as expected.";
+        return "SUCCESS .length() behaved as expected.";
     }
 
 }
@@ -131,15 +154,19 @@ string peekTest() {
 
     bool trialOne, trialTwo;
 
+    try {
     trialOne = testQueue.peek() == testValue;  // Is the value as expected?
+    } catch (EmptyQueueError) {
+        return "FAILED .peek() threw EmptyQueueError: .enqueue() may have failed.";
+    }
+
     trialTwo = testQueue.length() == 1;  // Is the queue still populated?
 
     if (trialOne and trialTwo) {
-        return "SUCCESS peek() returned expected value and did not altered length.";
+        return "SUCCESS .peek() returned expected value and did not altered length.";
     } else {
-        return "FAIL peek() did not return expected value and/or altered length.";
+        return "FAILED .peek() did not return expected value and/or altered length.";
     }
-
 }
 
 
@@ -176,7 +203,7 @@ string wiggleTest() {
         cout << testQueue.dequeue() << endl;
     }
 
-    return "presumably passed!";  // dynamic message needed
+    return "presumably SUCCESS!";  // dynamic message needed
 }
 
 

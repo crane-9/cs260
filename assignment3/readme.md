@@ -1,23 +1,36 @@
-# CS 260: Assignment 3: Linked-list Queue Design
+# CS 260: Assignment 3: Linked-list Queue and Array Queue Design
 
-Documentation design and plan for `queue.h`/`queue.cpp`.
+
+### Shortcuts
+* [Linked Queue Design](#linked-queue)
+* [Array Queue Design](#array-queue)
+
+
+### Summary
+
+This README contains documentation for two separate queue designs: a linked queue and a bonus array queue. 
+
+Along with a chapter of documentation below, each design has the following files:
+- `DESIGN_queue.h` containing declarations.
+- `DESIGN_queue.cpp` containing definitions.
+- `DESIGN_driver.cpp` containing tests.
+
+(Wherein 'DESIGN' is a placeholder for 'array' or 'linked'.)
 
 ---
 ## Linked Queue
 
-My queue will consist of linked nodes. Nodes will be a simple `struct` with a `value` and a `next` pointer.
-
-A queue will keep track of the front and back nodes, as well as the total length of the queue. The length attribute will assist in the pre-conditions for `dequeue()`, `enqueue()`, and `peek()`.
+A queue will keep track of the nodes at the front and back of the queue, as well as the total length of the queue. The length attribute will assist in the pre-conditions for `dequeue()`, `enqueue()`, and `peek()`.
 
 ### Attributes
-| Scope      | Name                    | Purpose                              |
+| Scope      | Definition              | Purpose                              |
 |------------|-------------------------|--------------------------------------|
 | Private    | `Node* backPtr`         | Pointer to the end of the line.
 | Private    | `Node* frontPtr`        | Pointer to the front of the line.    
 | Private    | `int _length`           | Counts every value in line.
 
 ### Methods
-| Scope      | Name                    | Purpose                              |
+| Scope      | Definition              | Purpose                              |
 |------------|-------------------------|--------------------------------------|
 | Public     | `int dequeue()`         | Get the next at the front of the line.
 | Public     | `void enqueue(int)`     | Add a new value to the back of the line.
@@ -25,12 +38,14 @@ A queue will keep track of the front and back nodes, as well as the total length
 | Public     | `int peek()`            | Peek at the front of the line.
 | Public     | `int length()`          | Read-only length of the queue.
 
+## Nodes
+
+Nodes are a simple structure, consisting of a `value` and `next` pointer.
 
 ## EmptyQueueError
 
 I'll have a single error to throw on `dequeue()` and `peek()`, in the case of these methods being called on an empty queue.
 
----
 ## Tests
 
 I want to test every public method and attempt to show their approrpriate function.
@@ -52,3 +67,43 @@ I want to test every public method and attempt to show their approrpriate functi
 
 6. **Wiggle test.**
     Enqueue four items. Dequeue one. Enqueue two. Dequeue three. Enqueue one. Dequeue the rest. Crash test to test with a handful of queue states (ex: enqueuing on a just-dequeued, non-empty queue).
+
+
+---
+## Array Queue
+
+The following is an adaptation of [queue_design.md](../assignment2/queue_design.md).
+
+The main adjustment I have made is setting a pre-defined capacity, 10. I've also added read-only access for `_isEmpty` and `_isFull`
+
+### Methods
+| Scope      | Definition              | Purpose                              |
+|------------|-------------------------|--------------------------------------|
+| Public     | `void enqueue(int)`     | Add an item to the end of the queue.
+| Public     | `int dequeue()`         | Get the next item of the queue. Removes the item from the queue.
+| Public     | `int peek()`            | Peek at the next item of the queue. Does not remove the item from the queue.
+| Public     | `bool isEmpty()`        | Read-only `_isEmpty`.
+| Public     | `bool isFull()`         | Read-only `_isFull`.
+| Public     | `int length()`          | Calculate and return the filled positions in the queue.
+| Private    | `int advanceIndex(int)` | Utility/helper method. Calculates the next index down the queue. Loops back around to index 0 when the time comes.
+
+### Attributes
+| Scope      | Definition           | Purpose                                    |
+|------------|----------------------|-----------------------------------------|
+| Public     | `const int CAPACITY` | The maximum capacity of the queue, or the length of the array.
+| Private    | `bool _isEmpty`       | Set to `true` when the list is emptied, and back to `false` once `enqueue()` is called.
+| Private    | `bool _isFull`        | Set to `true` when the list is filled, and back to `false` once `dequeue()` is called.
+| Private    | `int frontIndex`     | The index of the next item to come off the queue.
+| Private    | `int tailIndex`      | The index of the next position to be filled.
+| Private    | `int items[]`        | Array of items in the queue.
+
+
+## Exceptions
+
+I'll have two exceptions: 
+1. `EmptyQueueError` thrown on `peek()` and `dequeue()`.
+2. `FullQueueError` thrown on `enqueue()`. 
+
+## Tests
+
+

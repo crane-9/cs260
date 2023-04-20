@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include <string>
-#include "queue.h"
+#include "linked_queue.h"
 
 using namespace std;
 
@@ -26,8 +26,8 @@ int LinkedQueue::dequeue() {
     // Retrieve value, set new front node.
     Node* previous = frontPtr;
     int value = previous->value;
-    frontPtr = previous->next;
 
+    frontPtr = previous->next;
     delete previous;
 
     _length --;
@@ -46,8 +46,7 @@ void LinkedQueue::enqueue(int newValue) {
 
     if (isEmpty()) {
         // In a queue of one, the front and back are the same.
-        frontPtr = newNode;
-        backPtr = newNode; 
+        frontPtr = backPtr = newNode; 
     } else {
         // The end of the queue references the new node.
         backPtr->next = newNode;

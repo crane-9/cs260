@@ -27,7 +27,7 @@ class LinkedQueue {
 
     public:
         /**
-         * Constructs a queue, empty by default.
+         * Constructs an empty queue.
         */
         LinkedQueue();
 
@@ -49,7 +49,7 @@ class LinkedQueue {
 
 
         /**
-         * @return True if the queue is empty, false otherwise.
+         * @return True if 0 items in queue, false otherwise.
         */
         inline bool isEmpty() { return _length == 0; };
 
