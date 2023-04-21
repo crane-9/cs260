@@ -6,6 +6,7 @@
 * [Array Queue Design](#array-queue)
 * [Tests](#tests)
 * [Complexity Analysis](#complexity-analysis)
+* [Guidelines Fulfilled](#guidelines-fulfilled)
 
 
 ### Summary
@@ -92,6 +93,7 @@ Both queue designs will go through the same tests, as they should have the same 
 
 3. **Empty queue test.**
     Tests that dequeuing an empty queue throws and error. Catch that error.
+     Paralell **Full queue test** for array queue.
 
 4. **Length test.**
     Enqueue a given number of values, and check that the length updates as expected. Dequeue, and check the length.
@@ -102,17 +104,9 @@ Both queue designs will go through the same tests, as they should have the same 
 6. **Wiggle test.**
     Enqueue four items. Dequeue one. Enqueue two. Dequeue three. Enqueue one. Dequeue the rest. Crash test to test with a handful of queue states (ex: enqueuing on a just-dequeued, non-empty queue).
 
-### `driver.cpp`/`driver.exe`
+### `driver.cpp`
 
-Compiling and running `driver.cpp` will run tests for both `LinkedQueue` and `ArrayQueue` by default. If desired, "linked" or "array" may be passed as a command-line argument in order to *only* run tests for the corresponding model.
-
-```ps
-PS ...\cs260\assignment3> g++ driver.cpp array_queue.cpp linked_queue.cpp -o driver
-PS ...\cs260\assignment3> .\driver
-    * results *
-PS ...\cs260\assignment3> .\driver linked
-    * half the results :] *
-```
+ `driver.cpp` must be compiled with `linked_queue.cpp` and `array_queue.cpp`. Running the compiled code will test both queues using the same tests (templated functions), save the full queue test.
 
 
 ---
@@ -167,3 +161,9 @@ void ArrayQueue::enqueue(int value) {
 ```
 
 `enqueue()` and `advanceIndex()` both only use basic operations, and zero loops. At no point is this method's time or space affected by the size of input.
+
+
+---
+## Guidelines Fulfilled
+
+ahahabhgdsijkg
