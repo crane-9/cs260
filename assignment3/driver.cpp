@@ -226,7 +226,7 @@ string fullTest() {
     try {
         testQueue.enqueue(9);
     } catch (FullQueueError) {
-        return "SUCCESS FullQueueError thrown.";
+        return "SUCCESS FullQueueError thrown at the appropriate time.";
     }
 
     return "FAIL FullQueueError not thrown.";
@@ -239,43 +239,22 @@ void runTests(string queueName) {
     cout << queueName << ":" << endl;
     cout << "\t" << singleTest<Queue>() << endl;
     cout << "\t" << tripleTest<Queue>() << endl;
-    cout << "\t" << emptyTest<Queue>() << endl;
-    
-    if (is_same<Queue, ArrayQueue>::value) {
-        cout << "\t" << fullTest() << endl;
-    }
-    
+    cout << "\t" << emptyTest<Queue>() << endl;   
     cout << "\t" << lengthTest<Queue>() << endl;
     cout << "\t" << peekTest<Queue>() << endl;
     cout << "\t" << wiggleTest<Queue>() << endl;
+
+    if (is_same<Queue, ArrayQueue>::value) {
+        cout << "\t" << fullTest() << endl;
+    }
     
     cout << endl;
 }
 
 
 int main(int argc, char* argv[]) {
-    // Parse arguments, run both tests by default.
-    bool printLinked, printArray;
-    if (argc == 2) {
-        string arg = argv[1];
-
-        if (arg != "linked" && arg != "array") {
-            cout << "Nonsense argument: accept 'linked' and 'array' only." << endl;
-            return -1;
-        }
-        
-        printLinked = arg == "linked";
-        printArray = arg == "array";
-    } else if (argc != 1) {
-        cout << "Arguments not understood." << endl;
-    } else {
-        printLinked = printArray = true;
-    }
-
-    // Run tests.
-    if (printLinked) { runTests<LinkedQueue>("LINKED QUEUE"); }
-    
-    if (printArray) { runTests<ArrayQueue>("ARRAY QUEUE"); }
+    runTests<LinkedQueue>("LINKED QUEUE");
+    runTests<ArrayQueue>("ARRAY QUEUE");
 
     return 0;
 }
