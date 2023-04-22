@@ -1,5 +1,5 @@
-#ifndef MARBLES_HEADER
-#define MARBLES_HEADER
+#ifndef LINK_QUEUE_HEADER
+#define LINK_QUEUE_HEADER
 
 #include <string>
 
