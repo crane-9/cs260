@@ -51,6 +51,16 @@ The following is an adaptation of [queue_design.md](../assignment2/queue_design.
 
 The main adjustment I have made is setting a pre-defined capacity, 10. I've also added read-only access for `_isEmpty` and `_isFull`
 
+### Attributes
+| Scope      | Definition           | Purpose                                 |
+|------------|----------------------|-----------------------------------------|
+| Public     | `const int CAPACITY` | The maximum capacity of the queue, or the length of the array.
+| Private    | `bool _isEmpty`      | Set to `true` when the list is emptied, and back to `false` once `enqueue()` is called.
+| Private    | `bool _isFull`       | Set to `true` when the list is filled, and back to `false` once `dequeue()` is called.
+| Private    | `int frontIndex`     | The index of the next item to come off the queue.
+| Private    | `int tailIndex`      | The index of the next position to be filled.
+| Private    | `int items[]`        | Array of items in the queue.
+
 ### Methods
 | Scope      | Definition              | Purpose                              |
 |------------|-------------------------|--------------------------------------|
@@ -61,16 +71,6 @@ The main adjustment I have made is setting a pre-defined capacity, 10. I've also
 | Public     | `bool isFull()`         | Read-only `_isFull`.
 | Public     | `int length()`          | Calculate and return the filled positions in the queue.
 | Private    | `int advanceIndex(int)` | Utility/helper method. Calculates the next index down the queue. Loops back around to index 0 when the time comes.
-
-### Attributes
-| Scope      | Definition           | Purpose                                 |
-|------------|----------------------|-----------------------------------------|
-| Public     | `const int CAPACITY` | The maximum capacity of the queue, or the length of the array.
-| Private    | `bool _isEmpty`      | Set to `true` when the list is emptied, and back to `false` once `enqueue()` is called.
-| Private    | `bool _isFull`       | Set to `true` when the list is filled, and back to `false` once `dequeue()` is called.
-| Private    | `int frontIndex`     | The index of the next item to come off the queue.
-| Private    | `int tailIndex`      | The index of the next position to be filled.
-| Private    | `int items[]`        | Array of items in the queue.
 
 
 ## Exceptions
