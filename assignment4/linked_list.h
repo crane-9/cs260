@@ -48,11 +48,27 @@ class LinkedList {
         void append(int newValue);
         
         /**
+         * Counts the appearances of the given value on the list.
+         * @param value The value to count.
+         * @return How many times the given value appears on the list.
+        */
+        int count(int value);
+
+        /**
          * Get the value at the desired index. Value remains in the list.
          * @param idx Index to retrieve.
          * @return The value at the given index. 
         */
         int get(int idx);
+
+        /**
+         * Get the index of a given value in the list.
+         * @param value The desired value.
+         * @return The index of the given value, if on the list.
+         * @note Returns -1 if value is not on the list.
+         * @note Returns index for the first instance of the value on the list.
+        */
+       int index(int value);
 
         /**
          * Insert a value at a specific place in the list.
@@ -76,7 +92,7 @@ class LinkedList {
 
         /**
          * View the entire list.
-         * @note For debug, not really useful.
+         * @note Debug. Not really useful.
          * @return The entire list written out as a string.
         */
         std::string peek();

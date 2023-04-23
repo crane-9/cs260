@@ -52,9 +52,41 @@ void LinkedList::append(int newValue) {
     _length ++;
 }
 
+int LinkedList::count(int value) {
+    Node* current = firstNode;
+    int count = 0;
+
+    // Loop through and count every instance of the given value.
+    while (current != nullptr) {
+        if (current->value == value) {
+            count ++;
+        }
+        current = current->next;
+    }
+    
+    return count;
+}
+
 int LinkedList::get(int idx) {
     Node* wantedNode = fetchNode(idx);
     return wantedNode->value;
+}
+
+int LinkedList::index(int value) {
+    Node* current = firstNode;
+    int idx = 0;
+
+    // Run through the whole list.
+    while (current != nullptr) {
+        if (current->value == value) {
+            return idx; 
+        }
+        current = current->next;
+        idx ++;
+    }
+
+    // If the value was never found.
+    return -1;
 }
 
 void LinkedList::insert(int idx, int newValue) {
