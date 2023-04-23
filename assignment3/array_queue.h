@@ -4,15 +4,19 @@
 #include <string>
 
 
-/// Array-based queue. 
+/// @brief Array-based queue. 
 class ArrayQueue {
     private:
         int items[10];
 
-        int tailIndex;
+        // Index for next item to pop.
         int frontIndex;
-        bool _isEmpty;
-        bool _isFull;
+
+        // Index for next space to be filled.
+        int tailIndex;
+
+        // Flags
+        bool _isEmpty, _isFull;
 
         /**
          * Private helper. Calculates and returns the next position in the array, 

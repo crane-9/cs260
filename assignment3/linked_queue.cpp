@@ -20,11 +20,11 @@ int LinkedQueue::dequeue() {
     }
 
     // Retrieve value, set new front node.
-    Node* previous = frontPtr;
-    int value = previous->value;
+    Node* oldNode = frontPtr;
+    int value = oldNode->value;
 
-    frontPtr = previous->next;
-    delete previous;
+    frontPtr = oldNode->next;
+    delete oldNode;
 
     _length --;
 

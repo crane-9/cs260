@@ -6,7 +6,7 @@
 * [Array Queue Design](#array-queue)
 * [Tests](#tests)
 * [Complexity Analysis](#complexity-analysis)
-* [Guidelines Fulfilled](#guidelines-fulfilled)
+* [Meeting Requirements](#meeting-requirements)
 
 
 ### Summary
@@ -164,6 +164,88 @@ void ArrayQueue::enqueue(int value) {
 
 
 ---
-## Guidelines Fulfilled
+## Meeting Requirements
 
-ahahabhgdsijkg
+### Linked Queue
+
+Uses a linked-list:
+```cpp
+// Lines 16-18, `linked_queue.h`. //
+
+private:
+        Node* frontPtr;
+        Node* backPtr;
+```
+
+Enqueue method that adds to the back of the queue:
+```cpp
+// Lines 43 - 52, `linked_queue.cpp` //
+
+if (isEmpty()) {
+    // In a queue of one, the front and back are the same.
+    frontPtr = backPtr = newNode; 
+} else {
+    // The end of the queue references the new node.
+    backPtr->next = newNode;
+
+    // New end of the queue.
+    backPtr = newNode;
+}
+```
+
+Dequeue method that removes from the front of the queue:
+```cpp
+// Lines 22 - 27, `linked_queue.cpp` //
+
+// Retrieve value, set new front node.
+Node* oldNode = frontPtr;
+int value = oldNode->value;
+
+frontPtr = oldNode->next;
+delete oldNode;
+```
+
+Peek method:
+```cpp
+// Line 62, `linked_queue.cpp` //
+
+return frontPtr->value; 
+```
+
+### Array Queue
+
+Uses an array:
+```cpp
+// Lines 9 - 10, `array_queue.h` //
+
+private:
+    int items[10];
+```
+
+Enqueue method that ends to the back of the queue:
+```cpp
+// Line 51, `array_queue.cpp //
+
+items[tailIndex] = value;
+```
+
+Dequeue method that removes from the front of the queue:
+```cpp
+// Line 32 - 39, `array_queue.cpp` //
+
+// Actually dequeue.
+int value = items[frontIndex];
+frontIndex = advanceIndex(frontIndex);
+
+// If the front catches up to the back, queue is now empty.
+if (frontIndex == tailIndex) { _isEmpty = true; }
+
+return value;
+```
+
+Peek method:
+```cpp
+// Line 63, `array_queue.cpp` //
+
+return items[frontIndex];
+```
