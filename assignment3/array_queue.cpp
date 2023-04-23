@@ -33,7 +33,7 @@ int ArrayQueue::dequeue() {
     int value = items[frontIndex];
     frontIndex = advanceIndex(frontIndex);
 
-    // If front == tail, queue is now empty.
+    // If the front catches up to the back, queue is now empty.
     if (frontIndex == tailIndex) { _isEmpty = true; }
 
     return value;

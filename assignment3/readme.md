@@ -6,7 +6,7 @@
 * [Array Queue Design](#array-queue)
 * [Tests](#tests)
 * [Complexity Analysis](#complexity-analysis)
-* [Guidelines Fulfilled](#guidelines-fulfilled)
+* [Meeting Requirements](#meeting-requirements)
 
 
 ### Summary
@@ -51,6 +51,16 @@ The following is an adaptation of [queue_design.md](../assignment2/queue_design.
 
 The main adjustment I have made is setting a pre-defined capacity, 10. I've also added read-only access for `_isEmpty` and `_isFull`
 
+### Attributes
+| Scope      | Definition           | Purpose                                 |
+|------------|----------------------|-----------------------------------------|
+| Public     | `const int CAPACITY` | The maximum capacity of the queue, or the length of the array.
+| Private    | `bool _isEmpty`      | Set to `true` when the list is emptied, and back to `false` once `enqueue()` is called.
+| Private    | `bool _isFull`       | Set to `true` when the list is filled, and back to `false` once `dequeue()` is called.
+| Private    | `int frontIndex`     | The index of the next item to come off the queue.
+| Private    | `int tailIndex`      | The index of the next position to be filled.
+| Private    | `int items[]`        | Array of items in the queue.
+
 ### Methods
 | Scope      | Definition              | Purpose                              |
 |------------|-------------------------|--------------------------------------|
@@ -61,16 +71,6 @@ The main adjustment I have made is setting a pre-defined capacity, 10. I've also
 | Public     | `bool isFull()`         | Read-only `_isFull`.
 | Public     | `int length()`          | Calculate and return the filled positions in the queue.
 | Private    | `int advanceIndex(int)` | Utility/helper method. Calculates the next index down the queue. Loops back around to index 0 when the time comes.
-
-### Attributes
-| Scope      | Definition           | Purpose                                 |
-|------------|----------------------|-----------------------------------------|
-| Public     | `const int CAPACITY` | The maximum capacity of the queue, or the length of the array.
-| Private    | `bool _isEmpty`      | Set to `true` when the list is emptied, and back to `false` once `enqueue()` is called.
-| Private    | `bool _isFull`       | Set to `true` when the list is filled, and back to `false` once `dequeue()` is called.
-| Private    | `int frontIndex`     | The index of the next item to come off the queue.
-| Private    | `int tailIndex`      | The index of the next position to be filled.
-| Private    | `int items[]`        | Array of items in the queue.
 
 
 ## Exceptions
@@ -164,6 +164,88 @@ void ArrayQueue::enqueue(int value) {
 
 
 ---
-## Guidelines Fulfilled
+## Meeting Requirements
 
-ahahabhgdsijkg
+### Linked Queue
+
+Uses a linked-list:
+```cpp
+// Lines 16-18, `linked_queue.h`. //
+
+private:
+        Node* frontPtr;
+        Node* backPtr;
+```
+
+Enqueue method that adds to the back of the queue:
+```cpp
+// Lines 43 - 52, `linked_queue.cpp` //
+
+if (isEmpty()) {
+    // In a queue of one, the front and back are the same.
+    frontPtr = backPtr = newNode; 
+} else {
+    // The end of the queue references the new node.
+    backPtr->next = newNode;
+
+    // New end of the queue.
+    backPtr = newNode;
+}
+```
+
+Dequeue method that removes from the front of the queue:
+```cpp
+// Lines 22 - 27, `linked_queue.cpp` //
+
+// Retrieve value, set new front node.
+Node* oldNode = frontPtr;
+int value = oldNode->value;
+
+frontPtr = oldNode->next;
+delete oldNode;
+```
+
+Peek method:
+```cpp
+// Line 62, `linked_queue.cpp` //
+
+return frontPtr->value; 
+```
+
+### Array Queue
+
+Uses an array:
+```cpp
+// Lines 9 - 10, `array_queue.h` //
+
+private:
+    int items[10];
+```
+
+Enqueue method that ends to the back of the queue:
+```cpp
+// Line 51, `array_queue.cpp //
+
+items[tailIndex] = value;
+```
+
+Dequeue method that removes from the front of the queue:
+```cpp
+// Line 32 - 39, `array_queue.cpp` //
+
+// Actually dequeue.
+int value = items[frontIndex];
+frontIndex = advanceIndex(frontIndex);
+
+// If the front catches up to the back, queue is now empty.
+if (frontIndex == tailIndex) { _isEmpty = true; }
+
+return value;
+```
+
+Peek method:
+```cpp
+// Line 63, `array_queue.cpp` //
+
+return items[frontIndex];
+```
