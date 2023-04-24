@@ -20,7 +20,7 @@ int LinkedQueue::dequeue() {
     }
 
     // Retrieve value, set new front node.
-    Node* oldNode = frontPtr;
+    Node<int>* oldNode = frontPtr;
     int value = oldNode->value;
 
     frontPtr = oldNode->next;
@@ -38,7 +38,7 @@ int LinkedQueue::dequeue() {
 
 
 void LinkedQueue::enqueue(int newValue) {
-    Node* newNode = new Node{newValue, nullptr};
+    Node<int>* newNode = new Node<int>{newValue, nullptr};
 
     if (isEmpty()) {
         // In a queue of one, the front and back are the same.

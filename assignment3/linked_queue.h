@@ -5,17 +5,18 @@
 
 
 /// @brief Single-linked node.
+template <class T>
 struct Node {
-    int value;
-    Node* next;
+    T value;
+    Node<T>* next;
 };
 
 
 /// @brief A queue designed in the spirit of linked lists. 
 class LinkedQueue {
     private:
-        Node* frontPtr;
-        Node* backPtr;
+        Node<int>* frontPtr;
+        Node<int>* backPtr;
         int _length;
 
     public:
