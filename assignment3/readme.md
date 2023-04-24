@@ -114,7 +114,7 @@ Both queue designs will go through the same tests, as they should have the same 
 
 Below are attempted complexity analyses for both `linked_queue.cpp` and `array_queue.cpp`. 
 
-To summarize, neither file uses a loop or recursion at any point, and I believe the time and space complexity for all methods/functions in both are **O(1)**.
+To summarize, neither file uses a loop or recursion at any point, and I believe the time and space complexity for all methods/functions in both designs are both **O(1)**.
 
 ### For `linked_queue.cpp`
 
@@ -160,7 +160,7 @@ void ArrayQueue::enqueue(int value) {
 }
 ```
 
-`enqueue()` and `advanceIndex()` both only use basic operations, and zero loops. At no point is this method's time or space affected by the size of input.
+`enqueue()` and `advanceIndex()` both only use basic operations, and no loops. At no point is this method's time or space affected by the size of input.
 
 
 ---

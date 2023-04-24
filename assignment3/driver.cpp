@@ -1,4 +1,3 @@
-// EVIL EXPERIMENTAL DRIVER!!!!!!!!!!!!!
 #include "array_queue.h"
 #include "linked_queue.h"
 #include "queue_errors.h"
@@ -208,6 +207,26 @@ string wiggleTest() {
     testQueue.enqueue(1);
 
     // Dequeue until empty
+    while (!testQueue.isEmpty()) {
+        testQueue.dequeue();
+    }
+
+    // Enqueue 9
+    for (int i = 1; i < 10; i++) {
+        testQueue.enqueue(i);
+    }
+
+    // Dequeue 3
+    for (int i = 1; i < 4; i++) {
+        testQueue.dequeue();
+    }
+
+    // Enqueue 4
+    for (int i = 1; i < 5; i++) {
+        testQueue.enqueue(i);
+    }
+
+    // Dequeue all
     while (!testQueue.isEmpty()) {
         testQueue.dequeue();
     }
