@@ -7,6 +7,7 @@
 #include <iterator>
 #include <random>
 #include <vector>
+#include <sstream>
 
 #include <time.h>
 
@@ -106,6 +107,32 @@ void parseInput() {
 }
 
 
+// 04 21 2023
+class MyError : public std::exception {
+    private:
+        int hint;
+
+    public:
+        MyError(int data) {
+            hint = data;
+        }
+
+        string what() {
+            stringstream message;
+            message << "the evil number was....!!! " << hint;
+            return message.str();
+        }
+};
+
+void errorTest() {
+    try {
+        throw MyError(3);
+    } catch (MyError e) {
+        cout << e.what() << endl;
+    }
+}
+
+
 int main(int argc, char* argv[]) {
     // srand(time(NULL));
 
@@ -116,8 +143,10 @@ int main(int argc, char* argv[]) {
 
     // randomFromVector();
 
-    parseArgs(argc, argv);
+    // parseArgs(argc, argv);
     // parseInput();
+
+    errorTest();
 
     return 0;
 }
