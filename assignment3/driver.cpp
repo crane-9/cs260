@@ -1,4 +1,3 @@
-// EVIL EXPERIMENTAL DRIVER!!!!!!!!!!!!!
 #include "array_queue.h"
 #include "linked_queue.h"
 #include "queue_errors.h"
@@ -18,6 +17,7 @@ using namespace std;
 template<class Queue>
 string singleTest() {
     Queue testQueue;
+
     int testValue = 5;
 
     testQueue.enqueue(testValue);
@@ -30,10 +30,21 @@ string singleTest() {
         return "FAILED Dequeue failed, threw EmptyQueueError.";
     }
 
+    stringstream message;
+    // Main test success
     if (value == testValue) {
-        return "SUCCESS Dequeue returned desired test value.";
+        message << "SUCCESS Dequeue returned desired test value, ";
+        
+        if (testQueue.length() == 0) {
+            message << "and emptied the list appropriately.";
+        } else {
+            message << "HOWEVER the list is not empty.";
+        }
+        
+        return message.str();
+
+    // Failure
     } else {
-        stringstream message;
         message << "FAILED Dequeue returned " << value << " instead of desired value: " << testValue;
         return message.str();
     }
@@ -62,25 +73,36 @@ string tripleTest() {
         return "FAILED Dequeue threw error.";
     }
 
-    if (trialOne and trialTwo and trialThree) {
-        return "SUCCESS Three values queued and retrieved as expected.";
-    }
-
     stringstream message;
-    message << "FAILED Not all values enqueued were retrieved as expected.";
+    // Success
+    if (trialOne and trialTwo and trialThree) {
+        message << "SUCCESS Three values queued and retrieved as expected, ";
 
-    // Provide details. None are mutually exclusive, hence "if, if, if".
-    if (!trialOne) {
-        message << " First dequeue failed.";
-    }
-    if (!trialTwo) {
-        message << " Second dequeue failed.";
-    }
-    if (!trialThree) {
-        message << " Third dequeue failed.";
-    }
+        if (testQueue.length() == 0) {
+            message << "and emptied the list.";
+        } else {
+            message << "HOWEVER the list is not empty.";
+        }
 
-    return message.str();
+        return message.str();
+    
+    // Fail
+    } else {
+        message << "FAILED Not all values enqueued were retrieved as expected.";
+
+        // Provide details. None are mutually exclusive, hence "if, if, if".
+        if (!trialOne) {
+            message << " First dequeue failed.";
+        }
+        if (!trialTwo) {
+            message << " Second dequeue failed.";
+        }
+        if (!trialThree) {
+            message << " Third dequeue failed.";
+        }
+
+        return message.str();
+    }
 }
 
 
@@ -208,6 +230,26 @@ string wiggleTest() {
     testQueue.enqueue(1);
 
     // Dequeue until empty
+    while (!testQueue.isEmpty()) {
+        testQueue.dequeue();
+    }
+
+    // Enqueue 9
+    for (int i = 1; i < 10; i++) {
+        testQueue.enqueue(i);
+    }
+
+    // Dequeue 3
+    for (int i = 1; i < 4; i++) {
+        testQueue.dequeue();
+    }
+
+    // Enqueue 4
+    for (int i = 1; i < 5; i++) {
+        testQueue.enqueue(i);
+    }
+
+    // Dequeue all
     while (!testQueue.isEmpty()) {
         testQueue.dequeue();
     }

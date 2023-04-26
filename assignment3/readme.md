@@ -11,28 +11,28 @@
 
 ### Summary
 
-This README contains documentation for two separate queue designs: a linked queue and a bonus array queue. Each queue design has its own chapter of documentation, and a clearly named `.h` and `.cpp` file. They share an error file, `queue_errors.h`, and a driver file, `driver.cpp`.
+This README contains documentation for two separate queue designs: a linked queue and a bonus array queue. Each queue design has its own chapter of documentation, and a clearly named `.h` and `.cpp` file. They share an error file, `queue_errors.h`, and a driver file, `driver.cpp`. For the sake of simplicity, both queues store integers.
 
 
 ---
 ## Linked Queue
 
-A queue will keep track of the nodes at the front and back of the queue, as well as the total length of the queue. The length attribute will assist in the pre-conditions for `dequeue()`, `enqueue()`, and `peek()`.
+A queue keeps track of the nodes at the front and back of the queue, as well as the total length of the queue. The length attribute will assist in pre-conditions for `dequeue()`, `enqueue()`, and `peek()`.
 
 ### Attributes
 | Scope      | Definition              | Purpose                              |
 |------------|-------------------------|--------------------------------------|
-| Private    | `Node* backPtr`         | Pointer to the end of the line.
-| Private    | `Node* frontPtr`        | Pointer to the front of the line.    
-| Private    | `int _length`           | Counts every value in line.
+| Private    | `Node* backPtr`         | Pointer to the end of the queue.
+| Private    | `Node* frontPtr`        | Pointer to the front of the queue.    
+| Private    | `int _length`           | Counts every value in queue.
 
 ### Methods
 | Scope      | Definition              | Purpose                              |
 |------------|-------------------------|--------------------------------------|
-| Public     | `int dequeue()`         | Get the next at the front of the line.
-| Public     | `void enqueue(int)`     | Add a new value to the back of the line.
+| Public     | `int dequeue()`         | Get the next at the front of the queue.
+| Public     | `void enqueue(int)`     | Add a new value to the back of the queue.
 | Public     | `bool isEmpty()`        | Check if the queue is empty.
-| Public     | `int peek()`            | Peek at the front of the line.
+| Public     | `int peek()`            | Peek at the front of the queue.
 | Public     | `int length()`          | Read-only length of the queue.
 
 ## Nodes
@@ -93,7 +93,7 @@ Both queue designs will go through the same tests, as they should have the same 
 
 3. **Empty queue test.**
     Tests that dequeuing an empty queue throws and error. Catch that error.
-     Paralell **Full queue test** for array queue.
+    Paralell **Full queue test** for array queue.
 
 4. **Length test.**
     Enqueue a given number of values, and check that the length updates as expected. Dequeue, and check the length.
@@ -102,11 +102,9 @@ Both queue designs will go through the same tests, as they should have the same 
     Enqueue a known value. Peek, and ensure the given value is as expected. Then test that the value is still in the queue.
 
 6. **Wiggle test.**
-    Enqueue four items. Dequeue one. Enqueue two. Dequeue three. Enqueue one. Dequeue the rest. Crash test to test with a handful of queue states (ex: enqueuing on a just-dequeued, non-empty queue).
+    Alternate between enqueuing and dequeuing arbitrary numbers of values. Crash test to test with a handful of queue states (ex: enqueuing on a just-dequeued, non-empty queue).
 
-### `driver.cpp`
-
- `driver.cpp` must be compiled with `linked_queue.cpp` and `array_queue.cpp`. Running the compiled code will test both queues using the same tests (templated functions), save the full queue test.
+ `driver.cpp`, which contains these tests, must be compiled with `linked_queue.cpp` and `array_queue.cpp`. Running the compiled code will test both queues using the same tests (templated functions), save the full queue test.
 
 
 ---
@@ -114,7 +112,10 @@ Both queue designs will go through the same tests, as they should have the same 
 
 Below are attempted complexity analyses for both `linked_queue.cpp` and `array_queue.cpp`. 
 
-To summarize, neither file uses a loop or recursion at any point, and I believe the time and space complexity for all methods/functions in both are **O(1)**.
+To summarize, neither file uses a loop or recursion at any point, and I believe the time and space complexity for all methods/functions in both designs are both **O(1)**.
+
+Part of my reasoning is that the size of either queue (linked- or array-based) does not play a role in any method. Enqueue/dequeue/peek are each only concerned with one end (back/front) of the queue, and the number of items in between don't matter. I believe this keeps both time and space complexity simple.
+
 
 ### For `linked_queue.cpp`
 
@@ -138,7 +139,7 @@ void LinkedQueue::enqueue(int newValue) {
 }
 ```
 
-At no point does `newValue` have an effect on the time or space of the method.
+At no point does `newValue` have an effect on the time or space of the method, nor does the size of the queue.
 
 
 ### For `array_queue.cpp`
@@ -160,7 +161,7 @@ void ArrayQueue::enqueue(int value) {
 }
 ```
 
-`enqueue()` and `advanceIndex()` both only use basic operations, and zero loops. At no point is this method's time or space affected by the size of input.
+`enqueue()` and `advanceIndex()` both only use basic operations, and no loops. At no point is this method's time or space affected by the size of input, or the size of the queue. 
 
 
 ---
@@ -173,8 +174,8 @@ Uses a linked-list:
 // Lines 16-18, `linked_queue.h`. //
 
 private:
-        Node* frontPtr;
-        Node* backPtr;
+        Node<int>* frontPtr;
+        Node<int>* backPtr;
 ```
 
 Enqueue method that adds to the back of the queue:
