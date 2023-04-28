@@ -133,6 +133,18 @@ void errorTest() {
 }
 
 
+// 04 27 2023
+void loopTest() {
+    cout << "IN FUNCTION." << endl;
+    
+    for (int i = 0; i < 0; i++) {
+        cout << "HELLO" << endl;
+    }
+
+    cout << "BYE BYE." << endl;
+}
+
+
 int main(int argc, char* argv[]) {
     // srand(time(NULL));
 
@@ -146,7 +158,9 @@ int main(int argc, char* argv[]) {
     // parseArgs(argc, argv);
     // parseInput();
 
-    errorTest();
+    // errorTest();
+
+    loopTest();
 
     return 0;
 }

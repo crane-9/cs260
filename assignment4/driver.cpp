@@ -115,8 +115,6 @@ string indexTest() {
 
     int resultIdx = testList.index(testValue);
 
-    cout << testList.peek() << endl;
-
     if (resultIdx == testIdx) {
         return "SUCCESS Getting the index of a known value behaved as expected.";
     } else {
@@ -136,37 +134,72 @@ string indexTest() {
 
 
 string insertTest() {
-    // Add a couple items to a list.
+    LinkedList testList;
 
-    // Get length.
+    // Add a couple items to a list.
+    for (int i = 0; i < 5; i ++) {
+        testList.append(i);
+    }
+
+    int knownIndex = 2;
+    int knownValue = 9;
 
     // Insert in the middle of the list
+    testList.insert(knownIndex, knownValue);
 
-    // Get index, check value.
+    // Get and check value.
+    int result = testList.get(knownIndex);
 
-    // Check length.
+    if (result == knownValue) {
+        return "SUCCESS Value was inserted into the list as expected.";
+    } else {
+        stringstream message;
+        message << "FAILED Value not found. " << result << " found instead of " << knownValue;
 
-    return "";
-
+        return message.str();
+    }
 }
 
 
 string popTest() {
     // Add a bunch of items to a list.
+    LinkedList testList;
+    
+    // Hard-coding certain values
+    testList.append(4);
+    testList.append(5);
+    testList.append(6);
 
-    // Get length.
+    int beforeLength = testList.length();
 
-    // Pop an index and check for expected value.
+    // Hard-coded expected value.
+    int popResult = testList.pop(1);
 
-    // Compare new length.
+    if (popResult == 5) {
+        stringstream message;
+        message << "SUCCESS Expected value returned when popped, ";
 
-    return "";
+        if (beforeLength == testList.length() - 1) {
+            message << "and removed from list as expected.";
+        } else {
+            message << "HOWEVER it was not removed from the list.";
+        }
 
+        return message.str();
+    } else {
+        return "FAILED Expected value not returned from pop.";
+    }
 }
 
 
 string replaceTest() {
+    const int knownIndex = 3;
+    const int knownValue = 16;
+
+    LinkedList testList;
+
     // Add a bunch of items to a list.
+    
 
     // Get length.
 
@@ -181,6 +214,30 @@ string replaceTest() {
 }
 
 
+string indexErrorTest() {
+    LinkedList testList;
+
+    const int testLength = 4;
+
+    for (int i = 0; i < testLength; i++) {
+        testList.append(i ^ 2);
+    }
+
+    int mysteryValue;
+
+    try {
+        mysteryValue = testList.get(testLength + 1);
+    } catch (IndexError) {
+        return "SUCCESS Index error thrown as expected.";
+    }
+
+    // No error is not what we want.
+    stringstream message;
+    message << "FAILED Index error not thrown as expected. " << mysteryValue << " returned.";
+    return message.str();
+}
+
+
 int main() {
     cout << appendTest() << endl;
     cout << countTest() << endl;
@@ -189,6 +246,7 @@ int main() {
     cout << insertTest() << endl;
     cout << popTest() << endl;
     cout << replaceTest() << endl;
+    cout << indexErrorTest() << endl;
 
     return 0;
 }
