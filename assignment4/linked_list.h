@@ -15,6 +15,14 @@ class IndexError : public std::exception {
 };
 
 
+/**
+ * Node structure. Three values held:
+ * @note `value`: Data the node holds.
+ * @note `next`: Pointer to the next node in the list.
+ * @note `prev`: Pointer to the previous node in the list.
+ * @example `node1 = Node{42, nullptr, nullptr};` creates a lone node with value 42.
+ * @example `node2 = Node{39, nullptr, &node1};` creates a node with value 39, linked to the first node. `node1` must then be connected to `node2` like so: `node1.next = &node2;`
+*/
 struct Node {
     int value;
     Node* next;

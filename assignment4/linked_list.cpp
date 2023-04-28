@@ -54,17 +54,17 @@ void LinkedList::append(int newValue) {
 
 int LinkedList::count(int value) {
     Node* current = firstNode;
-    int count = 0;
+    int tally = 0;
 
     // Loop through and count every instance of the given value.
     while (current != nullptr) {
         if (current->value == value) {
-            count ++;
+            tally ++;
         }
         current = current->next;
     }
     
-    return count;
+    return tally;
 }
 
 int LinkedList::get(int idx) {
@@ -90,34 +90,37 @@ int LinkedList::index(int value) {
 }
 
 void LinkedList::insert(int idx, int newValue) {
+    // Flags
     bool isFirst, isLast;
     isFirst = isLast = false;
     
+    // Node pointers we need to find.
     Node* previousNode;
     Node* nextNode;
 
-    // Define previous node.
-    if (idx == 0) {
+    // Define node previous to the new node.
+    if (idx == 0) { // Special case: front of the list.
         isFirst = true;
         previousNode = nullptr; 
-    } else {
+    } else { // Default case, not the new front of the list.
         // If this throws an error, it throws an error!
         previousNode = fetchNode(idx - 1);
     }
 
-    // Define next node
-    if (idx + 1 == _length) {
+    // Define next node.
+    if (idx == _length) { // Special case: last of the list/behind the old end of the list. 
         isLast = true;
         nextNode = nullptr;
-    } else if (previousNode != nullptr) {
+    } else if (previousNode != nullptr) { // If there's a previous node, it points us to the next.
         nextNode = previousNode->next;
-    } else {
+    } else { // Special case part 2: in adding to the front of the list, the next node will be the old front of the list.
         nextNode = fetchNode(idx);
     }
     
+    // Build new node.
     Node* newNode = new Node{newValue, nextNode, previousNode};
 
-    // 
+    // Update first/last pointers.
     if (isFirst) { firstNode = newNode; }
     else if (isLast) { lastNode = newNode; }
 
