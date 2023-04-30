@@ -97,13 +97,6 @@ class LinkedList {
          * @return Length of the list.
         */
         int length() const { return _length; };
-
-        /**
-         * View the entire list.
-         * @note Debug. Not really useful.
-         * @return The entire list written out as a string.
-        */
-        std::string peek();
         
         /**
          * Remove and return the value at the desired index.
@@ -119,6 +112,14 @@ class LinkedList {
          * @return The old value at the given index.
         */
         int replace(int idx, int newValue);
+
+        
+        /**
+         * View the entire list.
+         * @note Debug. Not really useful.
+         * @return The entire list written out as a string.
+        */
+        std::string toString();
 };
 
 

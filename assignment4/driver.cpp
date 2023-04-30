@@ -179,7 +179,7 @@ string popTest() {
         stringstream message;
         message << "SUCCESS Expected value returned when popped, ";
 
-        if (beforeLength == testList.length() - 1) {
+        if (beforeLength - 1 == testList.length()) {
             message << "and removed from list as expected.";
         } else {
             message << "HOWEVER it was not removed from the list.";
@@ -199,18 +199,35 @@ string replaceTest() {
     LinkedList testList;
 
     // Add a bunch of items to a list.
+    for (int i = 0; i < 5; i++) {
+        testList.append(i + 3);
+    }
     
-
     // Get length.
+    const int beforeLength = testList.length();
 
     // Replace a known index with a new known value.
+    int oldValue = testList.replace(knownIndex, knownValue);
 
     // Get known index and check the value matches.
+    int testValue = testList.get(knownIndex);
 
-    // Compare length.
+    if (testValue == knownValue) {
+        stringstream message;
 
-    return "";
+        message << "SUCCESS Replacing a value appropriately inserts the new value in the given index, ";
+        
+        // Compare length.
+        if (testList.length() == beforeLength) {
+            message << "and removed the old value.";
+        } else {
+            message << "HOWEVER it did not remove the old value.";
+        }
 
+        return message.str();
+    } else {
+        return "FAILED Replacing a value did not insert the new value into the given index.";
+    }
 }
 
 

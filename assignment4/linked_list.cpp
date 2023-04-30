@@ -124,19 +124,6 @@ void LinkedList::insert(int idx, int newValue) {
 
 bool LinkedList::isEmpty() { return _length == 0; }
 
-string LinkedList::peek() {
-    stringstream list;
-
-    Node* current = firstNode;
-
-    while (current != nullptr) {
-        list << current->value << ", ";
-        current = current->next;
-    }
-
-    return list.str();
-}
-
 int LinkedList::pop(int idx) {
     Node* poppedNode = fetchNode(idx);
 
@@ -164,4 +151,24 @@ int LinkedList::replace(int idx, int newValue) {
     currentNode->value = newValue;
 
     return oldValue;
+}
+
+string LinkedList::toString() {
+    stringstream stringList;
+
+    Node* current = firstNode;
+
+    stringList << "[";
+    while (current != nullptr) {
+        stringList << current->value;
+        current = current->next;
+
+        if (current != nullptr) {
+            stringList << ", ";
+        }
+    }
+
+    stringList << "]";
+
+    return stringList.str();
 }
