@@ -25,24 +25,25 @@ class IndexError : public std::exception {
 */
 struct Node {
     int value;
-    Node* next;
-    Node* prev;
+    Node *next;
+    Node *prev;
 };
 
 
 /// @brief A list of unrestricted length.
 class LinkedList {
     private:
-        Node* firstNode;
-        Node* lastNode;
+        Node *firstNode;
+        Node *lastNode;
         int _length;
         
         /**
          * Get the node at the desired index on the list.
          * @param idx Index of the list.
+         * @throws IndexError, if the given index is out of range.
          * @return Pointer to the desired node.
         */
-        Node* fetchNode(int idx);
+        Node *fetchNode(int idx);
 
     public:
         /// @brief Construct an empty list.
@@ -65,7 +66,8 @@ class LinkedList {
         /**
          * Get the value at the desired index. Value remains in the list.
          * @param idx Index to retrieve.
-         * @return The value at the given index. 
+         * @return The value at the given index.
+         * @note Throws IndexError if index is out of range.
         */
         int get(int idx);
 
@@ -73,8 +75,8 @@ class LinkedList {
          * Get the index of a given value in the list.
          * @param value The desired value.
          * @return The index of the given value, if on the list.
-         * @note Returns -1 if value is not on the list.
          * @note Returns index for the first instance of the value on the list.
+         * @note Returns -1 if value is not on the list.
         */
        int index(int value);
 
@@ -83,6 +85,7 @@ class LinkedList {
          * @param idx The index to insert the value at. 
          * @param newValue The value to insert.
          * @return No return value.
+         * @note Throws IndexError if the index is invalid.
         */
         void insert(int idx, int newValue);
 
@@ -102,6 +105,7 @@ class LinkedList {
          * Remove and return the value at the desired index.
          * @param idx The index of the value to remove and return.
          * @return The value at the given index.
+         * @note Throws IndexError if invalid index.
         */
         int pop(int idx);
         
@@ -110,6 +114,7 @@ class LinkedList {
          * @param idx The position to remove, and the new position of the given value.
          * @param newValue The value that will take the position of the previous.
          * @return The old value at the given index.
+         * @note Throws IndexError if index is invalid.
         */
         int replace(int idx, int newValue);
 

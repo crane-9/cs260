@@ -7,6 +7,10 @@
 using namespace std;
 
 
+/**
+ * Tests that the .append() method of the LinkedList adds an item to the back of the list
+ * @return Success/fail message.
+*/
 string appendTest() {
     LinkedList testList;
 
@@ -44,6 +48,10 @@ string appendTest() {
 }
 
 
+/**
+ * Tests that the LinkedList.count() method accurately counts the given value.
+ * @return Success/fail message.
+*/
 string countTest() {
     const int knownValue = 63;
     const int knownAmount = 6;
@@ -75,6 +83,10 @@ string countTest() {
 }
 
 
+/**
+ * Tests that getting an index returns the expected value.
+ * @return Success/fail message.
+*/
 string getTest() {
     LinkedList testList;
     
@@ -99,6 +111,10 @@ string getTest() {
 }
 
 
+/**
+ * Tests that getting the index of a given value behaves as expected.
+ * @return Success/fail message.
+*/
 string indexTest() {
     LinkedList testList;
 
@@ -133,6 +149,10 @@ string indexTest() {
 }
 
 
+/**
+ * Tests that inserting a value places it at the expected location.
+ * @return Success/fail message.
+*/
 string insertTest() {
     LinkedList testList;
 
@@ -161,6 +181,10 @@ string insertTest() {
 }
 
 
+/**
+ * Tests that popping off an index returns the expected value and alters the list.
+ * @return Success/fail message.
+*/
 string popTest() {
     // Add a bunch of items to a list.
     LinkedList testList;
@@ -192,6 +216,10 @@ string popTest() {
 }
 
 
+/**
+ * Tests that the replace method behaves as expected, inserting and removing a value, without changing the list length.
+ * @return Success/fail message.
+*/
 string replaceTest() {
     const int knownIndex = 3;
     const int knownValue = 16;
@@ -231,6 +259,10 @@ string replaceTest() {
 }
 
 
+/**
+ * Tests that IndexError is thrown at the appropriate time.
+ * @return Success/fail message.
+*/
 string indexErrorTest() {
     LinkedList testList;
 
@@ -245,12 +277,12 @@ string indexErrorTest() {
     try {
         mysteryValue = testList.get(testLength + 1);
     } catch (IndexError) {
-        return "SUCCESS Index error thrown as expected.";
+        return "SUCCESS IndexError thrown as expected.";
     }
 
     // No error is not what we want.
     stringstream message;
-    message << "FAILED Index error not thrown as expected. " << mysteryValue << " returned.";
+    message << "FAILED IndexError not thrown as expected. " << mysteryValue << " returned.";
     return message.str();
 }
 

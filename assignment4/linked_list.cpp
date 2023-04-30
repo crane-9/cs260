@@ -22,12 +22,14 @@ LinkedList::LinkedList() {
     _length = 0;
 }
 
-Node* LinkedList::fetchNode(int idx) {
-    Node* currentNode = firstNode;
+Node *LinkedList::fetchNode(int idx) {
+    Node *currentNode = firstNode;
 
+    // Cycle through until the wanted index is reached.
     for (int i = 0; i != idx; i++) {
         currentNode = currentNode->next;
         
+        // Throw error if the index is out of range.
         if (currentNode == nullptr) {
             throw IndexError(idx);
         }
@@ -37,7 +39,7 @@ Node* LinkedList::fetchNode(int idx) {
 }
 
 void LinkedList::append(int newValue) {
-    Node* newNode = new Node{newValue, nullptr, lastNode};
+    Node *newNode = new Node{newValue, nullptr, lastNode};
     
     // Only if there is a node to attach to.
     if (!isEmpty()) {
@@ -53,7 +55,7 @@ void LinkedList::append(int newValue) {
 }
 
 int LinkedList::count(int value) {
-    Node* current = firstNode;
+    Node *current = firstNode;
     int tally = 0;
 
     // Loop through and count every instance of the given value.
@@ -68,12 +70,12 @@ int LinkedList::count(int value) {
 }
 
 int LinkedList::get(int idx) {
-    Node* wantedNode = fetchNode(idx);
+    Node *wantedNode = fetchNode(idx);
     return wantedNode->value;
 }
 
 int LinkedList::index(int value) {
-    Node* current = firstNode;
+    Node *current = firstNode;
     int idx = 0;
 
     // Run through the whole list.
@@ -90,18 +92,11 @@ int LinkedList::index(int value) {
 }
 
 void LinkedList::insert(int idx, int newValue) {
-    Node* nextNode = firstNode;
-
-    for (int i = 0; i < idx; i++) {
-        if (nextNode->next == nullptr) {
-            throw IndexError(idx);
-        }
-
-        nextNode = nextNode->next;
-    }
+    // Get the node currently at `idx`
+    Node *nextNode = fetchNode(idx);
 
     // Build new node.
-    Node* newNode = new Node{newValue, nextNode, nextNode->prev};
+    Node *newNode = new Node{newValue, nextNode, nextNode->prev};
 
     // Link respective nodes to the new node.
     if (newNode->next != nullptr) {
@@ -125,18 +120,20 @@ void LinkedList::insert(int idx, int newValue) {
 bool LinkedList::isEmpty() { return _length == 0; }
 
 int LinkedList::pop(int idx) {
-    Node* poppedNode = fetchNode(idx);
+    Node *poppedNode = fetchNode(idx);
 
-    // Darn your socks
-    Node* previousNode = poppedNode->prev;
-    Node* nextNode = poppedNode->next;
+    // Retrieve adjacent nodes.
+    Node *previousNode = poppedNode->prev;
+    Node *nextNode = poppedNode->next;
 
+    // Close the gap.
     previousNode->next = nextNode;
     nextNode->prev = previousNode;
 
-    // Ding dong ditch
+    // Retrieve the value.
     int value = poppedNode->value;
 
+    // Alter list.
     delete poppedNode;
     _length --;
 
@@ -144,7 +141,7 @@ int LinkedList::pop(int idx) {
 }
 
 int LinkedList::replace(int idx, int newValue) {
-    Node* currentNode = fetchNode(idx);
+    Node *currentNode = fetchNode(idx);
 
     // Swap values
     int oldValue = currentNode->value;
@@ -156,7 +153,7 @@ int LinkedList::replace(int idx, int newValue) {
 string LinkedList::toString() {
     stringstream stringList;
 
-    Node* current = firstNode;
+    Node *current = firstNode;
 
     stringList << "[";
     while (current != nullptr) {
