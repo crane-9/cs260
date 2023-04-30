@@ -22,7 +22,7 @@ class LinkedList {
 ...
 ```
 
-> **Note**: the below snippets refer to a private method of the `LinkedList` class called `fetchNode()`. This method uses a loop to get the desired node at the given index. I created this private method to cut down on repetition.
+> **Note**: The below snippets refer to a private method of the `LinkedList` class called `fetchNode()`. This method uses a loop to get the desired node at the given index. I created this private method to cut down on repetition.
 
 My implementation of an `add()` method is called `insert()`. Here is its implementation in `linked_list.cpp`.
 ```cpp
@@ -87,3 +87,28 @@ int LinkedList::get(int idx) {
     return wantedNode->value;
 }
 ```
+
+---
+## Implementation Complexity Analysis Summary
+
+Below are my complexity analysis results for each function as implemented in `linked_list.cpp`. 
+
+| Method                         | Complexity   |
+|:-------------------------------|:------------:|
+| `IndexError::IndexError()`     | O(1)
+| `IndexError::what()`           | O(1)
+| `LinkedList::LinkedList()`     | O(1)
+| `LinkedList::fetchNode()`      | **O(n)**
+| `LinkedList::append()`         | O(1)
+| `LinkedList::count()`          | **O(n)**
+| `LinkedList::get()`            | **O(n)**
+| `LinkedList::index()`          | **O(n)**
+| `LinkedList::insert()`         | **O(n)**
+| `LinkedList::isEmpty()`        | O(1)
+| `LinkedList::pop()`            | **O(n)**
+| `LinkedList::replace()`        | **O(n)**
+| `LinkedList::toString()`       | * **O(n)**/*O(n²)*
+
+When compared to the [Big-O cheatsheet](https://www.bigocheatsheet.com/), as a doubly-linked list, my implementation complexity looks about right.
+
+*I used a `stringstream` in `LinkedList::toString()`. As mentioned in class, the complexity of a `stringstream`'s `str()` method could be O(n), but that is not known. At best, the complexity is O(n), and at worst, it is O(n²).
