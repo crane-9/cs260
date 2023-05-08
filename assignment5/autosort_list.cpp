@@ -57,6 +57,10 @@ class AutoList {
 
         int length() const { return _len; }
 
+        bool search(int value) {
+            /// sjgldjgdslk
+        }
+
         string toString() {
             stringstream stringList;
 
@@ -76,7 +80,6 @@ class AutoList {
 
             return stringList.str();
         }
-
 };
 
 
