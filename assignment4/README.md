@@ -1,4 +1,4 @@
-# CS 260: Assignment 4: List operations.
+# CS 260: Assignment 4: List operations
 
 I've built a linked list with the following operations:
 - append(value), returns void.
