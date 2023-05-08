@@ -1,120 +1,130 @@
-/**
- * autosort list, following along in class, plus my own edits.
-*/
 #include <iostream>
 #include <sstream>
 #include <string>
 
+#include "autosort_list.h"
+
 using namespace std;
 
 
-struct Node
-{
-    int data;
-    Node* next;
-};
-
-
-class AutoList {
-    private:
-        Node* head;
-        int _len;
-
-    public:
-        AutoList() {
-            head = nullptr;
-            _len = 0;
-        }
-
-        void insert(int data) {
-            cout << toString() << endl;
-
-            Node* newNode = new Node{data, nullptr};
-            _len ++;
-
-            // special cases? i think.
-            if (head == nullptr) {
-                head = newNode;
-                return;
-            } else if (data <= head->data) {
-                newNode->next = head;
-                head = newNode;
-                
-                return;
-            } 
-
-            // surf to find insertion point
-            Node* current = head;
-
-            while (current->next != nullptr && data > current->next->data) {
-                current = current->next;
-            }
-
-            // darn socks
-            newNode->next = current->next;
-            current->next = newNode;
-        }
-
-        int length() const { return _len; }
-
-        bool search(int value) {
-            /// sjgldjgdslk
-        }
-
-        string toString() {
-            stringstream stringList;
-
-            stringList << "[";
-
-            Node* current = head;
-            while (current != nullptr) {
-                stringList << current->data;
-                
-                if (current->next != nullptr) {
-                    stringList << ", ";
-                }
-                current = current->next;
-            }
-
-            stringList << "]";
-
-            return stringList.str();
-        }
-};
-
-
-void shortInsertTest() {
-    AutoList testList;
-
-    cout << testList.toString() << endl;
-
-    testList.insert(15);
-    testList.insert(6);
-    testList.insert(8);
-    testList.insert(2);
-
-    cout << testList.toString() << endl;
+ValueNotFoundError::ValueNotFoundError(int data) {
+    hint = data;
 }
 
 
-void longInsertTest() {
-    AutoList testList;
+string ValueNotFoundError::what() {
+    stringstream message;
+    message << "Value '" << hint << "' not found in list.";
+    return message.str();
+}
 
-    cout << testList.toString() << endl;
 
-    for (int i = 10; i < 20; i ++) {
-        testList.insert(i + 5);
-        testList.insert(i - 5);
+AutoList::AutoList() {
+    head = nullptr;
+    _len = 0;
+}
+
+
+int AutoList::index(int value) {
+    // Start at index 0, head of the list.
+    int idx = 0;
+
+    for (Node *current = head; current != nullptr; current = current->next) {
+        // If data is larger than the value, the value is not in thelist.
+        if (current->data > value) {
+            break;
+        } else if (current->data == value) {  // Value has been found.
+            return idx;
+        }
+
+        // Else, value has not yet been found, but may exist.
+        idx ++;
+    }
+    
+    throw ValueNotFoundError(value);
+}
+
+
+void AutoList::insert(int data) {
+    Node* newNode = new Node{data, nullptr};
+    _len ++;
+
+    // Cases where the new node goes in the front.
+    if (head == nullptr) {
+        // If list was previously empty.
+        head = newNode;
+        return;
+    } else if (data <= head->data) { // Or if the value is already the smallest on the list.
+        newNode->next = head;
+        head = newNode;
+        
+        return;
+    } 
+
+    // surf to find insertion point
+    Node* current = head;
+
+    while (current->next != nullptr && data > current->next->data) {
+        current = current->next;
     }
 
-    cout << testList.toString() << endl;
-    cout << "length: " << testList.length();
+    // darn socks
+    newNode->next = current->next;
+    current->next = newNode;
 }
 
 
-int main() {
-    shortInsertTest();
-    longInsertTest();
-    
-    return 0;
+int AutoList::remove(int value) {
+    Node *current = head;
+
+    while (current != nullptr) {
+        // If data is greater than the given value, value is not going to be in the list.
+        if (current->data > value) {
+            throw ValueNotFoundError(value);
+        
+        // What we are looking for: 
+        } else if (current->next->data == value) {
+            break;
+        }
+
+        current = current->next;
+    }
+
+    // Because there are two loop exit conditions:
+    if (current == nullptr) {
+        throw ValueNotFoundError(value);
+    }
+
+    // Return value
+    int retValue = current->next->data;
+
+    // Prepare to darn socks.
+    Node *newNext = current->next->next;
+    delete current->next;
+
+    current->next = newNext;
+
+    _len --;
+    return retValue; // In the end this is the exact value that was passed as a parameter, but a real database would probably have more to return.
+}
+
+
+string AutoList::toString() {
+    stringstream stringList;
+
+    stringList << "[";
+
+    Node* current = head;
+    while (current != nullptr) {
+        stringList << current->data;
+        
+        if (current->next != nullptr) {
+            stringList << ", ";
+        }
+        current = current->next;
+    }
+
+    stringList << "]";
+
+    return stringList.str();
 }
