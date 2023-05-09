@@ -25,12 +25,12 @@ AutoList::AutoList() {
 }
 
 
-int AutoList::index(int value) {
+int AutoList::index(int value) { // O(n)
     // Start at index 0, head of the list.
     int idx = 0;
 
-    for (Node *current = head; current != nullptr; current = current->next) {
-        // If data is larger than the value, the value is not in thelist.
+    for (Node *current = head; current != nullptr; current = current->next) { // O(n)
+        // If data is larger than the value, the value is not in the list.
         if (current->data > value) {
             break;
         } else if (current->data == value) {  // Value has been found.
@@ -45,7 +45,7 @@ int AutoList::index(int value) {
 }
 
 
-void AutoList::insert(int data) {
+void AutoList::insert(int data) { // O(n)
     Node* newNode = new Node{data, nullptr};
     _len ++;
 
@@ -61,14 +61,13 @@ void AutoList::insert(int data) {
         return;
     } 
 
-    // surf to find insertion point
+    // Surf to find insertion point
     Node* current = head;
 
-    while (current->next != nullptr && data > current->next->data) {
+    while (current->next != nullptr && data > current->next->data) { // O(n)
         current = current->next;
     }
 
-    // darn socks
     newNode->next = current->next;
     current->next = newNode;
 }
@@ -77,7 +76,7 @@ void AutoList::insert(int data) {
 int AutoList::remove(int value) {
     Node *current = head;
 
-    while (current != nullptr) {
+    while (current != nullptr) { // O(n)
         // If data is greater than the given value, value is not going to be in the list.
         if (current->data > value) {
             throw ValueNotFoundError(value);
@@ -98,7 +97,7 @@ int AutoList::remove(int value) {
     // Return value
     int retValue = current->next->data;
 
-    // Prepare to darn socks.
+    // Darn socks.
     Node *newNext = current->next->next;
     delete current->next;
 
@@ -109,7 +108,7 @@ int AutoList::remove(int value) {
 }
 
 
-string AutoList::toString() {
+string AutoList::toString() {  // O(n)
     stringstream stringList;
 
     stringList << "[";
