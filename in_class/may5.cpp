@@ -64,6 +64,14 @@ void inOrderTraversal(Node<int> *root) {
 }
 
 
+void breadthFirstTraversal(Node<int> *root) {
+    // queue children of the root, 
+    // visit children, add those children to the queue.
+    // holy heck
+    
+}
+
+
 // main main driver main do the things here this file is SQUISHED
 int main() {
     Node<int> *leftLeft = new Node<int>{0, nullptr, nullptr};
