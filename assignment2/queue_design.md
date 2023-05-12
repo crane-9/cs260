@@ -66,7 +66,7 @@ In which:
 
 - `enqueue()` shifts the position of `tailIndex` (using `advanceIndex()`). `dequeue()` shifts the position of `frontIndex` (also using `advanceIndex()`).
 
-* `isEmpty` and `isFalse` are set on construction, and altered conditionally on `dequeue()` and `enqueue()`, respectively.
+* `isEmpty` and `isFull` are set on construction, and altered conditionally on `dequeue()` and `enqueue()`, respectively.
     * These are treated as flags to clarify the queue's status in the case that `frontIndex == tailIndex`.
 
 - `length()` is calculated using `frontIndex` and `tailIndex`, unless either `isEmpty` or `isFull` are `true`.
