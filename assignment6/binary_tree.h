@@ -34,7 +34,7 @@ class BSTree {
         /// @brief Count of items in the tree.
         int items;
 
-        bool recurSearch(int value, Node *branch);
+        // bool recurSearch(int value, Node *branch);
 
     public:
         /**
