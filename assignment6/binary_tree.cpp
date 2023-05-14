@@ -2,6 +2,7 @@
 #include <string>
 
 #include "binary_tree.h"
+#include "queue.h"
 
 using namespace std;
 
@@ -123,6 +124,26 @@ string traversals::postOrder(Node *root) {
 }
 
 string traversals::breadthFirst(Node *root) {
-    return "not implemented";
+    // Initialize.
+    stringstream message;
+    LinkedQueue queue;
+    
+    // Add root to queue. 
+    queue.enqueue(root);
+
+    // While queue isn't empty, dequeue, add value to return message, and enqueue children.
+    while (!queue.isEmpty()) {
+        Node *current = queue.dequeue();
+        message << current->value << ", ";
+
+        if (current->left != nullptr) {
+            queue.enqueue(current->left);
+        }
+        if (current->right != nullptr) {
+            queue.enqueue(current->right);
+        }
+    }
+
+    return message.str();
 }
 
