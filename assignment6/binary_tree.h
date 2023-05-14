@@ -34,8 +34,6 @@ class BSTree {
         /// @brief Count of items in the tree.
         int items;
 
-        // bool recurSearch(int value, Node *branch);
-
     public:
         /**
          * Constructs a binary search tree with a root of the given value.
