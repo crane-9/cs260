@@ -47,8 +47,6 @@ class BinaryTree {
 };
 
 
-
-
 // recursive function to traverse the tree.
 /// @note set to type int for simplicity.
 void inOrderTraversal(Node<int> *root) {
