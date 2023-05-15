@@ -63,7 +63,7 @@ void LinkedQueue::enqueue(Node *newData) {
 
 Node *LinkedQueue::peek() {
     if (isEmpty()) {
-        throw EmptyQueueError();        
+        throw EmptyQueueError();
     }
 
     return frontPtr->data; 

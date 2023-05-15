@@ -25,14 +25,39 @@ Node *makePrimitiveTree() {
     return root;
 }
 
-
-int main() {
+void traversalTests() {
     Node* testRoot = makePrimitiveTree();
 
     cout << traversals::preOrder(testRoot) << endl;
     cout << traversals::inOrder(testRoot) << endl;
     cout << traversals::postOrder(testRoot) << endl;
     cout << traversals::breadthFirst(testRoot) << endl;
+}
+
+
+string addTest() {
+    BSTree testTree(3);
+    testTree.add(5);
+
+    cout << testTree.traverseInOrder() << endl;
+
+    testTree.add(0);
+    testTree.add(4);
+
+    cout << testTree.traverseInOrder() << endl;
+
+    // remove function is not working as of current ! OK!
+    testTree.remove(0);
+
+    cout << testTree.traverseInOrder() << endl;
+
+    return "";
+}
+
+
+int main() {
+    traversalTests();
+    addTest();
 
     return 0;
 }

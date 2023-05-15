@@ -34,6 +34,14 @@ class BSTree {
         /// @brief Count of items in the tree.
         int items;
 
+        /**
+         * Finds and returns a node with the given value.
+         * @param value The desired value of the node.
+         * @throws MissingValueError if the given value does not exist in the tree.
+         * @return The first node with the given value.
+        */
+        Node* findByValue(int value);
+
     public:
         /**
          * Constructs a binary search tree with a root of the given value.
@@ -46,6 +54,11 @@ class BSTree {
          * @param value The value to add to the tree.
         */
         void add(int value);
+
+        /**
+         * Getter for root node. Intended for traversals.
+        */
+        Node *getRoot() { return root; }
 
         /**
          * Removes the given value from the tree.
@@ -61,6 +74,30 @@ class BSTree {
          * @return True if present in the tree, false if absent.
         */
         bool search(int value);
+
+        /**
+         * Traverses the tree pre-order.
+         * @return A string of the tree's values pre-order.
+        */
+        std::string traversePreOrder();
+
+        /**
+         * Traverses the tree in-order.
+         * @return A string of the tree's values in-order.
+        */
+        std::string traverseInOrder();
+
+        /**
+         * Traverses the tree post-order.
+         * @return A string of the tree's values post-order.
+        */
+        std::string traversePostOrder();
+
+        /**
+         * Traverses the tree breadth-first.
+         * @return A string of the tree's values breadth-first.
+        */
+        std::string traverseBreadthFirst();
 };
 
 

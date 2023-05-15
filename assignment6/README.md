@@ -2,11 +2,13 @@
 
 ## BST Tests
 
-Basic insertion test--insert values out-of-order, then print the tree and verify that all is well [how to print BST??]
+Basic insertion test--insert values out-of-order, then check that all is well.
 
 Basic removal test--after a tree is populated, remove a value. Check again that all is well. Remove another value, check again.
 
-Basic search test--returns a boolean for whether the given value is in the tree. This could butt heads with the insertion test.
+Basic search test--returns a boolean for whether the given value is in the tree. If insertion does not work as intended, this will not work.
+
+"Checking all is well"--for the time being, this means printing traversal results.
 
 
 ## Traversal tests

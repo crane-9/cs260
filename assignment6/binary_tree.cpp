@@ -1,3 +1,4 @@
+#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -28,24 +29,11 @@ BSTree::BSTree(int _root) {
     items = 1;
 }
 
-
-void BSTree::add(int value) {
-    Node* leaf = new Node{value, nullptr, nullptr};
-
-    // AGH
-}
-
-int BSTree::remove(int value) {
-    return -1;
-}
-
-
-bool BSTree::search(const int value) {
-    // Lambda to call recursively.
-    auto recurSearch = [value] (auto rS, Node *branch) -> bool {
+Node *BSTree::findByValue(const int value) {
+    auto recurSearch = [value] (auto rS, Node *branch) -> Node * {
         // Base case
         if (value == branch->value) {
-            return true;    
+            return branch;   
         } else 
         // Recursive case 1
         if (value < branch->value && branch->left != nullptr) {
@@ -55,11 +43,68 @@ bool BSTree::search(const int value) {
         if (value > branch->value && branch->right != nullptr) {
             return rS(rS, branch->right);
         } else {
-            return false;
+            throw MissingValueError(value);
         }
     };
 
     return recurSearch(recurSearch, root);
+}
+
+
+void BSTree::add(const int value) {
+    Node* leaf = new Node{value, nullptr, nullptr};
+    items ++;
+
+    // basic adding.
+    // recursive lambda that will traverse and eventually connect a new node.
+    auto traverse = [leaf, value] (auto t, Node *branch) -> void {
+        Node **next;
+
+        // decide where .... this code is UGNGLY.
+        if (branch->value > value) {
+            if (branch->left != nullptr) {
+                t(t, branch->left);
+            } else {
+                branch->left = leaf;
+            }
+        } else {
+            if (branch->right != nullptr) {
+                t(t, branch->right);
+            } else {
+                branch->right = leaf;
+            }
+        }
+    };
+
+    // then that's it i think.
+    traverse(traverse, root);
+}
+
+int BSTree::remove(const int value) {
+    Node *desired = findByValue(value);
+
+    // if 1 or more child,
+    if (desired->left != nullptr && desired->right != nullptr) {
+        // find successor
+    }
+
+    int retValue = desired->value;
+    
+    delete desired;
+    items --;
+
+    return retValue;
+}
+
+
+bool BSTree::search(const int value) {
+    try {
+        Node *desired = findByValue(value);
+    } catch (MissingValueError error) {
+        return false;
+    }
+
+    return true;
 }
 
 
@@ -85,6 +130,10 @@ string traversals::preOrder(Node *root) {
     return message.str();
 }
 
+string BSTree::traversePreOrder() {
+    return traversals::preOrder(root);
+}
+
 string traversals::inOrder(Node *root) {
     stringstream message;
 
@@ -104,6 +153,10 @@ string traversals::inOrder(Node *root) {
     return message.str();
 }
 
+string BSTree::traverseInOrder() {
+    return traversals::inOrder(root);
+}
+
 string traversals::postOrder(Node *root) {
     stringstream message;
 
@@ -121,6 +174,10 @@ string traversals::postOrder(Node *root) {
 
     order(order, root);
     return message.str();
+}
+
+string BSTree::traversePostOrder() {
+    return traversals::postOrder(root);
 }
 
 string traversals::breadthFirst(Node *root) {
@@ -147,3 +204,6 @@ string traversals::breadthFirst(Node *root) {
     return message.str();
 }
 
+string BSTree::traverseBreadthFirst() {
+    return traversals::breadthFirst(root);
+}
