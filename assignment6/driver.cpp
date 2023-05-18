@@ -41,15 +41,19 @@ string addTest() {
 
     cout << testTree.traverseInOrder() << endl;
 
-    testTree.add(0);
+    testTree.add(1);
     testTree.add(4);
 
     cout << testTree.traverseInOrder() << endl;
 
     // remove function is not working as of current ! OK!
-    testTree.remove(0);
+    // testTree.search(3);
 
-    cout << testTree.traverseInOrder() << endl;
+    cout << testTree.search(0) << endl;
+    cout << testTree.search(3) << endl;
+    cout << testTree.search(7) << endl;
+
+    cout << testTree.remove(1) << endl;
 
     return "";
 }

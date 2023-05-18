@@ -81,16 +81,49 @@ void BSTree::add(const int value) {
 }
 
 int BSTree::remove(const int value) {
-    Node *desired = findByValue(value);
+    // actually, i need to get the parent node of the removed node!
+    Node *current, *parent;
 
-    // if 1 or more child,
-    if (desired->left != nullptr && desired->right != nullptr) {
-        // find successor
+    current = root;
+    parent = nullptr;
+    while (current != nullptr) {
+        if (current->value == value) {
+            break;
+        }
+
+        parent = current;
+        
+        if (current->value > value) {
+            current = current->left;
+        } else if (current->value < value) {
+            current = current->right;
+        }
     }
 
-    int retValue = desired->value;
+    // not found
+    if (current == nullptr) {
+        throw MissingValueError(value);
+    }
+
+    if (parent != nullptr) {
+        // detach from parent
+        if (current->value < parent->value) {
+            parent->left = nullptr;
+        } else {
+            parent->right = nullptr;
+        }
+    }
+
+    // if 1 or more child, find successor, attach successor to parent...
+    if (current->left != nullptr && current->right != nullptr) {
+    }
+
+    // if parent is nullptr, then set new root
+
+    // return desired value, delete current node.
+    int retValue = current->value;
     
-    delete desired;
+    delete current;
     items --;
 
     return retValue;
@@ -108,12 +141,29 @@ bool BSTree::search(const int value) {
 }
 
 
+string BSTree::traversePreOrder() {
+    return traversals::preOrder(root);
+}
+
+string BSTree::traverseInOrder() {
+    return traversals::inOrder(root);
+}
+
+string BSTree::traversePostOrder() {
+    return traversals::postOrder(root);
+}
+
+string BSTree::traverseBreadthFirst() {
+    return traversals::breadthFirst(root);
+}
+
+
 // Traversal implementations
 
 string traversals::preOrder(Node *root) {
     stringstream message;
 
-    // Recursive lambda, captures output stringstream.
+    // Recursive lambda, captures outputs to stringstream.
     auto order = [&message] (auto o, Node *branch) -> void {
         message << branch->value << ", ";
 
@@ -130,13 +180,10 @@ string traversals::preOrder(Node *root) {
     return message.str();
 }
 
-string BSTree::traversePreOrder() {
-    return traversals::preOrder(root);
-}
-
 string traversals::inOrder(Node *root) {
     stringstream message;
 
+    // Recursive lambda
     auto order = [&message] (auto o, Node *branch) -> void {
         if (branch->left != nullptr) {
             o(o, branch->left);
@@ -151,10 +198,6 @@ string traversals::inOrder(Node *root) {
 
     order(order, root);
     return message.str();
-}
-
-string BSTree::traverseInOrder() {
-    return traversals::inOrder(root);
 }
 
 string traversals::postOrder(Node *root) {
@@ -174,10 +217,6 @@ string traversals::postOrder(Node *root) {
 
     order(order, root);
     return message.str();
-}
-
-string BSTree::traversePostOrder() {
-    return traversals::postOrder(root);
 }
 
 string traversals::breadthFirst(Node *root) {
@@ -202,8 +241,4 @@ string traversals::breadthFirst(Node *root) {
     }
 
     return message.str();
-}
-
-string BSTree::traverseBreadthFirst() {
-    return traversals::breadthFirst(root);
 }

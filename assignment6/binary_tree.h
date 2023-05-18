@@ -56,11 +56,6 @@ class BSTree {
         void add(int value);
 
         /**
-         * Getter for root node. Intended for traversals.
-        */
-        Node *getRoot() { return root; }
-
-        /**
          * Removes the given value from the tree.
          * @param value Value to remove from the tree.
          * @throws MissingValueError, if the given value cannot be found in the tree.
