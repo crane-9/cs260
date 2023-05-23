@@ -15,7 +15,7 @@ Hashtable::Hashtable(int initCapacity) {
 }
 
 Hashtable::~Hashtable() {
-
+    delete[] values;
 }
 
 int Hashtable::hash(string key) {
@@ -51,8 +51,8 @@ string Hashtable::find(string value) {
 string Hashtable::remove(string value) {
     int idx = hash(value);
 
-    if (values[idx] != value) {
-        return "FAILED!";
+    if (values[idx] != value && values[idx] != "") {
+        return "collision!";
     }
 
     string result = values[idx];

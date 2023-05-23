@@ -53,7 +53,7 @@ Node *BSTree::findByValue(const int value) {
 
 void BSTree::add(const int value) {
     Node* leaf = new Node{value, nullptr, nullptr};
-    items ++;
+    ++items;
 
     // basic adding.
     // recursive lambda that will traverse and eventually connect a new node.
@@ -114,17 +114,33 @@ int BSTree::remove(const int value) {
         }
     }
 
-    // if 1 or more child, find successor, attach successor to parent...
+    // if 2 children
     if (current->left != nullptr && current->right != nullptr) {
-    }
+        // IF PARENT:
+        //  decide which one is an appropriate successor in relation to the parent node
+        //  make connection to parent
+        //  make sibling the parent
 
-    // if parent is nullptr, then set new root
+        // IF PARENT IS NULLPTR:
+        //  uhhh default successor comes from the right.
+        //  make new root.
+        //  make sibling child.
+    } else 
+    // if 1 child
+    if (current->left != nullptr || current->right != nullptr) {
+        // IF PARENT:
+        //  find it and make it the successor to the parent node.
+        //  make sibling child
+
+        // IF PARENT IS NULLPTR:
+        //  find it and make it new root
+    }
 
     // return desired value, delete current node.
     int retValue = current->value;
     
     delete current;
-    items --;
+    --items;
 
     return retValue;
 }
