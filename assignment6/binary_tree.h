@@ -27,9 +27,6 @@ class BSTree {
     private:
         /// @brief Root of the tree.
         Node* root;
-        
-        /// @brief Depth of the tree, root level at 0.
-        int depth;
 
         /// @brief Count of items in the tree.
         int items;
@@ -69,6 +66,12 @@ class BSTree {
          * @return True if present in the tree, false if absent.
         */
         bool search(int value);
+
+        /**
+         * Getter method for the number of items on a tree.
+         * @return Integer for number of items in a tree.  
+        */
+        int size() const { return items; }
 
         /**
          * Traverses the tree pre-order.

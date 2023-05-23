@@ -25,11 +25,10 @@ string MissingValueError::what() {
 BSTree::BSTree(int _root) {
     root = new Node{_root, nullptr, nullptr};
     
-    depth = 0;
     items = 1;
 }
 
-Node *BSTree::findByValue(const int value) {
+Node *BSTree::findByValue(const int value) { // O(logn)
     auto recurSearch = [value] (auto rS, Node *branch) -> Node * {
         // Base case
         if (value == branch->value) {
@@ -51,16 +50,16 @@ Node *BSTree::findByValue(const int value) {
 }
 
 
-void BSTree::add(const int value) {
+void BSTree::add(const int value) { // O(logn) ?
+    // O(1)
     Node* leaf = new Node{value, nullptr, nullptr};
-    ++items;
+    ++items; 
 
-    // basic adding.
-    // recursive lambda that will traverse and eventually connect a new node.
-    auto traverse = [leaf, value] (auto t, Node *branch) -> void {
+    // Recursive traversal.
+    auto traverse = [leaf, value] (auto t, Node *branch) -> void { // O(logn)
         Node **next;
 
-        // decide where .... this code is UGNGLY.
+        // Decides where to place the new node.
         if (branch->value > value) {
             if (branch->left != nullptr) {
                 t(t, branch->left);
@@ -76,17 +75,18 @@ void BSTree::add(const int value) {
         }
     };
 
-    // then that's it i think.
     traverse(traverse, root);
 }
 
-int BSTree::remove(const int value) {
-    // actually, i need to get the parent node of the removed node!
-    Node *current, *parent;
+int BSTree::remove(const int value) { // O(logn)
+    // O(1)
+    Node *current, *parent, *successor;
+    bool isRightChild; // Variable indicates current's relationship to parent.
 
+    // Find desired node.
     current = root;
     parent = nullptr;
-    while (current != nullptr) {
+    while (current != nullptr) { // O(logn)
         if (current->value == value) {
             break;
         }
@@ -95,48 +95,45 @@ int BSTree::remove(const int value) {
         
         if (current->value > value) {
             current = current->left;
+            isRightChild = false;
         } else if (current->value < value) {
             current = current->right;
+            isRightChild = true;
         }
     }
 
-    // not found
+    // O(1) from here
+    // Not found.
     if (current == nullptr) {
         throw MissingValueError(value);
     }
-
-    if (parent != nullptr) {
-        // detach from parent
-        if (current->value < parent->value) {
-            parent->left = nullptr;
-        } else {
-            parent->right = nullptr;
+    
+    // Pick a successor--defaults to right child.
+    if (current->right != nullptr) {
+        successor = current->right;
+        
+        // Move sibling node.
+        if (current->left != nullptr) {
+            /* I can't figure this out, I need recursion and 
+            to restructure the rest of this method. */
         }
+
+    } else if (current->left != nullptr) {
+        successor = current->left;
+    } else {
+        successor = nullptr;
     }
 
-    // if 2 children
-    if (current->left != nullptr && current->right != nullptr) {
-        // IF PARENT:
-        //  decide which one is an appropriate successor in relation to the parent node
-        //  make connection to parent
-        //  make sibling the parent
-
-        // IF PARENT IS NULLPTR:
-        //  uhhh default successor comes from the right.
-        //  make new root.
-        //  make sibling child.
-    } else 
-    // if 1 child
-    if (current->left != nullptr || current->right != nullptr) {
-        // IF PARENT:
-        //  find it and make it the successor to the parent node.
-        //  make sibling child
-
-        // IF PARENT IS NULLPTR:
-        //  find it and make it new root
+    // Attach successor to parent
+    if (parent == nullptr) {
+        root = successor;
+    } else if (isRightChild) {
+        parent->right = successor;
+    } else {
+        parent->left = successor;
     }
 
-    // return desired value, delete current node.
+    // Return desired value, delete current node.
     int retValue = current->value;
     
     delete current;
@@ -146,9 +143,9 @@ int BSTree::remove(const int value) {
 }
 
 
-bool BSTree::search(const int value) {
+bool BSTree::search(const int value) { // O(logn)
     try {
-        Node *desired = findByValue(value);
+        Node *desired = findByValue(value); // O(logn)
     } catch (MissingValueError error) {
         return false;
     }
@@ -175,6 +172,7 @@ string BSTree::traverseBreadthFirst() {
 
 
 // Traversal implementations
+// I believe they should all be O(n)?
 
 string traversals::preOrder(Node *root) {
     stringstream message;
