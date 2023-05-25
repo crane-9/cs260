@@ -83,7 +83,7 @@ class Hashtable {
         string remove(string data);
 
         /**
-         * Searches for a value within the table. Throws no errors.
+         * Checks if a given value is present within the table.
          * @param data Value to search the table for.
          * @return True if the given data is present.
         */

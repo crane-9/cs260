@@ -68,6 +68,22 @@ string positionTest(Hashtable *ht) {
     return failDebugMessage(ht, "Position method not behaving as expected.");
 }
 
+/// @brief Tests collisions using anagrams. 
+string anagramTest(Hashtable *ht) {
+    string anagrams[] = {"points", "pinots", "piston"};
+    
+    stringstream message;
+    
+    message << "Initial: " << ht->display() << "\n";
+
+    for (string word : anagrams) {
+        ht->insert(word);
+        message << "After '" << word << "': " << ht->display() << "\n";
+    }
+    
+    return message.str();
+}
+
 
 int main() {
     Hashtable *table = new Hashtable;
@@ -76,6 +92,8 @@ int main() {
     cout << searchTest(table) << endl;
     cout << removalTest(table) << endl;
     cout << positionTest(table) << endl;
+
+    cout << anagramTest(table) << endl;
 
     return 0;
 }
