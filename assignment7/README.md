@@ -27,7 +27,7 @@ return value % capacity;
 
 In `driver.cpp`, I'll test each of my main methods.
 
-First, I'll test that the insert method works. In order to avoid using the `search()` method (which could validate the present of a value, but is not yet tested), I'll implement a `print()` method within the hashtable class for the sake of debugging. After manually adding a value, I'll print and manually assure it's there.
+First, I'll test that the `insert()` method works. In order to avoid using the `search()` method (which could validate the present of a value, but is not yet tested), I'll implement a `print()` method within the hashtable class for the sake of debugging. After manually adding a value, I'll print and manually assure it's there.
 
 Next, I can use `search()` and see if it agrees. Then once `search()` works, I'll use `remove()`. I will use `remove()` twice to ensure it raises the expected error.
 

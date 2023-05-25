@@ -43,10 +43,10 @@ class Hashtable {
         ~Hashtable();
 
         /**
-         * Displays the current table by printing it to terminal.
-         * @return No return value, only prints..... for now.
+         * Returns the current table as a string.
+         * @return All items on the table, listed in order.
         */
-        void display();
+        string display();
 
         /**
          * Getter for the table's total capacity.

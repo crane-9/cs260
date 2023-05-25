@@ -1,10 +1,13 @@
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include "hashtable.h"
 
-using std::cout, std::endl, std::string;
+using std::cout, std::endl, std::string, std::stringstream;
 
+
+// Error implementations.
 
 DataNotFound::DataNotFound(string data) {
     hint = data;
@@ -15,12 +18,14 @@ string DataNotFound::what() {
 }
 
 
+// Hashtable implementations.
+
 Hashtable::Hashtable() {
     size = 0;
 }
 
 Hashtable::~Hashtable() {
-    delete table;
+    delete [] &table;
 }
 
 int Hashtable::hash(string data) {
@@ -33,11 +38,30 @@ int Hashtable::hash(string data) {
     return value % capacity;
 }
 
-void Hashtable::display() {
-    for (string data : table) {
-        cout << data;
+string Hashtable::display() {
+    // Guard claus--save the effort.
+    if (size == 0) {
+        return "[ Empty hashtable. ]";
     }
-    cout << endl;
+    
+    stringstream stream;
+    string data;
+    for (string data : table) {
+
+        // Skip if there's no data.
+        if (data == "") {
+            continue;
+        }
+
+        // Unless this is the first item to print, add delimiter.
+        if (stream.tellp() != 0) {  // would it be more efficient to just have a bool flag variable?
+            stream << ", ";
+        }
+
+        stream << data;
+    }
+
+    return stream.str();
 }
 
 void Hashtable::insert(string data) {
@@ -45,6 +69,7 @@ void Hashtable::insert(string data) {
 
     // THIS OVERWRITES RIGHT NOW!
     table[idx] = data;
+    ++size;
 }
 
 string Hashtable::position(int index) {
@@ -57,16 +82,18 @@ string Hashtable::position(int index) {
 }
 
 string Hashtable::remove(string data) {
+    // Get data.
     int idx = hash(data);
-
     string value = table[idx];
 
+    // Verify data is as expected.
     if (value != data) {
         throw DataNotFound(data);
     }
 
+    // Empty and return.
     table[idx] = EMPTY;
-
+    --size;
     return value;
 }
 
