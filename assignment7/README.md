@@ -1,6 +1,12 @@
 # CS 260: Assignment 7: Hashtable
 
-## Design
+I have a simple hashtable and advanced hashtable. Each in their own header/implementation files, but sharing a driver.
+
+## Designs
+
+### SimpleHash
+
+>`simplehash.cpp` and `simplehash.h`
 
 My design is for a simple array-based hashtable, which stores strings. Currently, collisions are handled by overwriting the previous data, and the single hash method is very simple.  
 
@@ -22,10 +28,21 @@ for (char i : data) {
 return value % capacity;
 ```
 
+### Advanced hash
+
+> `hashtable.h` and `hashtable.cpp`
+
+My design for my advanced hashtable builds directly off the simple hashtable. The key difference being that it handles collisions by double-hashing.
+
+On `insert()`, double hash will be used to find a space that is empty.
+
+On `search()` and `remove()`, double hash will be used to find a space that is equal to the given value. I will also need to account for and consider preventing the hashing from going on forever and detecting a full table, or fruitless search. (math stuff my brain isn't getting yet)
+
+
 
 ### Tests
 
-In `driver.cpp`, I'll test each of my main methods.
+> `driver.cpp`
 
 First, I'll test that the `insert()` method works. In order to avoid using the `search()` method (which could validate the present of a value, but is not yet tested), I'll implement a `print()` method within the hashtable class for the sake of debugging. After manually adding a value, I'll print and manually assure it's there.
 
@@ -33,7 +50,10 @@ Next, I can use `search()` and see if it agrees. Then once `search()` works, I'l
 
 Finally, I have `position()`, which I may still remove. But in the case of testing, I'll `insert()` a value with an expected index, and check that the same value is returned by calling `position()` with said known index.
 
+For the advanced hash class, I'll have an additional test for handling collisions. Once I figure out how I want to handle collisions.
 
+
+---
 ## Applications
 
 A hashtable reminds me of a player inventory in a video game. It has a limited number of spaces, and is easy/efficient to access/search/remove. 

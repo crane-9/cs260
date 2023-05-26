@@ -2,7 +2,7 @@
 #include <sstream>
 #include <string>
 
-#include "hashtable.h"
+#include "simplehash.h"
 
 using namespace std;
 
@@ -13,7 +13,7 @@ using namespace std;
  * @param info Debug message.
  * @return Error message with the given message and table contents. 
 */
-string failDebugMessage(Hashtable *ht, string info) {
+string failDebugMessage(SimpleHash *ht, string info) {
     stringstream message;
 
     message << "FAILED " << info << " ";
@@ -24,7 +24,7 @@ string failDebugMessage(Hashtable *ht, string info) {
 
 
 /// @brief Tests insertion, returns pass/fail message.
-string insertionTest(Hashtable *ht) {
+string insertionTest(SimpleHash *ht) {
     ht->insert("broccoli");
     ht->insert("tomato");
 
@@ -35,7 +35,7 @@ string insertionTest(Hashtable *ht) {
 }
 
 /// @brief Tests search, returns pass/fail message. 
-string searchTest(Hashtable *ht) {
+string searchTest(SimpleHash *ht) {
     if (ht->search("tomato")) {
         return "PASSED Tomato on the table.";
     }
@@ -43,7 +43,7 @@ string searchTest(Hashtable *ht) {
 }
 
 /// @brief Tests removal, returns pass/fail message. 
-string removalTest(Hashtable *ht) {
+string removalTest(SimpleHash *ht) {
     ht->remove("broccoli");
     try {
         ht->remove("broccoli");
@@ -54,7 +54,7 @@ string removalTest(Hashtable *ht) {
 }
 
 /// @brief Tests get by position, returns pass/fail message. 
-string positionTest(Hashtable *ht) {
+string positionTest(SimpleHash *ht) {
     bool test;
     try {
         test = ht->position(4) == "tomato";
@@ -69,7 +69,7 @@ string positionTest(Hashtable *ht) {
 }
 
 /// @brief Tests collisions using anagrams. 
-string anagramTest(Hashtable *ht) {
+string anagramTest(SimpleHash *ht) {
     string anagrams[] = {"points", "pinots", "piston"};
     
     stringstream message;
@@ -86,7 +86,7 @@ string anagramTest(Hashtable *ht) {
 
 
 int main() {
-    Hashtable *table = new Hashtable;
+    SimpleHash *table = new SimpleHash;
 
     cout << insertionTest(table) << endl;
     cout << searchTest(table) << endl;

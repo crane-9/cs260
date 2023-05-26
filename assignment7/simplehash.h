@@ -6,7 +6,7 @@
 using std::string;
 
 
-/// @brief An error to throw on Hashtable::remove() if the given data is not found on the table.
+/// @brief An error to throw on SimpleHash::remove() if the given data is not found on the table.
 class DataNotFound : public std::exception {
     private:
         string hint;
@@ -20,7 +20,7 @@ class DataNotFound : public std::exception {
 
 
 /// @brief A simple hashtable.
-class Hashtable {
+class SimpleHash {
     private:
         const char *EMPTY = "";
         static const int capacity = 16;
@@ -28,25 +28,19 @@ class Hashtable {
         
         int size;
 
-        /// @brief First hash function.
-        int hash1(string data);
-
-        /// @brief Second hash function.
-        int hash2(string data);
-
         /**
          * Private hash method for hashing data.
          * @param data The string to hash.
          * @return Hashed value -- an index on the table.
         */
-        int doubleHash(string data);
+        int hash(string data);
 
     public:
         /// @brief Constructs an empty hashtable.
-        Hashtable();
+        SimpleHash();
 
         /// @brief Deconstructs hashtable.
-        ~Hashtable();
+        ~SimpleHash();
 
         /**
          * Returns the current table as a string.

@@ -2,7 +2,7 @@
 #include <sstream>
 #include <string>
 
-#include "hashtable.h"
+#include "simplehash.h"
 
 using std::cout, std::endl, std::string, std::stringstream;
 
@@ -20,44 +20,25 @@ string DataNotFound::what() {
 
 // Hashtable implementations.
 
-Hashtable::Hashtable() {
+SimpleHash::SimpleHash() {
     size = 0;
 }
 
-Hashtable::~Hashtable() {
+SimpleHash::~SimpleHash() {
     delete [] &table;
 }
 
-int Hashtable::hash1(string data) {
+int SimpleHash::hash(string data) {
     int value;
 
     for (char i : data) {
         value += i;
     }
-    return value;
+
+    return value % capacity;
 }
 
-int Hashtable::hash2(string data) {
-
-}
-
-int Hashtable::doubleHash(string data) {
-    int value; // Eventual return value.
-
-    int h1 = hash1(data);
-    int h2 = hash2(data);
-
-    int i = 0;
-    do {
-        value = (h1 + i * h2) % capacity;
-        ++i;
-    } while (table[value] != "" || table[value] != data); // this doesn't work actually, as the condition changes between insert and search/remove. hm
-    // also what about when `i` leaves valid table range?
-
-    return value;
-}
-
-string Hashtable::display(const bool showEmpty) {
+string SimpleHash::display(const bool showEmpty) {
     // Guard claus--save the effort.
     if (size == 0) {
         return "[ Empty hashtable. ]";
@@ -86,15 +67,15 @@ string Hashtable::display(const bool showEmpty) {
     return stream.str();
 }
 
-void Hashtable::insert(string data) {
-    int idx = doubleHash(data);
+void SimpleHash::insert(string data) {
+    int idx = hash(data);
 
     // THIS OVERWRITES RIGHT NOW!
     table[idx] = data;
     ++size;
 }
 
-string Hashtable::position(int index) {
+string SimpleHash::position(int index) {
     if (index >= capacity) { 
         throw DataNotFound("Index " + std::to_string(index));
     }
@@ -103,9 +84,9 @@ string Hashtable::position(int index) {
     return table[index];
 }
 
-string Hashtable::remove(string data) {
+string SimpleHash::remove(string data) {
     // Get data.
-    int idx = doubleHash(data);
+    int idx = hash(data);
     string value = table[idx];
 
     // Verify data is as expected.
@@ -119,8 +100,8 @@ string Hashtable::remove(string data) {
     return value;
 }
 
-bool Hashtable::search(string data) {
-    int idx = doubleHash(data);
+bool SimpleHash::search(string data) {
+    int idx = hash(data);
     string value = table[idx];
 
     return value == data;
