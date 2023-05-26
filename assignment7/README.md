@@ -28,6 +28,7 @@ for (char i : data) {
 return value % capacity;
 ```
 
+
 ### Advanced hash
 
 > `hashtable.h` and `hashtable.cpp`
@@ -37,7 +38,6 @@ My design for my advanced hashtable builds directly off the simple hashtable. Th
 On `insert()`, double hash will be used to find a space that is empty.
 
 On `search()` and `remove()`, double hash will be used to find a space that is equal to the given value. I will also need to account for and consider preventing the hashing from going on forever and detecting a full table, or fruitless search. (math stuff my brain isn't getting yet)
-
 
 
 ### Tests
