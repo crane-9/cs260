@@ -68,6 +68,12 @@ class Hashtable {
         void insert(string data);
 
         /**
+         * Checks if the table is full.
+         * @return True if full, false if there are open spaces.
+        */
+        bool isFull() const { return size == capacity; }
+
+        /**
          * Returns data from the given index.
          * @param index Desired index.
          * @return The value at the given index. 
