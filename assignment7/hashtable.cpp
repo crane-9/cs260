@@ -38,7 +38,7 @@ int Hashtable::hash(string data) {
     return value % capacity;
 }
 
-string Hashtable::display() {
+string Hashtable::display(const bool showEmpty) {
     // Guard claus--save the effort.
     if (size == 0) {
         return "[ Empty hashtable. ]";
@@ -46,19 +46,22 @@ string Hashtable::display() {
     
     stringstream stream;
     string data;
+    bool emptyStream = true;
     for (string data : table) {
 
-        // Skip if there's no data.
+        // Skip or replace if there's no data.
         if (data == "") {
-            continue;
+            if (!showEmpty) { continue; }
+            data = "__";  // Visual indication of blank space.
         }
 
         // Unless this is the first item to print, add delimiter.
-        if (stream.tellp() != 0) {  // would it be more efficient to just have a bool flag variable?
+        if (!emptyStream) {
             stream << ", ";
         }
 
         stream << data;
+        emptyStream = false;
     }
 
     return stream.str();

@@ -44,9 +44,10 @@ class Hashtable {
 
         /**
          * Returns the current table as a string.
+         * @param showEmpty False by default. True includes empty spaces for debug.
          * @return All items on the table, listed in order.
         */
-        string display();
+        string display(const bool showEmpty = false);
 
         /**
          * Getter for the table's total capacity.
@@ -71,7 +72,7 @@ class Hashtable {
          * Checks if the table is full.
          * @return True if full, false if there are open spaces.
         */
-        bool isFull() const { return size == capacity; }
+        inline bool isFull() { return size == capacity; }
 
         /**
          * Returns data from the given index.

@@ -78,7 +78,7 @@ string anagramTest(Hashtable *ht) {
 
     for (string word : anagrams) {
         ht->insert(word);
-        message << "After '" << word << "': " << ht->display() << "\n";
+        message << "After '" << word << "': " << ht->display(true) << "\n";
     }
     
     return message.str();

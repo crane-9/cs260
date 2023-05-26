@@ -11,6 +11,8 @@
 
 #include <time.h>
 
+#include <cctype>
+
 using namespace std;
 
 // 04 07 2023
@@ -145,6 +147,17 @@ void loopTest() {
 }
 
 
+// 05 25 2023
+void charEval() {
+    char ch1{'a'}, ch2{'!'}, ch3{'3'}, ch4{'G'};
+
+    cout << isalpha(ch1) << endl;
+    cout << isalpha(ch2) << endl;
+    cout << isalpha(ch3) << endl;
+    cout << isalpha(ch4) << endl;
+}
+
+
 int main(int argc, char* argv[]) {
     // srand(time(NULL));
 
@@ -160,7 +173,9 @@ int main(int argc, char* argv[]) {
 
     // errorTest();
 
-    loopTest();
+    // loopTest();
+
+    charEval();
 
     return 0;
 }
