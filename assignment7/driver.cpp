@@ -2,6 +2,8 @@
 #include <sstream>
 #include <string>
 
+#include "error.h"
+#include "hashtable.h"
 #include "simplehash.h"
 
 using namespace std;
@@ -13,7 +15,8 @@ using namespace std;
  * @param info Debug message.
  * @return Error message with the given message and table contents. 
 */
-string failDebugMessage(SimpleHash *ht, string info) {
+template <typename T>
+string failDebugMessage(T *ht, string info) {
     stringstream message;
 
     message << "FAILED " << info << " ";
@@ -24,7 +27,8 @@ string failDebugMessage(SimpleHash *ht, string info) {
 
 
 /// @brief Tests insertion, returns pass/fail message.
-string insertionTest(SimpleHash *ht) {
+template <typename T>
+string insertionTest(T *ht) {
     ht->insert("broccoli");
     ht->insert("tomato");
 
@@ -35,7 +39,8 @@ string insertionTest(SimpleHash *ht) {
 }
 
 /// @brief Tests search, returns pass/fail message. 
-string searchTest(SimpleHash *ht) {
+template <typename T>
+string searchTest(T *ht) {
     if (ht->search("tomato")) {
         return "PASSED Tomato on the table.";
     }
@@ -43,7 +48,8 @@ string searchTest(SimpleHash *ht) {
 }
 
 /// @brief Tests removal, returns pass/fail message. 
-string removalTest(SimpleHash *ht) {
+template <typename T>
+string removalTest(T *ht) {
     ht->remove("broccoli");
     try {
         ht->remove("broccoli");
@@ -54,7 +60,8 @@ string removalTest(SimpleHash *ht) {
 }
 
 /// @brief Tests get by position, returns pass/fail message. 
-string positionTest(SimpleHash *ht) {
+template <typename T>
+string positionTest(T *ht) {
     bool test;
     try {
         test = ht->position(4) == "tomato";
@@ -69,12 +76,13 @@ string positionTest(SimpleHash *ht) {
 }
 
 /// @brief Tests collisions using anagrams. 
-string anagramTest(SimpleHash *ht) {
+template <typename T>
+string anagramTest(T *ht) {
     string anagrams[] = {"points", "pinots", "piston"};
     
     stringstream message;
     
-    message << "Initial: " << ht->display() << "\n";
+    message << "Initial: " << ht->display(true) << "\n";
 
     for (string word : anagrams) {
         ht->insert(word);
@@ -85,8 +93,11 @@ string anagramTest(SimpleHash *ht) {
 }
 
 
-int main() {
+/// @brief Tests SimpleHash class.
+void testSimpleHash() {
     SimpleHash *table = new SimpleHash;
+
+    cout << "! SIMPLE HASH TESTS:" << endl;
 
     cout << insertionTest(table) << endl;
     cout << searchTest(table) << endl;
@@ -94,6 +105,26 @@ int main() {
     cout << positionTest(table) << endl;
 
     cout << anagramTest(table) << endl;
+}
+
+
+/// @brief Tests doublehashing, Hashtable class.
+void testDoubleHash() {
+    Hashtable *table = new Hashtable;
+
+    cout << "! DOUBLE HASH TESTS:" << endl;
+
+    cout << insertionTest(table) << endl;
+    cout << searchTest(table) << endl;
+    cout << removalTest(table) << endl;
+    cout << positionTest(table) << endl;
+
+    cout << anagramTest(table) << endl;
+}
+
+int main() {
+    testSimpleHash();
+    testDoubleHash();
 
     return 0;
 }

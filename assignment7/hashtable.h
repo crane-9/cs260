@@ -6,19 +6,6 @@
 using std::string;
 
 
-/// @brief An error to throw on Hashtable::remove() if the given data is not found on the table.
-class DataNotFound : public std::exception {
-    private:
-        string hint;
-
-    public:
-        DataNotFound(string data);
-
-        /// @brief Error message.
-        string what();
-};
-
-
 /// @brief A simple hashtable.
 class Hashtable {
     private:
@@ -35,11 +22,21 @@ class Hashtable {
         int hash2(string data);
 
         /**
-         * Private hash method for hashing data.
+         * Private hash method for hashing calculation.
          * @param data The string to hash.
+         * @param i Doublehash iteration.
          * @return Hashed value -- an index on the table.
         */
-        int doubleHash(string data);
+        int doubleHash(string data, int i = 0);
+
+        /**
+         * Finds the index of the desired data. For use within search() and remove().
+         * @param data Desired data.
+         * @param target Content of the desired index. Expected EMPTY or data.
+         * @return The data's index within the hashtable.
+         * @throws DataNotFound if data is absent.
+        */
+        int findIndexOf(string data, string target);
 
     public:
         /// @brief Constructs an empty hashtable.

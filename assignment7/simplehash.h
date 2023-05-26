@@ -1,22 +1,11 @@
-#ifndef HASH_HEADER
-#define HASH_HEADER
+#ifndef SIMPLE_HASH_HEADER
+#define SIMPLE_HASH_HEADER
 
 #include <string>
 
+#include "error.h"
+
 using std::string;
-
-
-/// @brief An error to throw on SimpleHash::remove() if the given data is not found on the table.
-class DataNotFound : public std::exception {
-    private:
-        string hint;
-
-    public:
-        DataNotFound(string data);
-
-        /// @brief Error message.
-        string what();
-};
 
 
 /// @brief A simple hashtable.

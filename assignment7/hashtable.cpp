@@ -3,22 +3,10 @@
 #include <string>
 
 #include "hashtable.h"
+#include "error.h"
 
-using std::cout, std::endl, std::string, std::stringstream;
+using std::string, std::stringstream;
 
-
-// Error implementations.
-
-DataNotFound::DataNotFound(string data) {
-    hint = data;
-}
-
-string DataNotFound::what() {
-    return "'" + hint + "' was not found in the hashtable.";
-}
-
-
-// Hashtable implementations.
 
 Hashtable::Hashtable() {
     size = 0;
@@ -28,37 +16,45 @@ Hashtable::~Hashtable() {
     delete [] &table;
 }
 
-int Hashtable::hash1(string data) {
+int Hashtable::hash1(string data) { // output range of [0 - capacity-1]
     int value;
 
     for (char i : data) {
         value += i;
     }
-    return value;
+    return value % capacity;
 }
 
-int Hashtable::hash2(string data) {
+int Hashtable::hash2(string data) { 
+    int value;
 
+    for (int i = 1; i <= data.size(); ++i) {
+        value += i * data[i];
+    }
+    return value % (capacity - 1) + 1; // output range of [1 - capacity-1]
 }
 
-int Hashtable::doubleHash(string data) {
-    int value; // Eventual return value.
+int Hashtable::doubleHash(string data, int i) {
+    if (i == 0) {
+        return hash1(data);
+    }
 
-    int h1 = hash1(data);
-    int h2 = hash2(data);
+    return (hash1(data) + i * hash2(data)) % capacity;
+}
 
-    int i = 0;
-    do {
-        value = (h1 + i * h2) % capacity;
-        ++i;
-    } while (table[value] != "" || table[value] != data); // this doesn't work actually, as the condition changes between insert and search/remove. hm
-    // also what about when `i` leaves valid table range?
-
-    return value;
+int Hashtable::findIndexOf(string data, string target) {
+    int idx;
+    for (int i = 0; i < capacity; ++i) { // no idea if i < capacity is what it should be
+        idx = doubleHash(data, i);
+        if (table[idx] == target) { // target is expected EMPTY or data
+            return idx;
+        }
+    }
+    throw DataNotFound(data);
 }
 
 string Hashtable::display(const bool showEmpty) {
-    // Guard claus--save the effort.
+    // Guard.
     if (size == 0) {
         return "[ Empty hashtable. ]";
     }
@@ -87,11 +83,15 @@ string Hashtable::display(const bool showEmpty) {
 }
 
 void Hashtable::insert(string data) {
-    int idx = doubleHash(data);
-
-    // THIS OVERWRITES RIGHT NOW!
-    table[idx] = data;
+    int idx;
+    try {
+        idx = findIndexOf(data, EMPTY);
+    } catch (DataNotFound) {
+        return;
+    }
+    
     ++size;
+    table[idx] = data;
 }
 
 string Hashtable::position(int index) {
@@ -105,23 +105,21 @@ string Hashtable::position(int index) {
 
 string Hashtable::remove(string data) {
     // Get data.
-    int idx = doubleHash(data);
-    string value = table[idx];
-
-    // Verify data is as expected.
-    if (value != data) {
-        throw DataNotFound(data);
-    }
+    int idx;
+    idx = findIndexOf(data, data);
 
     // Empty and return.
+    string value = table[idx];
     table[idx] = EMPTY;
     --size;
     return value;
 }
 
 bool Hashtable::search(string data) {
-    int idx = doubleHash(data);
-    string value = table[idx];
-
-    return value == data;
+    try {
+        findIndexOf(data, data);
+    } catch (DataNotFound) {
+        return false;
+    }
+    return true;
 }

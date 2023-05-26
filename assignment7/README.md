@@ -37,7 +37,9 @@ My design for my advanced hashtable builds directly off the simple hashtable. Th
 
 On `insert()`, double hash will be used to find a space that is empty.
 
-On `search()` and `remove()`, double hash will be used to find a space that is equal to the given value. I will also need to account for and consider preventing the hashing from going on forever and detecting a full table, or fruitless search. (math stuff my brain isn't getting yet)
+On `search()` and `remove()`, double hash will be used to find a space that is equal to the given value. I will also need to account for and consider preventing the hashing from going on forever and detecting a full table, or fruitless search. 
+
+To facilitate use of doublehashing, I will write a method called `findIndexOf()`. It will take two parameters, the first being the hashed data, and the second being the desired value to find the index of (expected either an empty space, or the data itself) (this might serve better as a boolean, but saves time to just be `EMPTY || data`). Either return an integer for the desired data's index, or raise an error if the data cannot be found.
 
 
 ### Tests

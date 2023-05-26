@@ -2,23 +2,11 @@
 #include <sstream>
 #include <string>
 
+#include "error.h"
 #include "simplehash.h"
 
-using std::cout, std::endl, std::string, std::stringstream;
+using std::string, std::stringstream;
 
-
-// Error implementations.
-
-DataNotFound::DataNotFound(string data) {
-    hint = data;
-}
-
-string DataNotFound::what() {
-    return "'" + hint + "' was not found in the hashtable.";
-}
-
-
-// Hashtable implementations.
 
 SimpleHash::SimpleHash() {
     size = 0;
