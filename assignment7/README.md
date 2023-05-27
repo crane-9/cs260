@@ -1,6 +1,11 @@
 # CS 260: Assignment 7: Hashtable
 
-I have a simple hashtable and advanced hashtable. Each in their own header/implementation files, but sharing a driver.
+I have a simple hashtable and advanced hashtable. Each have their own header and implementation files, and share an error header and driver file.
+
+To run `driver.cpp`:
+```
+g++ driver.cpp hashtable.cpp simplehash.cpp
+```
 
 ## Designs
 
@@ -8,7 +13,7 @@ I have a simple hashtable and advanced hashtable. Each in their own header/imple
 
 >`simplehash.cpp` and `simplehash.h`
 
-My design is for a simple array-based hashtable, which stores strings. Currently, collisions are handled by overwriting the previous data, and the single hash method is very simple.  
+My design for a simple array-based hashtable stores strings. Collisions are handled by overwriting the previous data, and the single hash method is very simple.
 
 Its four main methods are:
 - `void insert(string data)`: Inserts a single string into the table. This hashes, but does not check for collisions.
@@ -40,6 +45,12 @@ On `insert()`, double hash will be used to find a space that is empty.
 On `search()` and `remove()`, double hash will be used to find a space that is equal to the given value. I will also need to account for and consider preventing the hashing from going on forever and detecting a full table, or fruitless search. 
 
 To facilitate use of doublehashing, I will write a method called `findIndexOf()`. It will take two parameters, the first being the hashed data, and the second being the desired value to find the index of (expected either an empty space, or the data itself) (this might serve better as a boolean, but saves time to just be `EMPTY || data`). Either return an integer for the desired data's index, or raise an error if the data cannot be found.
+
+For double-hashing, my first hash algorithm is identical to the original. My second hash algorithm calculates the sum of each letter's value multiplied by its position (starting at 1). 
+
+> Example "Hello world": 'H' * 1 + 'e' * 2 + 'l' * 3 ...
+
+I chose this algorithm because I wanted its results to have the least likely repeated collision between two values. Where the first hash algorithm results in collision for anagrams, this, I hope, will correct that.
 
 
 ### Tests

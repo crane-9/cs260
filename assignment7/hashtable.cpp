@@ -28,8 +28,8 @@ int Hashtable::hash1(string data) { // output range of [0 - capacity-1]
 int Hashtable::hash2(string data) { 
     int value;
 
-    for (int i = 1; i <= data.size(); ++i) {
-        value += i * data[i];
+    for (int i = 0; i < data.size(); ++i) {
+        value += (i + 1) * data[i];
     }
     return value % (capacity - 1) + 1; // output range of [1 - capacity-1]
 }
@@ -87,7 +87,7 @@ void Hashtable::insert(string data) {
     try {
         idx = findIndexOf(data, EMPTY);
     } catch (DataNotFound) {
-        return;
+        throw FullTableError();
     }
     
     ++size;

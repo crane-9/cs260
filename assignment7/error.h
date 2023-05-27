@@ -22,4 +22,13 @@ class DataNotFound : public std::exception {
         }
 };
     
+
+/// @brief An error to throw on insert() on a full table.
+class FullTableError : public std::exception {
+    public:
+        string what() {
+            return "Cannot insert, table is full.";
+        }
+};
+
 #endif
