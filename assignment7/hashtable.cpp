@@ -16,13 +16,13 @@ Hashtable::~Hashtable() {
     delete [] &table;
 }
 
-int Hashtable::hash1(string data) { // output range of [0 - capacity-1]
+int Hashtable::hash1(string data) { 
     int value;
 
     for (char i : data) {
         value += i;
     }
-    return value % capacity;
+    return value % capacity; // Output range of [0 -- capacity-1]
 }
 
 int Hashtable::hash2(string data) { 
@@ -31,7 +31,7 @@ int Hashtable::hash2(string data) {
     for (int i = 0; i < data.size(); ++i) {
         value += (i + 1) * data[i];
     }
-    return value % (capacity - 1) + 1; // output range of [1 - capacity-1]
+    return value % (capacity - 1) + 1; // Output range of [1 -- capacity-1]
 }
 
 int Hashtable::doubleHash(string data, int i) {
@@ -44,9 +44,9 @@ int Hashtable::doubleHash(string data, int i) {
 
 int Hashtable::findIndexOf(string data, string target) {
     int idx;
-    for (int i = 0; i < capacity; ++i) { // no idea if i < capacity is what it should be
+    for (int i = 0; i < capacity; ++i) { // [no idea if i < capacity is what it should be]
         idx = doubleHash(data, i);
-        if (table[idx] == target) { // target is expected EMPTY or data
+        if (table[idx] == target) { // Target is expected EMPTY or data.
             return idx;
         }
     }
@@ -86,8 +86,8 @@ void Hashtable::insert(string data) {
     int idx;
     try {
         idx = findIndexOf(data, EMPTY);
-    } catch (DataNotFound) {
-        throw FullTableError();
+    } catch (DataNotFound) { // If I can't find an empty space, the table is full.
+        throw FullTableError(); // Translate DataNotFound to FullTableError, for coherency.
     }
     
     ++size;

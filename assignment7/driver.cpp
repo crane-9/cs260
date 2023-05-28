@@ -78,7 +78,7 @@ string positionTest(T *ht) {
 /// @brief Tests collisions using anagrams. 
 template <typename T>
 string anagramTest(T *ht) {
-    string anagrams[] = {"points", "pinots", "piston"};
+    string anagrams[] = {"points", "pinots", "piston", "cat", "tac", "act"};
     
     stringstream message;
     
