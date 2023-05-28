@@ -120,7 +120,6 @@ I also created a removal function `remove()` to remove and return a desired valu
 
 ```cpp
 // hashtable.cpp, lines 106 - 116, Comments altered
-
 int idx;
 idx = findIndexOf(data, data);
 
