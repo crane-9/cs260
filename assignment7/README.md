@@ -44,7 +44,12 @@ On `insert()`, double hash will be used to find a space that is empty.
 
 On `search()` and `remove()`, double hash will be used to find a space that is equal to the given value. I will also need to account for and consider preventing the hashing from going on forever and detecting a full table, or fruitless search. 
 
-To facilitate use of doublehashing, I will write a method called `findIndexOf()`. It will take two parameters, the first being the hashed data, and the second being the desired value to find the index of (expected either an empty space, or the data itself) (this might serve better as a boolean, but saves time to just be `EMPTY || data`). Either return an integer for the desired data's index, or raise an error if the data cannot be found.
+To facilitate use of doublehashing, I will write a method called `findIndexOf()`. It will take two parameters, the first being the hashed data, and the second being the desired value to find the index of.
+> Notes on `findIndexOf()`:
+> - The desired value is expected either an empty space, or the data itself.
+> - It might serve better to be a boolean, but saves time to leave as is and expect only `EMPTY` or the same value matching `data`.
+> - I chose this strategy because this is a private method that will only be accessed from within the class.
+> - This method Either return an integer for the desired data's index, or raise an error if the data cannot be found.
 
 For double-hashing, my first hash algorithm is identical to the original. My second hash algorithm calculates the sum of each letter's value multiplied by its position (starting at 1). 
 
@@ -63,10 +68,64 @@ Next, I can use `search()` and see if it agrees. Then once `search()` works, I'l
 
 Finally, I have `position()`, which I may still remove. But in the case of testing, I'll `insert()` a value with an expected index, and check that the same value is returned by calling `position()` with said known index.
 
-For the advanced hash class, I'll have an additional test for handling collisions. Once I figure out how I want to handle collisions.
+For the advanced hash class, I'll have an additional anagram test to prove the handling of collisions.
 
 
 ---
 ## Applications
 
 A hashtable reminds me of a player inventory in a video game. It has a limited number of spaces, and is easy/efficient to access/search/remove. 
+
+
+---
+## Collisions and complexity
+
+From what I've gathered in my research behind this assignent, there's a tradeoff relationship between collision frequency and program complexity. With less complexity, collisions are more frequent. For example--if a hashtable, storing strings, had an incredibly simple hash method that used only the second character of a new value, collisions would be incredibly frequent. But when the hash method becomes more complex, and more closely measures the uniqueness of a new value (for example: consider the length of the value, the order of characters), collision rates go down.
+
+
+---
+## Meeting requirements
+
+For proof of meeting requirements, I will be using my double-hashtable in `hashtable.cpp`/`h`.
+
+On insertion, my class `Hashtable` calculates a new value's index using a double-hash method.
+
+```cpp
+// hashtable.cpp, lines 85 - 95. Comments altered.
+int idx;
+try {
+    idx = findIndexOf(data, EMPTY);
+} catch (DataNotFound) { // If I can't find an empty space, the table is full.
+    throw FullTableError(); 
+}
+
+++size;
+table[idx] = data;
+```
+*`findIndexOf()` is a private method which, as used here, double-hashes the given data, and attempts to find an empty space. If successful, it returns a valid index for the given data.
+
+My method to check if a table contains a value is `search()`. `search()` returns a boolean: true if present, false if not.
+
+```cpp
+// hashtable.cpp, lines 118 - 125
+try {
+    findIndexOf(data, data);
+} catch (DataNotFound) {
+    return false;
+}
+return true;
+```
+
+I also created a removal function `remove()` to remove and return a desired value.
+
+```cpp
+// hashtable.cpp, lines 106 - 116, Comments altered
+int idx;
+idx = findIndexOf(data, data);
+
+// Empty and return.
+string value = table[idx];
+table[idx] = EMPTY;
+--size;
+return value;
+```
