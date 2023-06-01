@@ -23,17 +23,19 @@ As (hopefully) illustrated by my previous points, a graph is an ideal structure 
 In practice, this becomes more complicated, as games like Zork require a player inventory system in order for the create puzzles for the player to solve. This issue, however, is more about how each story node, or the rest of the program, works. A graph solves the problem of how to create branching story paths.
 
 A simple version of a story node (with no concern for player inventory or conditional elements) might look like this:
+
 ```cpp
 struct StoryNode {
     StoryNode *paths[5]; // Setting a limit of 5 for simplicity
 
     // Narrative text
     std::string narration;
-    std::string title; // A name for the node/page/location. 
+    std::string title; // A unique name for the node/page/location. 
 };
 ```
 
 While a more complex node may look like this:
+
 ```cpp
 struct StoryNode {
     StoryNode *paths[5];
@@ -52,6 +54,7 @@ struct StoryNode {
 In both proposed node versions, I've modelled a connection between two nodes as one having a pointer to another--a one-directional relationship. This would thereby be a directioned graph, which I find appropriate for the purpose.
 
 As for unlockable routes, I believe it would be appropriate to place that logic in a node's callback like so:
+
 ```cpp
 void myCallback(StoryNode *node, Player *player) {
     if (player->hasItem("silver key")) {
@@ -74,28 +77,55 @@ Above, I've explored and outlined a couple iterations of what a `StoryNode` coul
 Written within the following files:
 
 - `graph.h` & `graph.cpp`
+    + `Graph` class.
+    + `GraphNode` struct.
 - `player.h` & `player.cpp`
-- `story_node.h` & `story_node.cpp`
+    + `Player` class.
+- `story_node.h` [& `story_node.cpp`?]
+    + `StoryNode` struct (inherits from `GraphNode`). 
 - `story.cpp`
     - Contains story contents: instances of story nodes.
 - `game.cpp`
+    + `main()`.
     - Input parsing and game loop.
-    - Contains `main()`.
 
 Informal game loop test [here](..\in_class\june1.cpp), though it acts more like browsing through a linked list. I may update this demo as I go.
 
 
 ### Tests
 
-Putting application aside and refocusing on the structure of a graph, there are a few tests I would like to run to prove graph functionality.
+Putting application aside and refocusing on the structure of a graph, there are a few tests I would like to run to prove graph functionality. 
 
-For `addVertex()`:
+The following examples us a graph pointer called `graph`, and nodes of various simple names.
 
-For `addArc()`:
 
-For `shortestPath()`:
+#### For `addVertex()`:
 
-For `minSpanTree()`:
+Create a new node with a value, and add to the graph:
+
+```cpp
+GraphNode *node = new GraphNode(1);
+
+graph->addVertex(node);
+```
+
+Repeat with multiple values, and manually print and check graph contents.
+
+
+#### For `addArc()`:
+
+Using previously created nodes, create an arc/edge between them, directioned from point A to B.
+
+```cpp
+graph->addArc(nodeA, nodeB);
+// OR...
+nodeA->addArc(nodeB);
+```
+
+
+#### For `shortestPath()`:
+
+#### For `minSpanTree()`:
 
 
 ---

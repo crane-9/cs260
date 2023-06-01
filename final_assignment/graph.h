@@ -1,21 +1,70 @@
 #ifndef GRAPH_HEADER
 #define GRAPH_HEADER
 
+#include <string>
 
-/// @brief Single node, up to three connections because I say so.
+/// @brief Single node, up to five connections because I say so.
 struct GraphNode {
-    int value;
-    GraphNode *connections[5]; //???? maybe
+    GraphNode *connections[5] = {nullptr};
+    
+    /**
+     * Adds a new destination to the current node.
+     * @param branch The new connection.
+     * @return No return value.
+    */
+    void addArc(GraphNode *branch);
 
+    /**
+     * Removes a branch from the current node's connections.
+     * @param branch The old collection to break.
+     * @return No return value.
+    */
+    void removeArc(GraphNode *branch);
 };
 
 
 /// @brief Graph class, manages graph nodes and subgraphs.
 class Graph {
     private:
+        // ?? how store
 
     public:
+        /**
+         * Adds a vertext to the graph.
+         * @param newVertex The new vertex to add to the graph.
+         * @return No return value.
+        */
+        void addVertex(GraphNode *newVertex);
 
+        /**
+         * Adds an arc between two nodes on the graph, from source to destination.
+         * @param source The starting node.
+         * @param destination The ending node.
+         * @return No return value.
+        */
+        void addArc(GraphNode *source, GraphNode *destination);
+
+        /**
+         * Calculates the shortest path to every (accessible) node from the given node.
+         * @param source The node to begin with.
+         * @return A string describing the shortest paths from the given node to all other accessible nodes.
+        */
+        std::string shortestPath(GraphNode *source);
+
+        /**
+         * Calculates the graph's minimum spanning tree starting at the given node.
+         * @param source The node to begin with.
+         * @return A string describing the graph's minimum spanning tree.
+        */
+        std::string minSpanTree(GraphNode *source);
 };
+
+
+namespace graphAlgorithms {
+    
+    std::string shortestPath(Graphnode *source);
+    
+    std::string minSpanTree(Graphnode *source);
+}
 
 #endif

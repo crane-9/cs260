@@ -34,7 +34,7 @@ void callback2(StoryNode *node, Player *player) {
 }
 
 void callback3(StoryNode *node, Player *player) {
-    return;
+    node->next = &page4;
 }
 
 void callback4(StoryNode *node, Player *player) {
@@ -59,7 +59,6 @@ int main() {
 
     page1.next = &page2;
     page2.next = &page3;
-    page3.next = &page4;
     page4.next = nullptr;
 
     // set loop and run
