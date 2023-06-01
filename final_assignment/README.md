@@ -43,30 +43,46 @@ struct StoryNode {
     // A special tag may tell a game-handling object how to handle this node. For example: "Start" or "End"
     std::string tag;
     // A possible callback that interacts with the Player object, or uses the Player object to modify itself.
-    std::function<void(StoryNode *, Player *)> callbackOnVisit;
+    void (* callback)(StoryNode *, Player *);
     // Some games may want to count if the player has visited before, or how many times.
     int visits = 0; 
 };
 ```
 
-Alternatively, it could be a class for more complex and flexible behavior. 
-
-In all proposed node versions, I've modelled a connection between two nodes as one having a pointer. This would thereby be a directioned graph, which I find appropriate for the situation.
+In both proposed node versions, I've modelled a connection between two nodes as one having a pointer to another--a one-directional relationship. This would thereby be a directioned graph, which I find appropriate for the purpose.
 
 As for unlockable routes, I believe it would be appropriate to place that logic in a node's callback like so:
 ```cpp
-void callback(StoryNode *node, Player *player) {
+void myCallback(StoryNode *node, Player *player) {
     if (player->hasItem("silver key")) {
-        // Where `GLOBAL_VAR_FOR_ANOTHER_NODE` is a defined node.
-        node->addPath(GLOBAL_VAR_FOR_ANOTHER_NODE);
+        // Where `OTHER_NODE_PTR` is a defined node, and `graph` is the globally defined graph. (Or, possibly, a third parameter, we will see.)
+        graph->addPath(node, OTHER_NODE_PTR);
     }
 }
+
+// Connect later like so:
+myNode->callback = myCallback;
 ```
 
 
 ### Design outline
 
-Above, I've explored and outlined a couple iterations of what a `StoryNode` could look like in order to provide common adventure game mechanics. As for the program's complete structural design 
+Above, I've explored and outlined a couple iterations of what a `StoryNode` could look like in order to provide common adventure game mechanics. As for the program's complete structural design, I plan for something like this:
+
+![Tentative UML Design](uml_design.png)
+
+Written within the following files:
+
+- `graph.h` & `graph.cpp`
+- `player.h` & `player.cpp`
+- `story_node.h` & `story_node.cpp`
+- `story.cpp`
+    - Contains story contents: instances of story nodes.
+- `game.cpp`
+    - Input parsing and game loop.
+    - Contains `main()`.
+
+Informal game loop test [here](..\in_class\june1.cpp), though it acts more like browsing through a linked list. I may update this demo as I go.
 
 
 ### Tests
@@ -75,7 +91,7 @@ Putting application aside and refocusing on the structure of a graph, there are 
 
 For `addVertex()`:
 
-For `addEdge()`:
+For `addArc()`:
 
 For `shortestPath()`:
 

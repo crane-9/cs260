@@ -6,6 +6,7 @@
 struct GraphNode {
     int value;
     GraphNode *connections[5]; //???? maybe
+
 };
 
 
