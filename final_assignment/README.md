@@ -6,7 +6,7 @@
 
 The first application I saw for a graph data structure is the skeleton for a text-based adventure game. For example, Zork. 
 
-![Map of Zork I](https://cdn.discordapp.com/attachments/799704269787496518/1112486555592958043/zork_map.png) 
+![Map of Zork I](https://cdn.discordapp.com/attachments/799704269787496518/1113593127148716163/zork_map.png) 
 Found on [archive.org](https://archive.org/details/zork-i-ii-iii-maps/)
 
 In Zork, the player navigates the world by entering a direction (north/east/south/west) into the console. Each location behaves as a node, as it has its own unique data and connections to other locations. Connections between locations can even be one-way passages, similar to the directionality of graph nodes.
@@ -43,13 +43,48 @@ struct StoryNode {
     // A special tag may tell a game-handling object how to handle this node. For example: "Start" or "End"
     std::string tag;
     // A possible callback that interacts with the Player object, or uses the Player object to modify itself.
-    std::function<void(StoryNode *, Player)> callbackOnVisit;
+    std::function<void(StoryNode *, Player *)> callbackOnVisit;
     // Some games may want to count if the player has visited before, or how many times.
     int visits = 0; 
 };
 ```
 
-Increasing complexity (unlockable/secret paths, custom-labelled paths) might call for modelling an `Edge` struct/class, however I feel averse to adding that complexity before further altering the `StoryNode` struct.
+Alternatively, it could be a class for more complex and flexible behavior. 
 
-The design I've discussed so far does not highlight any `Graph` class on its own, and in fact I allude instead to a game-handling class (something responsible for the game loop and player input). After setup, and providing the starting node to the game handler, the `Graph` class could play the role of navigation. For example, a game could have a mechanic of hinting the player toward the destination of their current quest. Or, alternatively, a game could have a chase sequence, in which it constantly alerts the player to how many spaces away the pursuing party currently is.
+In all proposed node versions, I've modelled a connection between two nodes as one having a pointer. This would thereby be a directioned graph, which I find appropriate for the situation.
 
+As for unlockable routes, I believe it would be appropriate to place that logic in a node's callback like so:
+```cpp
+void callback(StoryNode *node, Player *player) {
+    if (player->hasItem("silver key")) {
+        // Where `GLOBAL_VAR_FOR_ANOTHER_NODE` is a defined node.
+        node->addPath(GLOBAL_VAR_FOR_ANOTHER_NODE);
+    }
+}
+```
+
+
+### Design outline
+
+Above, I've explored and outlined a couple iterations of what a `StoryNode` could look like in order to provide common adventure game mechanics. As for the program's complete structural design 
+
+
+### Tests
+
+Putting application aside and refocusing on the structure of a graph, there are a few tests I would like to run to prove graph functionality.
+
+For `addVertex()`:
+
+For `addEdge()`:
+
+For `shortestPath()`:
+
+For `minSpanTree()`:
+
+
+---
+## [ complexity analysis ]
+
+
+---
+## [ meeting requirements ]
