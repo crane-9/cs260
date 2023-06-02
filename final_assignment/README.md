@@ -109,7 +109,9 @@ GraphNode *node = new GraphNode(1);
 graph->addVertex(node);
 ```
 
-Repeat with multiple values, and manually print and check graph contents.
+Repeat with multiple values, and check graph contents.
+
+In advanced tests, once proven and stable, `shortestPath()` will be used to check contents. Before then, I will write a more simplistic function to print the graph's contents.
 
 
 #### For `addArc()`:
@@ -125,7 +127,36 @@ nodeA->addArc(nodeB);
 
 #### For `shortestPath()`:
 
+To test `shortestPath()` (and `minSpanTree()`), I will manually code a graph like so:
+
+![Sample graph](sample_graph.png)
+
+Testing with this graph will test the algorithm's ability to handle variable directionality, non-connected nodes, and cycles.
+
+I plan for `shortestPath()` to return a string describing its shortest paths to various nodes like so:
+
+    SHORTEST PATH FROM NODE 'B'
+    A - ONE STEP
+    C - ONE STEP
+    D - TWO STEPS [PARENT C]
+    E - THREE STEPS [PARENT D]
+    F - FOUR STEPS [PARENT E]
+    G - TWO STEPS [PARENT C]
+    H - THREE STEPS [PARENT G]
+    I - FOUR STEPS [PARENT H]
+    J - FIVE STEPS [PARENT I]
+    X - NO PATH
+    Y - NO PATH
+    Z - NO PATH
+
+[Note: this does not incorporate weighted edges. This is not required for the problem I would like to solve. Should I code that in anyways to prove I can do it?]
+
+I will manually assess the output for accuracy.
+
+
 #### For `minSpanTree()`:
+
+urmmmmmm
 
 
 ---
