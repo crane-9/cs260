@@ -158,6 +158,32 @@ void charEval() {
 }
 
 
+// 06 02 2023 -- testing inheritance
+class Parent {
+    private:
+        int data;
+
+    public:
+        Parent(int value) {
+            data = value;
+        }
+
+        void printData() {
+            cout << "my data is... " << data << endl;
+        }
+};
+
+class Child : public Parent {
+    public:
+        explicit Child() : Parent(11) {}
+};
+
+
+void printTheValue(Parent object) {
+    object.printData();
+}
+
+
 int main(int argc, char* argv[]) {
     // srand(time(NULL));
 
@@ -175,7 +201,13 @@ int main(int argc, char* argv[]) {
 
     // loopTest();
 
-    charEval();
+    // charEval();
+
+    Parent parent(20);
+    Child child;
+    
+    printTheValue(parent);
+    printTheValue(child); // OK YAY THIS WORKS YAAAAY
 
     return 0;
 }

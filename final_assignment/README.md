@@ -136,18 +136,18 @@ Testing with this graph will test the algorithm's ability to handle variable dir
 I plan for `shortestPath()` to return a string describing its shortest paths to various nodes like so:
 
     SHORTEST PATH FROM NODE 'B'
-    A - ONE STEP
-    C - ONE STEP
-    D - TWO STEPS [PARENT C]
-    E - THREE STEPS [PARENT D]
-    F - FOUR STEPS [PARENT E]
-    G - TWO STEPS [PARENT C]
-    H - THREE STEPS [PARENT G]
-    I - FOUR STEPS [PARENT H]
-    J - FIVE STEPS [PARENT I]
-    X - NO PATH
-    Y - NO PATH
-    Z - NO PATH
+        A - 1 STEP
+        C - 1 STEP
+        D - 2 STEPS [PARENT C]
+        E - 3 STEPS [PARENT D]
+        F - 4 STEPS [PARENT E]
+        G - 2 STEPS [PARENT C]
+        H - 3 STEPS [PARENT G]
+        I - 4 STEPS [PARENT H]
+        J - 5 STEPS [PARENT I]
+        X - NO PATH
+        Y - NO PATH
+        Z - NO PATH
 
 [Note: this does not incorporate weighted edges. This is not required for the problem I would like to solve. Should I code that in anyways to prove I can do it?]
 
