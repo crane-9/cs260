@@ -149,14 +149,21 @@ I plan for `shortestPath()` to return a string describing its shortest paths to 
         Y - NO PATH
         Z - NO PATH
 
-[Note: this does not incorporate weighted edges. This is not required for the problem I would like to solve. Should I code that in anyways to prove I can do it?]
-
 I will manually assess the output for accuracy.
 
 
 #### For `minSpanTree()`:
 
-urmmmmmm
+I will use the same sample graph to test `minSpanTree()`. Here is the graph's expected minimum spanning tree:
+
+![Minimum spanning tree of sample graph](sample_graph_min.png)
+*I think there are multiple valid minimum spanning trees, so I need to decide what the flow's expected output will be.
+
+The method's output will be expressed as a string, listing the edges included in the minimum spanning tree. Example: 
+
+    BC, CD, DA, DE, EF, CG, GH, HI, IJ, XY
+
+This will be manually checked (or compared against the expected string), just as `shortestPath()`.
 
 
 ---
