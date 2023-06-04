@@ -6,14 +6,14 @@
 
 The first application I saw for a graph data structure is the skeleton for a text-based adventure game. For example, Zork. 
 
-![Map of Zork I](https://cdn.discordapp.com/attachments/799704269787496518/1113593127148716163/zork_map.png) 
+![Map of Zork I](readme_src/zork_map.png) 
 Found on [archive.org](https://archive.org/details/zork-i-ii-iii-maps/)
 
 In Zork, the player navigates the world by entering a direction (north/east/south/west) into the console. Each location behaves as a node, as it has its own unique data and connections to other locations. Connections between locations can even be one-way passages, similar to the directionality of graph nodes.
 
 Another example and point of inspiration is [Twine 2](https://twinery.org/), a tool for building non-linear, text-based adventure games. The tool's editor interface is a graph that holds story nodes, all of which are connected by directional arcs.
 
-![Twine 2 interface](https://cdn.discordapp.com/attachments/799704269787496518/1112636765300338728/twine2_example.jpg)
+![Twine 2 interface](readme_src/twine2_example.jpg)
 
 
 ### Solving a problem
@@ -72,7 +72,7 @@ myNode->callback = myCallback;
 
 Above, I've explored and outlined a couple iterations of what a `StoryNode` could look like in order to provide common adventure game mechanics. As for the program's complete structural design, I plan for something like this:
 
-![Current UML Design](uml_design.png)
+![Current UML Design](readme_src/uml_design.png)
 
 Written within the following files:
 
@@ -133,7 +133,7 @@ Because my design currently has a limited number of arcs, I will test cases in w
 
 To test `shortestPath()` (and `minSpanTree()`), I will manually code a graph like so:
 
-![Sample graph](sample_graph.png)
+![Sample graph](readme_src/sample_graph.png)
 
 Testing with this graph will test the algorithm's ability to handle variable directionality, non-connected nodes, and cycles.
 
@@ -160,7 +160,7 @@ I will manually assess the output for accuracy.
 
 I will use the same sample graph to test `minSpanTree()`. Here is the graph's expected minimum spanning tree:
 
-![Minimum spanning tree of sample graph](sample_graph_min.png)
+![Minimum spanning tree of sample graph](readme_src/sample_graph_min.png)
 *I think there are multiple valid minimum spanning trees, so I need to decide what the flow's expected output will be.
 
 The method's output will be expressed as a string, listing the edges included in the minimum spanning tree. Example: 
