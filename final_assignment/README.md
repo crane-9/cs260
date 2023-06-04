@@ -57,7 +57,7 @@ As for unlockable routes, I believe it would be appropriate to place that logic 
 
 ```cpp
 void myCallback(StoryNode *node, Player *player) {
-    if (player->hasItem("silver key")) {
+    if (player->hasItem("silver-key")) {
         // Where `OTHER_NODE_PTR` is a defined node, and `graph` is the globally defined graph. (Or, possibly, a third parameter, we will see.)
         graph->addPath(node, OTHER_NODE_PTR);
     }
@@ -72,17 +72,15 @@ myNode->callback = myCallback;
 
 Above, I've explored and outlined a couple iterations of what a `StoryNode` could look like in order to provide common adventure game mechanics. As for the program's complete structural design, I plan for something like this:
 
-![Tentative UML Design](uml_design.png)
+![Current UML Design](uml_design.png)
 
 Written within the following files:
 
 - `graph.h` & `graph.cpp`
     + `Graph` class.
-    + `GraphNode` struct.
+    + `StoryNode` struct.
 - `player.h` & `player.cpp`
     + `Player` class.
-- `story_node.h` [& `story_node.cpp`?]
-    + `StoryNode` struct (inherits from `GraphNode`). 
 - `story.cpp`
     - Contains story contents: instances of story nodes.
 - `game.cpp`
@@ -91,12 +89,14 @@ Written within the following files:
 
 Informal game loop test [here](..\in_class\june1.cpp), though it acts more like browsing through a linked list. I may update this demo as I go.
 
+> Note: I've decided that `addArc()` and `addVertex()` will take pointers to actual nodes, rather than just the node's name or data. I made this decision because of the complexity of a `StoryNode`--there is more data than just a single string variable.
+
 
 ### Tests
 
 Putting application aside and refocusing on the structure of a graph, there are a few tests I would like to run to prove graph functionality. 
 
-The following examples us a graph pointer called `graph`, and nodes of various simple names.
+The following examples us a Graph pointer called `graph`, and nodes of various simple names.
 
 
 #### For `addVertex()`:
@@ -104,7 +104,7 @@ The following examples us a graph pointer called `graph`, and nodes of various s
 Create a new node with a value, and add to the graph:
 
 ```cpp
-GraphNode *node = new GraphNode(1);
+GraphNode *node = new StoryNode("", "Hello world.");
 
 graph->addVertex(node);
 ```
@@ -123,6 +123,10 @@ graph->addArc(nodeA, nodeB);
 // OR...
 nodeA->addArc(nodeB);
 ```
+
+A node will have a method which returns an indexed list of its arcs. This will be used to manually test and validate the existence of an arc.
+
+Because my design currently has a limited number of arcs, I will test cases in which the connection limit has been exceeded, and ensure the expected error is thrown.
 
 
 #### For `shortestPath()`:
