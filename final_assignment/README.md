@@ -1,5 +1,13 @@
 # CS 260 Final Project: Graph
 
+This file contains design notes for my final project and game.
+
+To compile game, include:
+[ some files ]
+
+To compile tests, include: 
+[ some files ]
+
 ## Design
 
 ### Inspiration
@@ -104,7 +112,7 @@ The following examples us a Graph pointer called `graph`, and nodes of various s
 Create a new node with a value, and add to the graph:
 
 ```cpp
-GraphNode *node = new StoryNode("", "Hello world.");
+GraphNode *node = new StoryNode("Hello.");
 
 graph->addVertex(node);
 ```
