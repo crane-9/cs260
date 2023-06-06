@@ -13,6 +13,8 @@
 
 #include <cctype>
 
+#include <map>
+
 using namespace std;
 
 // 04 07 2023
@@ -184,6 +186,24 @@ void printTheValue(Parent object) {
 }
 
 
+// 06 06 2023
+
+void mapTest() {
+    map<string, bool> flagThing;
+
+    flagThing["bagel"] = true;
+    cout << flagThing["bagel"] << endl;
+
+    flagThing["bagel"] = false;
+    cout << flagThing["bagel"] << endl;
+
+    cout << flagThing["donut"] << endl;
+    cout << flagThing["pizza"] << endl;
+    cout << flagThing["broccoli"] << endl;
+    cout << flagThing["rocks"] << endl;
+}
+
+
 int main(int argc, char* argv[]) {
     // srand(time(NULL));
 
@@ -203,11 +223,13 @@ int main(int argc, char* argv[]) {
 
     // charEval();
 
-    Parent parent(20);
-    Child child;
+    // Parent parent(20);
+    // Child child;
     
-    printTheValue(parent);
-    printTheValue(child); // OK YAY THIS WORKS YAAAAY
+    // printTheValue(parent);
+    // printTheValue(child); // OK YAY THIS WORKS YAAAAY
+
+    mapTest();
 
     return 0;
 }
