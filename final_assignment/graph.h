@@ -1,7 +1,6 @@
 #ifndef GRAPH_HEADER
 #define GRAPH_HEADER
 
-#include <map>
 #include <string>
 #include <utility>
 #include <vector>
@@ -9,10 +8,15 @@
 #include "player.h"
 
 
+//using a template bc circular stuff and ugh yeah
+template <typename T>
+using labelledPair = std::pair<std::string, T>;
+
+
 /// @brief Single node.
 struct StoryNode {
     void (* callback)(StoryNode *, Player *);
-    std::vector<std::pair<std::string, StoryNode *> *> connections;
+    std::vector<labelledPair<StoryNode *> *> connections;
 
     std::string tag;
     std::string title;
@@ -25,7 +29,12 @@ struct StoryNode {
      * @param _tag A tag for the node. 
     */
     StoryNode(std::string _narration, std::string _tag = "");
-    
+
+    /**
+     * Destructs node and its connections.
+    */
+    ~StoryNode();
+
     /**
      * Adds a new destination to the current node.
      * @param branch The new connection.
@@ -49,13 +58,12 @@ struct StoryNode {
 };
 
 
-typedef std::map<std::string, StoryNode *> nodeMap;
 
 /// @brief MapGraph class, manages story map.
 class MapGraph {
     private:
         int size;
-        nodeMap vertices;
+        std::vector<StoryNode *> vertices;
 
     public:
         /**
@@ -92,9 +100,9 @@ class MapGraph {
 
         /**
          * Getter for graph vertices. Intended use for test and debug.
-         * @return Map of node names to nodes.
+         * @return 
         */
-        nodeMap getVertices();
+        StoryNode getVertices();
 
         /**
          * Calculates the graph's minimum spanning tree starting at the given node.

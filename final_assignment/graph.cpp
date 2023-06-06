@@ -14,6 +14,13 @@ StoryNode::StoryNode(string _narration, string _tag) {
     visits = 0;
 }
 
+StoryNode::~StoryNode() {
+    for (labelledPair<StoryNode *> *arc : connections) {
+        delete arc;
+    }
+    connections.clear();
+}
+
 void StoryNode::addArc(StoryNode *branch, string text) {
     connections.push_back(new pair<string, StoryNode *>(text, branch));
 }
@@ -31,7 +38,8 @@ string StoryNode::getPaths() {
 void StoryNode::removeArc(StoryNode *branch) {
     for (int i = 0; i < connections.size(); ++i) {
         if (connections[i]->second == branch) {
-            delete connections[i];
+            delete connections[i]->second;
+            delete connections[i];// .erase() is not working!
             return;
         }
     }
@@ -44,7 +52,10 @@ MapGraph::MapGraph() {
 }
 
 MapGraph::~MapGraph() {
-
+    for (StoryNode *node : vertices) {
+        delete node;
+    }
+    vertices.clear();
 }
 
 void MapGraph::addArc(StoryNode *source, StoryNode *destination) {
