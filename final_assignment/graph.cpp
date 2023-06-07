@@ -12,8 +12,6 @@ StoryNode::StoryNode(void (* _callback)(StoryNode *, Player *), string _descript
     callback = _callback;
     description = _description;
     tag = _tag;
-
-    visits = 0;
 }
 
 StoryNode::~StoryNode() {
