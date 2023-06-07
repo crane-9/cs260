@@ -18,17 +18,17 @@ struct StoryNode {
     void (* callback)(StoryNode *, Player *);
     std::vector<labelledPair<StoryNode *> *> connections;
 
+    std::string description;
     std::string tag;
-    std::string title;
-    std::string narration;
     int visits = 0;
 
     /**
      * Constructs node.
-     * @param _narration The node's narration.
-     * @param _tag A tag for the node. 
+     * @param _callback Node's callback
+     * @param _description The node's narration.
+     * @param _tag Optional unique tag for the node. 
     */
-    StoryNode(std::string _narration, std::string _tag = "");
+    StoryNode(void (* _callback)(StoryNode *, Player *), std::string _description, std::string _tag = "");
 
     /**
      * Destructs node and its connections.
@@ -51,6 +51,7 @@ struct StoryNode {
 
     /**
      * Removes a branch from the current node's connections.
+     * @throws No error thrown if the desired branch isn't found.
      * @param branch The old connection to break.
      * @return No return value.
     */
@@ -83,7 +84,15 @@ class MapGraph {
          * @return No return value.
          * @overload Overloaded to refer to nodes by name rather than the nodes themselves.
         */
-        void addArc(StoryNode *source, StoryNode *destination);
+        void addDirectionedArc(StoryNode *source, StoryNode *destination);
+
+        /**
+         * Adds two arcs between two nodes. One from A to B, and one from B to A.
+         * @param nodeA One node.
+         * @param nodeB Another node.
+         * @return No return value.
+        */
+       void addMutualArc(StoryNode *nodeA, StoryNode *nodeB);
 
         /**
          * Adds a vertex to the graph.
@@ -91,6 +100,14 @@ class MapGraph {
          * @return No return value.
         */
         void addVertex(StoryNode *newVertex);
+
+        /**
+         * Gets a node by its tag.
+         * @note Unique tags are not enforced, but expected to be unique. Only the first node with the given tag may be returned.
+         * @param tag The tag of the desired node.
+         * @return Pointer to that node.
+        */
+       StoryNode *getByTag(std::string tag);
 
         /**
          * Get the size of graph.

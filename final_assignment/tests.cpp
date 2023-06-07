@@ -1,3 +1,4 @@
+// Trial run for functionality and flow.
 #include "graph.h"
 
 #include <iostream>
@@ -6,17 +7,28 @@
 using namespace std;
 
 
+class EndProgram : public exception {
+    public:
+        string what() {
+            return "User ended program.";
+        }
+};
+
+
+void noCB(StoryNode *n, Player *p) {}
+
+
 StoryNode *sampleStory() {
-    StoryNode *firstNode = new StoryNode("once upon a time..", "start");
+    StoryNode *firstNode = new StoryNode(noCB, "once upon a time..", "START");
     
-    StoryNode *princessRoute = new StoryNode("there was a princess and her skirt was magical.");
-    StoryNode *dragonRoute = new StoryNode("there was a big giant dragon");
+    StoryNode *princessRoute = new StoryNode(noCB, "there was a princess and her skirt was magical.");
+    StoryNode *dragonRoute = new StoryNode(noCB, "there was a big giant dragon");
 
-    StoryNode *princessEndingOne = new StoryNode("she lived happily forever!", "end");
-    StoryNode *princessEndingTwo = new StoryNode("she then exploded and everyone was sad", "end");
+    StoryNode *princessEndingOne = new StoryNode(noCB, "she lived happily forever!", "END");
+    StoryNode *princessEndingTwo = new StoryNode(noCB, "she then exploded and everyone was sad", "END");
 
-    StoryNode *dragonEndingOne = new StoryNode("it napped happily in its hoard for all its days", "end");
-    StoryNode *dragonEndingTwo = new StoryNode("it left its cave to terrorize the world and explode a princess", "end");
+    StoryNode *dragonEndingOne = new StoryNode(noCB, "it napped happily in its hoard for all its days", "END");
+    StoryNode *dragonEndingTwo = new StoryNode(noCB, "it left its cave to terrorize the world and explode a princess", "END");
 
     firstNode->addArc(princessRoute, "there was a princess.");
     firstNode->addArc(dragonRoute, "there was a dragon");
@@ -27,11 +39,13 @@ StoryNode *sampleStory() {
     dragonRoute->addArc(dragonEndingOne, "take a nap, dragon");
     dragonRoute->addArc(dragonEndingTwo, "go do something scary");
 
-    return firstNode;    
+    return firstNode;
 }
 
 bool isValidInput(int vectorSize, string input) {
-    if (input == "") {
+    if (input == "q") {
+        throw EndProgram();
+    } else if (input == "") {
         return false;
     }
 
@@ -61,17 +75,17 @@ void runGame(StoryNode *start) {
     StoryNode *current;
     
     current = start;
+    Player player;
     while (current != nullptr) {
-        // do the callback. cut for now.
-        // current->callback(current, &myPlayer);
+        // current->callback(current, &player);
 
         ++current->visits;
 
         // print narration and menu
-        cout << current->narration << endl;
+        cout << current->description << endl;
         cout << current->getPaths() << endl;
 
-        if (current->tag == "end") {
+        if (current->tag == "END") {
             break;
         }
 
@@ -79,15 +93,18 @@ void runGame(StoryNode *start) {
         current = current->connections[
             getPlayerInput(current->connections.size()) - 1
         ]->second;
-}
+    }
 
     cout << "you did it. you won the video game forever." << endl;
 }
 
 int main() {
     StoryNode *storyRoot = sampleStory();
-
-    runGame(storyRoot);
+    try {
+        runGame(storyRoot);
+    } catch (EndProgram e) {
+        cout << e.what() << endl;
+    }
 
     return 0;
 }
