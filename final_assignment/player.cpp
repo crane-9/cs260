@@ -8,7 +8,10 @@ using namespace std;
 
 
 bool Player::addFlag(string newFlag) {
+    bool oldStatus = flags[newFlag];
     flags[newFlag] = true;
+
+    return oldStatus;
 }
 
 void Player::addItem(string newItem) {
