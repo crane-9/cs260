@@ -3,19 +3,19 @@
 ## Quickstart
 This file contains design notes for my final project and game.
 
-To compile game, include:
+To compile game:
 ```
-g++ story.cpp graph.cpp player.cpp game.cpp WIZARDVILLE
+g++ driver_run.cpp game.cpp graph.cpp player.cpp wizardville.cpp WIZARDVILLE
 ```
 
 Compile demo game:
 ```
-g++ demo.cpp graph.cpp player.cpp demo
+g++ driver_demo.cpp game.cpp graph.cpp player.cpp DEMO
 ```
 
-To compile unit tests, include: 
+Compile graph class unit tests: 
 ```
-g++ tests.cpp graph.cpp tests
+g++ driver_tests.cpp graph.cpp TESTS
 ```
 
 
@@ -40,7 +40,7 @@ Found on [archive.org](https://archive.org/details/zork-i-ii-iii-maps/)
 
 In Zork, the player navigates the world by entering a direction (north/east/south/west) into the console. Each location behaves as a node, as it has its own unique data and connections to other locations. Connections between locations can even be one-way passages, similar to the directionality of graph nodes.
 
-Another example and point of inspiration is [Twine 2](https://twinery.org/), a tool for building non-linear, text-based adventure games. The tool's editor interface is a graph that holds story nodes, all of which are connected by directional arcs.
+Another example and point of inspiration is [Twine](https://twinery.org/), a tool for building non-linear, text-based adventure games. The tool's editor interface is a graph that holds story nodes, all of which are connected by directional arcs.
 
 ![Twine 2 interface](../readme_src/twine2_example.jpg)
 
@@ -111,15 +111,17 @@ Written within the following files:
     + `StoryNode` struct.
 - `player.h` & `player.cpp`
     + `Player` class.
-- `story.cpp`
-    - Contains story contents: instances of story nodes.
-- `game.cpp`
-    + `main()`.
+- `story.h` & `wizardville.cpp`
+    + `getStory()` function.
+    - `wizardville.cpp` contains the implementation expected by `story.h`.
+- `game.h` & `game.cpp`
     - Input parsing and game loop.
 
-Informal game loop test [here](..\in_class\june1.cpp), though it acts more like browsing through a linked list. I may update this demo as I go.
+I wrote an informal game loop test [here](..\in_class\june1.cpp) during the development of my design.
 
 > Note: I've decided that `addArc()` and `addVertex()` will take pointers to actual nodes, rather than just the node's name or data. I made this decision because of the complexity of a `StoryNode`--there is more data than just a single string variable.
+
+> Additionally, it helps to have a pointer variable to each node for use in callbacks. For example: a secret passage opening, or a bridge crumbling. Within my design, adding or destroying these connections requires individual and specific pointers.
 
 
 ---

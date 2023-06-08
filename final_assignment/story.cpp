@@ -1,1 +1,0 @@
-// i need an empty callback for all nodes to be configured
