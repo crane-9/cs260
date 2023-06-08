@@ -1,24 +1,19 @@
 // Trial run for functionality and flow.
-#include "graph.h"
-
 #include <iostream>
 #include <string>
+
+#include "graph.h"
+#include "game.h"
 
 using namespace std;
 
 
-class EndProgram : public exception {
-    public:
-        string what() {
-            return "User ended program.";
-        }
-};
-
-
+// Empty callback.
 void noCB(StoryNode *n, Player *p) {}
 
 
 StoryNode *sampleStory() {
+    // Create story tree.
     StoryNode *firstNode = new StoryNode(noCB, "once upon a time..", "START");
     
     StoryNode *princessRoute = new StoryNode(noCB, "there was a princess and her skirt was magical.");
@@ -30,6 +25,7 @@ StoryNode *sampleStory() {
     StoryNode *dragonEndingOne = new StoryNode(noCB, "it napped happily in its hoard for all its days", "END");
     StoryNode *dragonEndingTwo = new StoryNode(noCB, "it left its cave to terrorize the world and explode a princess", "END");
 
+    // Map connections.
     firstNode->addArc(princessRoute, "there was a princess.");
     firstNode->addArc(dragonRoute, "there was a dragon");
 
@@ -42,69 +38,18 @@ StoryNode *sampleStory() {
     return firstNode;
 }
 
-bool isValidInput(int vectorSize, string input) {
-    if (input == "q") {
-        throw EndProgram();
-    } else if (input == "") {
-        return false;
-    }
-
-    int intput;
-    try {
-        intput = stoi(input);
-    } catch(invalid_argument e) {
-        return false;
-    }
-
-    // keep in mind i am going 1 - 3 rather than 0 - 2
-    return 0 < intput && intput <= vectorSize;
-}
-
-int getPlayerInput(int optionCount) {
-    string playerInput;
-
-    while (!isValidInput(optionCount, playerInput)) {
-        cout << "> ";
-        cin >> playerInput;
-    }
-
-    return stoi(playerInput);
-}
-
-void runGame(StoryNode *start) {
-    StoryNode *current;
-    
-    current = start;
-    Player player;
-    while (current != nullptr) {
-        // current->callback(current, &player);
-
-        ++current->visits;
-
-        // print narration and menu
-        cout << current->description << endl;
-        cout << current->getPaths() << endl;
-
-        if (current->tag == "END") {
-            break;
-        }
-
-        // get input, next iteration
-        current = current->connections[
-            getPlayerInput(current->connections.size()) - 1
-        ]->second;
-    }
-
-    cout << "you did it. you won the video game forever." << endl;
-}
 
 int main() {
     StoryNode *storyRoot = sampleStory();
+    Game game(new MapGraph()); // Enter empty graph, use the generated story node. why? i think i wanted to do this without a graph. why? i don't actually remember that part.
+
     try {
-        runGame(storyRoot);
+        game.gameLoop(storyRoot);
+        cout << "You completed the game!" << endl;
     } catch (EndProgram e) {
         cout << e.what() << endl;
     }
 
+    cout << "Bye bye!" << endl;
     return 0;
 }
