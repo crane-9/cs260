@@ -5,17 +5,17 @@ This file contains design notes for my final project and game.
 
 To compile game:
 ```
-g++ driver_run.cpp game.cpp graph.cpp player.cpp wizardville.cpp WIZARDVILLE
+g++ driver_run.cpp game.cpp graph.cpp player.cpp wizardville.cpp -o WIZARDVILLE
 ```
 
 Compile demo game:
 ```
-g++ driver_demo.cpp game.cpp graph.cpp player.cpp DEMO
+g++ driver_demo.cpp game.cpp graph.cpp player.cpp -o DEMO
 ```
 
 Compile graph class unit tests: 
 ```
-g++ driver_tests.cpp graph.cpp TESTS
+g++ driver_tests.cpp graph.cpp -o TESTS
 ```
 
 
@@ -109,13 +109,16 @@ Written within the following files:
 - `graph.h` & `graph.cpp`
     + `Graph` class.
     + `StoryNode` struct.
+    + `VertexTitleConflict` exception.
+    + `VertexNotFound` exception.
 - `player.h` & `player.cpp`
     + `Player` class.
 - `story.h` & `wizardville.cpp`
     + `getStory()` function.
     - `wizardville.cpp` contains the implementation expected by `story.h`.
 - `game.h` & `game.cpp`
-    - Input parsing and game loop.
+    + `Game` class.
+    + `EndProgram` error.
 
 I wrote an informal game loop test [here](..\in_class\june1.cpp) during the development of my design.
 

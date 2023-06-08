@@ -1,28 +1,51 @@
 #include <algorithm>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <utility>
 
 #include "graph.h"
+#include "player.h"
 
-using std::pair, std::string, std::stringstream;
+using std::cout, std::endl, std::pair, std::string, std::stringstream;
 
 
-StoryNode::StoryNode(void (* _callback)(StoryNode *, Player *), string _description, string _tag) {
+VertexTitleConflict::VertexTitleConflict(string title) {
+    hint = title;
+}
+
+string VertexTitleConflict::what() {
+    stringstream message;
+    message << "Node '" << hint << "' already exists.";
+    return message.str();
+}
+
+VertexNotFound::VertexNotFound(string title) {
+    hint = title;
+}
+
+string VertexNotFound::what() {
+    stringstream message;
+    message << "Node '" << hint << "' could not be found within the graph.";
+    return message.str();
+}
+
+
+StoryNode::StoryNode(void (* _callback)(StoryNode *, Player *), string _description, string _title) {
     callback = _callback;
     description = _description;
-    tag = _tag;
+    title = _title;
 }
 
 StoryNode::~StoryNode() {
-    for (labelledPair<StoryNode *> *arc : connections) {
+    for (auto arc : connections) {
         delete arc;
     }
     connections.clear();
 }
 
 void StoryNode::addArc(StoryNode *branch, string text) {
-    // I will allow duplicates because I am working out how not to :]
+    // I will allow duplicates.
     connections.push_back(new pair<string, StoryNode *>(text, branch));
 }
 
@@ -54,24 +77,46 @@ MapGraph::MapGraph() {
 }
 
 MapGraph::~MapGraph() {
-    for (StoryNode *node : vertices) {
+    for (auto const& [label, node] : vertices) {
         delete node;
     }
     vertices.clear();
 }
 
-void MapGraph::addDirectionedArc(StoryNode *source, StoryNode *destination) {
-    source->addArc(destination);
-}
-
-void MapGraph::addMutualArc(StoryNode *nodeA, StoryNode *nodeB) {
-    addDirectionedArc(nodeA, nodeB);
-    addDirectionedArc(nodeB, nodeA);
+void MapGraph::addDirectionedArc(StoryNode *source, StoryNode *destination, string text) {
+    source->addArc(destination, text);
 }
 
 void MapGraph::addVertex(StoryNode *newVertex) {
-    vertices.push_back(newVertex);
+    if (vertices[newVertex->title] != 0) {
+        throw VertexTitleConflict(newVertex->title);
+    }
+
+    vertices[newVertex->title] = (newVertex);
     ++size;
+}
+
+void MapGraph::deleteVertex(string title) {
+    if (vertices[title] == 0) {
+        throw VertexNotFound(title);
+    }
+
+    delete vertices[title];
+    --size;
+}
+
+StoryNode *MapGraph::getByTag(string tag) {
+    for (auto const& [label, node] : vertices) {
+        if (node->tag == tag) {
+            return node;
+        }
+    }
+
+    throw VertexNotFound("#" + tag);
+}
+
+StoryNode *MapGraph::getByTitle(string title) {
+    return vertices[title];
 }
 
 string MapGraph::minSpanTree(StoryNode *source) {
@@ -80,4 +125,11 @@ string MapGraph::minSpanTree(StoryNode *source) {
 
 string MapGraph::shortestPath() {
     return "";
+}
+
+void MapGraph::showVertices() {
+    for (auto const& [label, node] : vertices) {
+        cout << label << ", ";
+    }
+    cout << endl;
 }
