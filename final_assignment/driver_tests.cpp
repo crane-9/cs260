@@ -11,9 +11,9 @@ using namespace std;
 void eCB(StoryNode*, Player *) {}
 
 void addVertexTest(MapGraph *graph) {
-    auto node = new StoryNode(eCB, "A", "here is some data.");
-    auto node2 = new StoryNode(eCB, "B", "here is some data.");
-    auto node3 = new StoryNode(eCB, "C", "here is some data.");
+    auto node = new StoryNode(eCB, "data", "A");
+    auto node2 = new StoryNode(eCB, "data", "B");
+    auto node3 = new StoryNode(eCB, "data", "C");
 
     graph->addVertex(node);
     graph->addVertex(node2);
@@ -21,7 +21,7 @@ void addVertexTest(MapGraph *graph) {
 
     graph->showVertices();
 
-    cout << graph->getByTag("D") << endl;
+    // cout << graph->getByTag("D") << endl;
 }
 
 int main() {

@@ -121,14 +121,6 @@ class MapGraph {
         void deleteVertex(std::string title);
 
         /**
-         * Gets a node by its tag.
-         * @note Unique tags are not enforced, but expected to be unique. Only the first node with the given tag may be returned.
-         * @param tag The tag of the desired node.
-         * @return Pointer to that node.
-        */
-       StoryNode *getByTag(std::string tag);
-
-        /**
          * Gets a node by its unique title.
          * @param title Title of the desired node.
          * @throws VertexNotFound if node does not exist.

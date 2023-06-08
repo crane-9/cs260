@@ -88,34 +88,29 @@ void MapGraph::addDirectionedArc(StoryNode *source, StoryNode *destination, stri
 }
 
 void MapGraph::addVertex(StoryNode *newVertex) {
+    // Check that this doesn't override.
     if (vertices[newVertex->title] != 0) {
         throw VertexTitleConflict(newVertex->title);
     }
 
+    // Add and increase size.
     vertices[newVertex->title] = (newVertex);
     ++size;
 }
 
 void MapGraph::deleteVertex(string title) {
+    // Check that there is something to delete.
     if (vertices[title] == 0) {
         throw VertexNotFound(title);
     }
 
+    // Delete.
     delete vertices[title];
     --size;
 }
 
-StoryNode *MapGraph::getByTag(string tag) {
-    for (auto const& [label, node] : vertices) {
-        if (node->tag == tag) {
-            return node;
-        }
-    }
-
-    throw VertexNotFound("#" + tag);
-}
-
 StoryNode *MapGraph::getByTitle(string title) {
+    // Grab it.
     return vertices[title];
 }
 
