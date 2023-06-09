@@ -1,8 +1,8 @@
+#include "player.h"
+
 #include <algorithm>
 #include <string>
 #include <map>
-
-#include "player.h"
 
 using namespace std;
 

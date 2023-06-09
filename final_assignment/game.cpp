@@ -27,15 +27,15 @@ bool Game::isValidInput(int options, string input) {
         return false;
     }
 
-    int intput;
+    int intInput;
     try {
-        intput = stoi(input);
+        intInput = stoi(input);
     } catch(std::invalid_argument e) {
         return false;
     }
 
-    // keep in mind i am going 1 - 3 rather than 0 - 2
-    return 0 < intput && intput <= options;
+    // Check if input is in the appropriate range.
+    return 0 < intInput && intInput <= options;
 }
 
 int Game::getInput(int options) {
@@ -61,22 +61,23 @@ StoryNode *Game::pickNextNode(StoryNode *node) {
 
 void Game::gameLoop(StoryNode *start) {
     StoryNode *current;
-    
+    string callbackText;
+
     current = start;
     while (current != nullptr) {
-        current->callback(current, &player);
-
+        // Callback, update visits.
+        callbackText = current->callback(current, &player);
         ++current->visits;
 
-        // print narration and menu
+        // Print narration and menu.
         cout << current->description << endl;
-        std::cerr << current->getPaths() << endl;
+        if (callbackText != "") cout << callbackText << endl;
+        cout << current->getPaths() << endl;
 
-        if (current->tag == "END") {
-            break;
-        }
+        // Break loop here. 
+        if (current->tag == "END") break;
 
-        // get input, next iteration
+        // Next iteration.
         current = pickNextNode(current);
     }
 }
