@@ -13,6 +13,8 @@
 using std::cout, std::endl, std::pair, std::string, std::stringstream;
 
 
+// Exception implementations.
+
 VertexTitleConflict::VertexTitleConflict(string title) {
     hint = title;
 }
@@ -33,6 +35,8 @@ string VertexNotFound::what() {
     return message.str();
 }
 
+
+// StoryNode implementations.
 
 StoryNode::StoryNode(string (* _callback)(StoryNode *, Player *), string _description, string _title, string _tag) {
     callback = _callback;
@@ -77,6 +81,8 @@ void StoryNode::removeArc(StoryNode *branch) {
     // If no matching node is found, I've elected to do nothing.
 }
 
+
+// MapGraph implementations.
 
 MapGraph::MapGraph() {
     size = 0;
@@ -177,8 +183,9 @@ pathMap *MapGraph::shortestPath(string nodeTitle) {
             // New distance based on parent node's distance.
             int distance = (*paths)[current->title]->first + 1;
 
-            // Compare -- set if smaller.
+            // Compare.
             if ((*paths)[node->title]->first > distance) {
+                // Update distance and parent.
                 (*paths)[node->title]->first = distance;
                 (*paths)[node->title]->second = current->title;
             }

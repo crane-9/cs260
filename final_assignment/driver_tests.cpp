@@ -10,7 +10,7 @@
 
 using namespace std;
 
-// Empty callback
+// Defining empty callback.
 string eCB(StoryNode*, Player *) { return ""; }
 
 
