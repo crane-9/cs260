@@ -1,10 +1,11 @@
+#include "graph.h"
+
 #include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <utility>
 
-#include "graph.h"
 #include "player.h"
 
 using std::cout, std::endl, std::pair, std::string, std::stringstream;
@@ -31,10 +32,11 @@ string VertexNotFound::what() {
 }
 
 
-StoryNode::StoryNode(void (* _callback)(StoryNode *, Player *), string _description, string _title) {
+StoryNode::StoryNode(string (* _callback)(StoryNode *, Player *), string _description, string _title, string _tag) {
     callback = _callback;
     description = _description;
     title = _title;
+    tag = _tag;
 }
 
 StoryNode::~StoryNode() {
@@ -64,6 +66,7 @@ void StoryNode::removeArc(StoryNode *branch) {
         if (connections[i]->second == branch) {
             // Delete connection, and remove from list.
             delete connections[i]->second;
+            delete connections[i];
             connections.erase(connections.begin() + i);
             return;
         }
@@ -83,8 +86,15 @@ MapGraph::~MapGraph() {
     vertices.clear();
 }
 
-void MapGraph::addDirectionedArc(StoryNode *source, StoryNode *destination, string text) {
+void MapGraph::addArc(StoryNode *source, StoryNode *destination, string text) {
     source->addArc(destination, text);
+}
+
+void MapGraph::addArc(string source, string destination) {
+    StoryNode *sourceNode = getByTitle(source);
+    StoryNode *destinationNode = getByTitle(destination);
+
+    sourceNode->addArc(destinationNode);
 }
 
 void MapGraph::addVertex(StoryNode *newVertex) {
@@ -98,11 +108,21 @@ void MapGraph::addVertex(StoryNode *newVertex) {
     ++size;
 }
 
+void MapGraph::addVertices(StoryNode *rootVertex) {
+    // Only add if it has already been added.
+    if (vertices[rootVertex->title] == 0) {
+        addVertex(rootVertex);
+    }
+
+    // Add all connections.
+    for (auto connection : rootVertex->connections) {
+        addVertices(connection->second);
+    }
+}
+
 void MapGraph::deleteVertex(string title) {
     // Check that there is something to delete.
-    if (vertices[title] == 0) {
-        throw VertexNotFound(title);
-    }
+    if (vertices[title] == 0) throw VertexNotFound(title);
 
     // Delete.
     delete vertices[title];
@@ -114,17 +134,20 @@ StoryNode *MapGraph::getByTitle(string title) {
     return vertices[title];
 }
 
-string MapGraph::minSpanTree(StoryNode *source) {
+string MapGraph::minSpanTree() {
     return "";
 }
 
-string MapGraph::shortestPath() {
+string MapGraph::shortestPath(string nodeTitle) {
     return "";
 }
 
-void MapGraph::showVertices() {
+string MapGraph::showVertices() {
+    stringstream message;
+
     for (auto const& [label, node] : vertices) {
-        cout << label << ", ";
+        message << label << ", ";
     }
-    cout << endl;
+
+    return message.str();
 }

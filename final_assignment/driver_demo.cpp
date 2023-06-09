@@ -9,7 +9,7 @@ using namespace std;
 
 
 // Empty callback.
-void noCB(StoryNode *n, Player *p) {}
+string noCB(StoryNode *n, Player *p) { return ""; }
 
 
 StoryNode *sampleStory() {
@@ -19,11 +19,11 @@ StoryNode *sampleStory() {
     StoryNode *princessRoute = new StoryNode(noCB, "there was a princess and her skirt was magical.");
     StoryNode *dragonRoute = new StoryNode(noCB, "there was a big giant dragon");
 
-    StoryNode *princessEndingOne = new StoryNode(noCB, "she lived happily forever!", "END");
-    StoryNode *princessEndingTwo = new StoryNode(noCB, "she then exploded and everyone was sad", "END");
+    StoryNode *princessEndingOne = new StoryNode(noCB, "she lived happily forever!", "", "END");
+    StoryNode *princessEndingTwo = new StoryNode(noCB, "she then exploded and everyone was sad", "", "END");
 
-    StoryNode *dragonEndingOne = new StoryNode(noCB, "it napped happily in its hoard for all its days", "END");
-    StoryNode *dragonEndingTwo = new StoryNode(noCB, "it left its cave to terrorize the world and explode a princess", "END");
+    StoryNode *dragonEndingOne = new StoryNode(noCB, "it napped happily in its hoard for all its days", "", "END");
+    StoryNode *dragonEndingTwo = new StoryNode(noCB, "it left its cave to terrorize the world and explode a princess", "", "END");
 
     // Map connections.
     firstNode->addArc(princessRoute, "there was a princess.");
