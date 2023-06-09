@@ -12,6 +12,8 @@
 using std::string;
 
 
+typedef std::map<string, std::pair<int, string> *> pathMap;
+
 /// @brief Error thrown when a graph already has a node of the given name.
 class VertexTitleConflict : public std::exception {
     private: 
@@ -160,7 +162,7 @@ class MapGraph {
          * @param nodeTitle The title of the source node.
          * @return A string describing the shortest paths from the given node to all other accessible nodes.
         */
-        string shortestPath(string nodeTitle);
+        pathMap *shortestPath(string nodeTitle);
 
         /**
          * For debug purposes. Returns a string of all node titles and descriptions.

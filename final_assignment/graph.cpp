@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <iostream>
+#include <map>
+#include <queue>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -55,6 +57,7 @@ string StoryNode::getPaths() {
     stringstream menu;
 
     for (int i = 0; i < connections.size(); ++i) {
+        // +1 to keep options > 0.
         menu << "\n[" << i + 1 << "] " << connections[i]->first;
     }
 
@@ -138,8 +141,56 @@ string MapGraph::minSpanTree() {
     return "";
 }
 
-string MapGraph::shortestPath(string nodeTitle) {
-    return "";
+pathMap *MapGraph::shortestPath(string nodeTitle) {
+    std::map<string, bool> visited; // Tracks which nodes have been visited
+    
+    // This map holds path info. Node name mapped to the total distance and parent node.
+    auto paths = new pathMap;
+    for (auto items : vertices) {
+        // "Infinite" distance (larger than anything expected) and no parent.
+        (*paths)[items.first] = new pair<int, string>(size + 1, "");
+    }
+
+    (*paths)[nodeTitle]->first = 0;
+
+    // Prepare and run Dijkstra's algorithm
+    StoryNode *current;
+    std::queue<StoryNode *> nodeQueue;
+    nodeQueue.push(vertices[nodeTitle]);
+
+    while (!nodeQueue.empty()) {
+        current = nodeQueue.front(); nodeQueue.pop(); // Retrieve next node.
+
+        // Skip if it has been visited.
+        if (visited[current->title]) {
+            continue;
+        }
+
+        // Add unvisited connections to queue.
+        for (auto connection : current->connections) {
+            StoryNode *node = connection->second;
+            // Skip visited--possibly redundant, but this is safety.
+            if (visited[node->title]) {
+                continue;
+            }
+            
+            // New distance based on parent node's distance.
+            int distance = (*paths)[current->title]->first + 1;
+
+            // Compare -- set if smaller.
+            if ((*paths)[node->title]->first > distance) {
+                (*paths)[node->title]->first = distance;
+                (*paths)[node->title]->second = current->title;
+            }
+
+            nodeQueue.push(node);
+        }
+
+        // Mark as visited.
+        visited[current->title] = true;
+    }
+
+    return paths;
 }
 
 string MapGraph::showVertices() {

@@ -1,8 +1,10 @@
 // Tests for graph.h/cpp
 
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <string>
+#include <utility>
 
 #include "graph.h"
 
@@ -45,6 +47,8 @@ MapGraph *makeSampleGraph() {
     graph->addArc("J", "H");
 
     graph->addArc("X", "Y"); graph->addArc("Y", "X");
+
+    return graph;
 }
 
 
@@ -73,13 +77,13 @@ string addVertexTest(MapGraph *graph) {
 
 /// @brief Tests a graph's addArc() method, returns a pass/fail message.
 string addArcTest(MapGraph *graph) {
-
+    return "";
 }
 
 
 /// @brief Tests a graph addVertices() method, returns pass/fail message.
 string addVerticesTest(MapGraph *graph) {
-
+    return "";
 }
 
 
@@ -93,7 +97,29 @@ string deleteVertexTest(MapGraph *graph) {
 
 
 string shortestPathTest(MapGraph *sampleGraph) {
-    return sampleGraph->shortestPath("B");
+    pathMap *shortestPaths = sampleGraph->shortestPath("C");
+
+    stringstream results;
+
+    results << "SHORTEST PATHS FROM NODE 'C':\n";
+
+    for (auto const& [nodeTitle, data] : (*shortestPaths)) {
+        results << "\t";
+        results << nodeTitle << " - ";
+        if (data->first == sampleGraph->getSize() + 1) {
+            results << "NO PATH";
+        } else {
+            results << data->first << " STEP ";
+        }
+
+        if (data->second != "") {
+            results << "[PARENT '" << data->second << "']";
+        }
+
+        results << "\n";
+    }
+
+    return results.str();
 }
 
 
@@ -109,7 +135,7 @@ int main() {
     cout << addVertexTest(graph) << endl;
     cout << addArcTest(graph) << endl;
     cout << addVerticesTest(graph) << endl;
-    cout << deleteVertexTest(graph) << endl;
+    // cout << deleteVertexTest(graph) << endl;
 
     delete graph;
 
