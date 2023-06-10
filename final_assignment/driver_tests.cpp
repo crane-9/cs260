@@ -53,21 +53,17 @@ MapGraph *makeSampleGraph() {
 
 /// @brief Tests a graph's addVertex() method, returns pass/fail message.
 string addVertexTest(MapGraph *graph) {
-    auto node = new StoryNode("data", "A");
-    auto node2 = new StoryNode("data", "B");
-    auto node3 = new StoryNode("data", "C");
-
-    graph->addVertex(node);
-    graph->addVertex(node2);
-    graph->addVertex(node3);
+    graph->addVertex(new StoryNode("data", "A"));
+    graph->addVertex(new StoryNode("data", "B"));
+    graph->addVertex(new StoryNode("data", "C"));
 
     string result = graph->showVertices();
-    if (result == "A, B, C, ") {
+    if (result == "\"A\", \"B\", \"C\", ") {
         return "PASSED All nodes added to graph successfully.";
     }
 
     stringstream message;
-    message << "FAILED Expected: 'A, B, C, '. graph.showVertices(): " << result;
+    message << "FAILED Expected: '\"A\", \"B\", \"C\", '. graph.showVertices(): '" << result << "'";
     return message.str();
 }
 

@@ -45,6 +45,7 @@ StoryNode::StoryNode(string (* _callback)(StoryNode *, MapGraph *, Player *), st
     title = _title;
     tag = _tag;
 }
+
 StoryNode::StoryNode(string _description, string _title, string _tag) {
     callback = callbacks::eCB;
     description = _description;
@@ -114,7 +115,7 @@ void MapGraph::addArc(string source, string destination, string text) {
 }
 
 void MapGraph::addVertex(StoryNode *newVertex) {
-    // Check that this doesn't override. Improper check because a value is going to be created here anyhow.
+    // Check this doesn't override. Improper check because a value is going to be created here anyhow.
     if (vertices[newVertex->title] != 0) {
         throw VertexTitleConflict(newVertex->title);
     }
@@ -205,7 +206,7 @@ string MapGraph::showVertices() {
     stringstream message;
 
     for (auto const& [label, node] : vertices) {
-        message << label << ", ";
+        message << "\"" << label << "\", ";
     }
 
     return message.str();
