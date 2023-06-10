@@ -1,6 +1,5 @@
 #include "graph.h"
 
-#include <algorithm>
 #include <iostream>
 #include <map>
 #include <queue>
