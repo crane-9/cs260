@@ -14,6 +14,12 @@ using std::string;
 
 typedef std::map<string, std::pair<int, string> *> pathMap;
 class MapGraph;
+struct StoryNode;
+
+// Empty callback
+namespace callbacks {
+    string eCB(StoryNode *n, MapGraph *g, Player *p);
+}
 
 
 /// @brief Error thrown when a graph already has a node of the given name.
@@ -51,12 +57,21 @@ struct StoryNode {
 
     /**
      * Constructs node.
-     * @param _callback Node's callback
+     * @param _callback Node's callback.
+     * @param _description The node's narration.
+     * @param _title Unique title for the node, may be omitted when used without a graph. 
+     * @param _tag Optional tag for the node. Non-unique. Example: "END" to mark an ending.
+     * @overload One overload that constructs node with empty callback.
+    */
+    StoryNode(string (* _callback)(StoryNode *, MapGraph *, Player *), string _description, string _title, string _tag = "");
+    
+    /**
+     * Constructs node with empty callback.
      * @param _description The node's narration.
      * @param _title Unique title for the node, may be omitted when used without a graph. 
      * @param _tag Optional tag for the node. Non-unique. Example: "END" to mark an ending.
     */
-    StoryNode(string (* _callback)(StoryNode *, MapGraph *, Player *), string _description, string _title = "", string _tag = "");
+    StoryNode(string _description, string _title, string _tag = "");
 
     /**
      * Destructs node and its connections.

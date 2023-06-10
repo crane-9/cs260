@@ -8,22 +8,18 @@
 using namespace std;
 
 
-// Empty callback.
-string noCB(StoryNode *n, MapGraph *g, Player *p) { return ""; }
-
-
 StoryNode *sampleStory() {
     // Create story tree.
-    StoryNode *firstNode = new StoryNode(noCB, "once upon a time..", "START");
+    StoryNode *firstNode = new StoryNode("once upon a time..", "START");
     
-    StoryNode *princessRoute = new StoryNode(noCB, "there was a princess and her skirt was magical.");
-    StoryNode *dragonRoute = new StoryNode(noCB, "there was a big giant dragon");
+    StoryNode *princessRoute = new StoryNode("there was a princess and her skirt was magical.", "");
+    StoryNode *dragonRoute = new StoryNode("there was a big giant dragon", "");
 
-    StoryNode *princessEndingOne = new StoryNode(noCB, "she lived happily forever!", "", "END");
-    StoryNode *princessEndingTwo = new StoryNode(noCB, "she then exploded and everyone was sad", "", "END");
+    StoryNode *princessEndingOne = new StoryNode("she lived happily forever!", "", "END");
+    StoryNode *princessEndingTwo = new StoryNode("she then exploded and everyone was sad", "", "END");
 
-    StoryNode *dragonEndingOne = new StoryNode(noCB, "it napped happily in its hoard for all its days", "", "END");
-    StoryNode *dragonEndingTwo = new StoryNode(noCB, "it left its cave to terrorize the world and explode a princess", "", "END");
+    StoryNode *dragonEndingOne = new StoryNode("it napped happily in its hoard for all its days", "", "END");
+    StoryNode *dragonEndingTwo = new StoryNode("it left its cave to terrorize the world and explode a princess", "", "END");
 
     // Map connections.
     firstNode->addArc(princessRoute, "there was a princess.");

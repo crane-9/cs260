@@ -5,15 +5,15 @@ This file contains design notes for my final project and game.
 
 To compile game:
 ```
-g++ driver_run.cpp game.cpp graph.cpp player.cpp wizardville.cpp -o WIZARDVILLE
+g++ driver_wizards.cpp game.cpp graph.cpp player.cpp wizardville.cpp -o WIZARDVILLE
 ```
 
-Compile demo game:
+To compile demo game:
 ```
 g++ driver_demo.cpp game.cpp graph.cpp player.cpp -o DEMO
 ```
 
-Compile graph class unit tests: 
+To compile graph class unit tests: 
 ```
 g++ driver_tests.cpp graph.cpp -o TESTS
 ```

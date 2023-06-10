@@ -79,7 +79,7 @@ void Game::gameLoop(StoryNode *start) {
 
         // Next iteration.
         current = pickNextNode(current);
-        cout << endl << endl;
+        cout << endl << ": :   :     :       :         :       :     :   : :" << endl << endl;
     }
 }
 

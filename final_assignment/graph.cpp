@@ -13,6 +13,8 @@
 using std::cout, std::endl, std::pair, std::string, std::stringstream;
 
 
+string callbacks::eCB(StoryNode *n, MapGraph *g, Player *p) { return ""; }
+
 // Exception implementations.
 
 VertexTitleConflict::VertexTitleConflict(string title) {
@@ -40,6 +42,12 @@ string VertexNotFound::what() {
 
 StoryNode::StoryNode(string (* _callback)(StoryNode *, MapGraph *, Player *), string _description, string _title, string _tag) {
     callback = _callback;
+    description = _description;
+    title = _title;
+    tag = _tag;
+}
+StoryNode::StoryNode(string _description, string _title, string _tag) {
+    callback = callbacks::eCB;
     description = _description;
     title = _title;
     tag = _tag;

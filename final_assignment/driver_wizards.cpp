@@ -14,6 +14,9 @@ using std::cin, std::cout, std::endl, std::string;
 
 
 int main(int argc, char *argv[]) {
+    // Aesthetic preference.
+    cout << endl << endl;
+
     Game game(story::getGraph());
 
     // Argument flag `-t` skips tutorial.
