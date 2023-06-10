@@ -10,28 +10,25 @@
 
 using namespace std;
 
-// Defining empty callback.
-string eCB(StoryNode*, Player *) { return ""; }
-
 
 // Complex graph generator.
 MapGraph *makeSampleGraph() {
     auto graph = new MapGraph();
 
-    graph->addVertex(new StoryNode(eCB, "", "A"));
-    graph->addVertex(new StoryNode(eCB, "", "B"));
-    graph->addVertex(new StoryNode(eCB, "", "C"));
-    graph->addVertex(new StoryNode(eCB, "", "D"));
-    graph->addVertex(new StoryNode(eCB, "", "E"));
-    graph->addVertex(new StoryNode(eCB, "", "F"));
-    graph->addVertex(new StoryNode(eCB, "", "G"));
-    graph->addVertex(new StoryNode(eCB, "", "H"));
-    graph->addVertex(new StoryNode(eCB, "", "I"));
-    graph->addVertex(new StoryNode(eCB, "", "J"));
+    graph->addVertex(new StoryNode("", "A"));
+    graph->addVertex(new StoryNode("", "B"));
+    graph->addVertex(new StoryNode("", "C"));
+    graph->addVertex(new StoryNode("", "D"));
+    graph->addVertex(new StoryNode("", "E"));
+    graph->addVertex(new StoryNode("", "F"));
+    graph->addVertex(new StoryNode("", "G"));
+    graph->addVertex(new StoryNode("", "H"));
+    graph->addVertex(new StoryNode("", "I"));
+    graph->addVertex(new StoryNode("", "J"));
     
-    graph->addVertex(new StoryNode(eCB, "", "X"));
-    graph->addVertex(new StoryNode(eCB, "", "Y"));
-    graph->addVertex(new StoryNode(eCB, "", "Z"));
+    graph->addVertex(new StoryNode("", "X"));
+    graph->addVertex(new StoryNode("", "Y"));
+    graph->addVertex(new StoryNode("", "Z"));
 
     graph->addArc("A", "B"); graph->addArc("B", "A");
     graph->addArc("B", "C");
@@ -56,9 +53,9 @@ MapGraph *makeSampleGraph() {
 
 /// @brief Tests a graph's addVertex() method, returns pass/fail message.
 string addVertexTest(MapGraph *graph) {
-    auto node = new StoryNode(eCB, "data", "A");
-    auto node2 = new StoryNode(eCB, "data", "B");
-    auto node3 = new StoryNode(eCB, "data", "C");
+    auto node = new StoryNode("data", "A");
+    auto node2 = new StoryNode("data", "B");
+    auto node3 = new StoryNode("data", "C");
 
     graph->addVertex(node);
     graph->addVertex(node2);
