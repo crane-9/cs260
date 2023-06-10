@@ -6,6 +6,7 @@
 #include "graph.h"
 #include "player.h"
 
+
 class EndProgram : public std::exception {
     public:
         std::string what();
@@ -14,14 +15,14 @@ class EndProgram : public std::exception {
 
 class Game {
     private:
-        MapGraph *game;
+        MapGraph *graph;
         Player player;
 
     public:
         /**
          * Constructs the game using the current graph.
         */
-        Game(MapGraph *_game);
+        Game(MapGraph *_graph);
 
         ~Game();
 

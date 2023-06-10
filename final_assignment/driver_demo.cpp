@@ -9,7 +9,7 @@ using namespace std;
 
 
 // Empty callback.
-string noCB(StoryNode *n, Player *p) { return ""; }
+string noCB(StoryNode *n, MapGraph *g, Player *p) { return ""; }
 
 
 StoryNode *sampleStory() {

@@ -3,12 +3,12 @@
 
 #include "graph.h"
 
-namespace main {
+namespace story {
     /**
      * Get a graph of the implemented story.
      * @return A graph loaded with a game's data.
     */
-    MapGraph *getStory();
+    MapGraph *getGraph();
 }
 
 #endif

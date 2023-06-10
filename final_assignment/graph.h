@@ -13,6 +13,8 @@ using std::string;
 
 
 typedef std::map<string, std::pair<int, string> *> pathMap;
+class MapGraph;
+
 
 /// @brief Error thrown when a graph already has a node of the given name.
 class VertexTitleConflict : public std::exception {
@@ -38,7 +40,7 @@ class VertexNotFound : public std::exception {
 
 /// @brief Single node.
 struct StoryNode {
-    string (* callback)(StoryNode *, Player *);
+    string (* callback)(StoryNode *, MapGraph *, Player *);
     std::vector<std::pair<string, StoryNode *> *> connections;
 
     string title; // Short, unique.
@@ -54,7 +56,7 @@ struct StoryNode {
      * @param _title Unique title for the node, may be omitted when used without a graph. 
      * @param _tag Optional tag for the node. Non-unique. Example: "END" to mark an ending.
     */
-    StoryNode(string (* _callback)(StoryNode *, Player *), string _description, string _title = "", string _tag = "");
+    StoryNode(string (* _callback)(StoryNode *, MapGraph *, Player *), string _description, string _title = "", string _tag = "");
 
     /**
      * Destructs node and its connections.
@@ -67,7 +69,7 @@ struct StoryNode {
      * @param text The text to display for the player.
      * @return No return value.
     */
-    void addArc(StoryNode *branch, string text = "Return.");
+    void addArc(StoryNode *branch, string text);
 
     /**
      * Get all connections and their reference message.
@@ -112,7 +114,7 @@ class MapGraph {
          * @return No return value.
         */
         void addArc(StoryNode *source, StoryNode *destination, string text = "");
-        void addArc(string source, string destination);
+        void addArc(string source, string destination, string text = "");
 
         /**
          * Adds a vertex to the graph.

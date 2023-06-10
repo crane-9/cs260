@@ -14,12 +14,12 @@ string EndProgram::what() {
 }
 
 
-Game::Game(MapGraph *_game) {
-    game = _game;
+Game::Game(MapGraph *_graph) {
+    graph = _graph;
 }
 
 Game::~Game() {
-    delete game;
+    delete graph;
 }
 
 bool Game::isValidInput(int options, string input) {
@@ -66,7 +66,7 @@ void Game::gameLoop(StoryNode *start) {
     current = start;
     while (current != nullptr) {
         // Callback, update visits.
-        callbackText = current->callback(current, &player);
+        callbackText = current->callback(current, graph, &player);
         ++current->visits;
 
         // Print narration and menu.
@@ -79,5 +79,11 @@ void Game::gameLoop(StoryNode *start) {
 
         // Next iteration.
         current = pickNextNode(current);
+        cout << endl << endl;
     }
+}
+
+
+void Game::runGame(string startTitle) {
+    gameLoop(graph->getByTitle(startTitle));
 }

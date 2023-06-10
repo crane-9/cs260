@@ -38,7 +38,7 @@ string VertexNotFound::what() {
 
 // StoryNode implementations.
 
-StoryNode::StoryNode(string (* _callback)(StoryNode *, Player *), string _description, string _title, string _tag) {
+StoryNode::StoryNode(string (* _callback)(StoryNode *, MapGraph *, Player *), string _description, string _title, string _tag) {
     callback = _callback;
     description = _description;
     title = _title;
@@ -99,11 +99,11 @@ void MapGraph::addArc(StoryNode *source, StoryNode *destination, string text) {
     source->addArc(destination, text);
 }
 
-void MapGraph::addArc(string source, string destination) {
+void MapGraph::addArc(string source, string destination, string text) {
     StoryNode *sourceNode = getByTitle(source);
     StoryNode *destinationNode = getByTitle(destination);
 
-    sourceNode->addArc(destinationNode);
+    sourceNode->addArc(destinationNode, text);
 }
 
 void MapGraph::addVertex(StoryNode *newVertex) {
