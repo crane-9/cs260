@@ -84,15 +84,6 @@ string addVerticesTest(MapGraph *graph) {
 }
 
 
-/// @brief Tests a graphs deleteVertex() method, returns a pass/fail message.  
-string deleteVertexTest(MapGraph *graph) {
-    graph->deleteVertex("A");
-
-    return graph->showVertices();
-}
-
-
-
 string shortestPathTest(MapGraph *sampleGraph) {
     pathMap *shortestPaths = sampleGraph->shortestPath("C");
 
@@ -116,6 +107,8 @@ string shortestPathTest(MapGraph *sampleGraph) {
         results << "\n";
     }
 
+    delete shortestPaths;
+
     return results.str();
 }
 
@@ -132,7 +125,6 @@ int main() {
     cout << addVertexTest(graph) << endl;
     cout << addArcTest(graph) << endl;
     cout << addVerticesTest(graph) << endl;
-    // cout << deleteVertexTest(graph) << endl;
 
     delete graph;
 

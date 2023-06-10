@@ -147,13 +147,6 @@ class MapGraph {
         void addVertices(StoryNode *rootVertex);
 
         /**
-         * Removes a vertex from the graph and deletes it forever.
-         * @param title The title of the node.
-         * @return No return--the vertex is deleted.
-        */
-        void deleteVertex(string title);
-
-        /**
          * Gets a node by its unique title.
          * @param title Title of the desired node.
          * @throws VertexNotFound if node does not exist.

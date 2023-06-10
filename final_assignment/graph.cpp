@@ -115,7 +115,7 @@ void MapGraph::addArc(string source, string destination, string text) {
 }
 
 void MapGraph::addVertex(StoryNode *newVertex) {
-    // Check that this doesn't override.
+    // Check that this doesn't override. Improper check because a value is going to be created here anyhow.
     if (vertices[newVertex->title] != 0) {
         throw VertexTitleConflict(newVertex->title);
     }
@@ -137,16 +137,10 @@ void MapGraph::addVertices(StoryNode *rootVertex) {
     }
 }
 
-void MapGraph::deleteVertex(string title) {
-    // Check that there is something to delete.
-    if (vertices[title] == 0) throw VertexNotFound(title);
-
-    // Delete.
-    delete vertices[title];
-    --size;
-}
-
 StoryNode *MapGraph::getByTitle(string title) {
+    // Check it.
+    if (vertices.find(title) == vertices.end()) throw VertexNotFound(title);
+    
     // Grab it.
     return vertices[title];
 }
