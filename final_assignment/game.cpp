@@ -42,7 +42,7 @@ int Game::getInput(int options) {
     string playerInput;
 
     while (!isValidInput(options, playerInput)) {
-        cout << "> ";
+        cout << ":>> ";
         cin >> playerInput;
 
         if (playerInput == "q" || playerInput == "Q") {
@@ -71,7 +71,7 @@ void Game::gameLoop(StoryNode *start) {
 
         // Print narration and menu.
         cout << current->description << endl;
-        if (callbackText != "") cout << callbackText << endl;
+        if (callbackText != "") cout << endl << callbackText << endl;
         cout << current->getPaths() << endl;
 
         // Break loop here. 
@@ -79,7 +79,7 @@ void Game::gameLoop(StoryNode *start) {
 
         // Next iteration.
         current = pickNextNode(current);
-        cout << endl << ": :   :     :       :         :       :     :   : :" << endl << endl;
+        cout << endl << "+ +   +     +       +         +       +     +   + +" << endl << endl;
     }
 }
 
