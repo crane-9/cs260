@@ -126,10 +126,10 @@ void MapGraph::addVertex(StoryNode *newVertex) {
 }
 
 void MapGraph::addVertices(StoryNode *rootVertex) {
-    // Only add if it has already been added.
-    if (vertices[rootVertex->title] == 0) {
+    // Let addVertex() do the work, just to avoid a double check.
+    try {
         addVertex(rootVertex);
-    }
+    } catch (VertexTitleConflict e) {}
 
     // Add all connections.
     for (auto connection : rootVertex->connections) {
@@ -146,6 +146,17 @@ StoryNode *MapGraph::getByTitle(string title) {
 }
 
 string MapGraph::minSpanTree() {
+    // This is going to be a mess--i don't want it and it doesn't want me.
+    // Chu-Liu's algorithm.
+
+    // Create a list of all edges--do i do a pair<source, dest>? probably
+    // To do this i will have to run through all nodes recursively, and there could be a lot of repeat edges. this will suck but that's ok.
+    // While building the list, i can ignore an edge if it is parallel [from the same source to the same dest]
+
+    // "arbitrary root node". i will remove any edge with a detination to this root node. pick the next root and repeat? [O(n * n * n * n). super cool.]
+
+    // https://en.wikipedia.org/wiki/Edmonds%27_algorithm this describes how to handle cycles and i'm scared :(
+
     return "";
 }
 
@@ -205,7 +216,8 @@ pathMap *MapGraph::shortestPath(string nodeTitle) {
 string MapGraph::showVertices() {
     stringstream message;
 
-    for (auto const& [label, node] : vertices) {
+    // Comma-separated list of vertices, each one's name in quotes.
+    for (auto const& [label, _] : vertices) {
         message << "\"" << label << "\", ";
     }
 
