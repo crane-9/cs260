@@ -30,20 +30,20 @@ MapGraph *makeSampleGraph() {
     graph->addVertex(new StoryNode("", "Y"));
     graph->addVertex(new StoryNode("", "Z"));
 
-    graph->addArc("A", "B"); graph->addArc("B", "A");
-    graph->addArc("B", "C");
-    graph->addArc("C", "D");
-    graph->addArc("C", "G");
-    graph->addArc("D", "A");
-    graph->addArc("D", "E");
-    graph->addArc("E", "F");
-    graph->addArc("G", "H");
-    graph->addArc("H", "F");
-    graph->addArc("H", "I");
-    graph->addArc("I", "J");
-    graph->addArc("J", "H");
+    graph->addArc("A", "B", "ab"); graph->addArc("B", "A", "ba");
+    graph->addArc("B", "C", "bc");
+    graph->addArc("C", "D", "cd");
+    graph->addArc("C", "G", "cg");
+    graph->addArc("D", "A", "da");
+    graph->addArc("D", "E", "de");
+    graph->addArc("E", "F", "ef");
+    graph->addArc("G", "H", "gh");
+    graph->addArc("H", "F", "hf");
+    graph->addArc("H", "I", "hi");
+    graph->addArc("I", "J", "ij");
+    graph->addArc("J", "H", "jh");
 
-    graph->addArc("X", "Y"); graph->addArc("Y", "X");
+    graph->addArc("X", "Y", "xy"); graph->addArc("Y", "X", "yx");
 
     return graph;
 }
@@ -81,11 +81,11 @@ string addVerticesTest(MapGraph *graph) {
 
 
 string shortestPathTest(MapGraph *sampleGraph) {
-    pathMap *shortestPaths = sampleGraph->shortestPath("C");
+    pathMap *shortestPaths = sampleGraph->shortestPath("B");
 
     stringstream results;
 
-    results << "SHORTEST PATHS FROM NODE 'C':\n";
+    results << "SHORTEST PATHS FROM NODE 'B':\n";
 
     for (auto const& [nodeTitle, data] : (*shortestPaths)) {
         results << "\t";
@@ -109,8 +109,17 @@ string shortestPathTest(MapGraph *sampleGraph) {
 }
 
 
-string minSpanTreeTest(MapGraph *sampleGraph) {
-    return sampleGraph->minSpanTree();
+string arborescenceTest(MapGraph *sampleGraph) {
+    auto information = sampleGraph->arborescence("B");
+    stringstream message;
+
+    // Return a list of all edge names.
+    for (auto const& [_, __, edgeName] : (*information)) {
+        message << "'" << edgeName << "', ";
+    }
+
+    delete information;
+    return message.str();
 }
 
 
@@ -128,7 +137,7 @@ int main() {
     MapGraph *compGraph = makeSampleGraph();
 
     cout << shortestPathTest(compGraph) << endl;    
-    cout << minSpanTreeTest(compGraph) << endl;    
+    // cout << arborescenceTest(compGraph) << endl;    
 
     delete compGraph;
 

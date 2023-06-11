@@ -145,19 +145,15 @@ StoryNode *MapGraph::getByTitle(string title) {
     return vertices[title];
 }
 
-string MapGraph::minSpanTree() {
-    // This is going to be a mess--i don't want it and it doesn't want me.
-    // Chu-Liu's algorithm.
+std::vector<arborEdge *> *MapGraph::arborescence(string sourceTitle) {
+    // This path map has the information for all 
+    pathMap *paths = shortestPath(sourceTitle);
+    
+    auto edges = new std::vector<arborEdge *>;
 
-    // Create a list of all edges--do i do a pair<source, dest>? probably
-    // To do this i will have to run through all nodes recursively, and there could be a lot of repeat edges. this will suck but that's ok.
-    // While building the list, i can ignore an edge if it is parallel [from the same source to the same dest]
 
-    // "arbitrary root node". i will remove any edge with a detination to this root node. pick the next root and repeat? [O(n * n * n * n). super cool.]
 
-    // https://en.wikipedia.org/wiki/Edmonds%27_algorithm this describes how to handle cycles and i'm scared :(
-
-    return "";
+    return edges;
 }
 
 pathMap *MapGraph::shortestPath(string nodeTitle) {

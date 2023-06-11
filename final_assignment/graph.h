@@ -16,6 +16,9 @@ typedef std::map<string, std::pair<int, string> *> pathMap;
 class MapGraph;
 struct StoryNode;
 
+// An edge only for use in MapGraph.arborescence()
+typedef std::tuple<StoryNode *, StoryNode *, string> arborEdge;
+
 // Empty callback
 namespace callbacks {
     string eCB(StoryNode *n, MapGraph *g, Player *p);
@@ -161,11 +164,11 @@ class MapGraph {
         inline int getSize() const { return size; }
 
         /**
-         * Calculates the graph's minimum spanning tree starting at the given node.
-         * @param source The node to begin with.
-         * @return A string describing the graph's minimum spanning tree.
+         * Calculates the graph's minimum arborescence starting at the given node.
+         * @param sourceTitle Title of the node to begin with.
+         * @return A vector of tuples representing each edge (source, destination, descriptive text).
         */
-        string minSpanTree();
+        std::vector<arborEdge *> *arborescence(string sourceTitle);
 
         /**
          * Calculates the shortest path to every (accessible) node from the given node.

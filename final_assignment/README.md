@@ -189,19 +189,17 @@ I plan for `shortestPath()` to return a string describing its shortest paths to 
 
 I will manually assess the output for accuracy.
 
+- For `arborescence()`:
 
-- For `minSpanTree()`:
+> Note: A "minimum spanning tree" by definition, is undirected (and most often weighted). A directed equivalent would be a minimum [arborescence](https://en.wikipedia.org/wiki/Arborescence_(graph_theory)). I found [this video](https://www.youtube.com/watch?v=B5H1qlv9hrg) on deciding the minimum arborescence. In working to adapt this for a non-weighted graph, I realized I reinvented the shortest path algorithm. I will talk about this more under [Meeting Requirements](#meeting-requirements).
 
-I will use the same sample graph to test `minSpanTree()`. Here is the graph's expected minimum spanning tree:
+> I plan for my `arborescence()` (directioned MST equivalent) to return a vector of tuples, each tuple representing an edge. The first value of each tuple being the source node, the second being the destination node, and the third being the text associated with the edge. This is not how I normally store edges, however it is necessary for the arborescence.
 
-![Minimum spanning tree of sample graph](../readme_src/sample_graph_min.png)
-*I think there are multiple valid minimum spanning trees, so I need to decide what the flow's expected output will be.
+For the arborescence, I will generate a list of all edge names from the return value of the method, and manually check them in early stages of testing. In later stages, this will be automatically evaluated against the expected strings.
 
-The method's output will be expressed as a string, listing the edges included in the minimum spanning tree. Example: 
+The expected arborescence for my sample graph (with root node "B") includes these edges:
 
-    BC, CD, DA, DE, EF, CG, GH, HI, IJ, XY
-
-This will be manually checked (or compared against the expected string), just as `shortestPath()`.
+![Sample arborescence graph](../readme_src/sample_graph_arborescence.png)
 
 
 ### Test run design
@@ -214,4 +212,4 @@ Along with unit tests, I will have a complete demo in `demo.cpp`. This will test
 
 
 ---
-## [ meeting requirements ]
+## Meeting Requirements
