@@ -18,7 +18,6 @@ To compile graph class unit tests:
 g++ driver_tests.cpp graph.cpp -o TESTS
 ```
 
-
 ### Shortcuts
 
 * [Design](#design)
@@ -28,6 +27,7 @@ g++ driver_tests.cpp graph.cpp -o TESTS
 * [Tests](#tests)
     * [Unit tests](#unit-tests)
     * [Test run design](#test-run-design)
+
 
 ## Design
 

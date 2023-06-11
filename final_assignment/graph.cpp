@@ -14,6 +14,7 @@ using std::cout, std::endl, std::pair, std::string, std::stringstream;
 
 string callbacks::eCB(StoryNode *n, GraphMap *g, Player *p) { return ""; }
 
+
 // Exception implementations.
 
 VertexTitleConflict::VertexTitleConflict(string title) {
@@ -216,7 +217,7 @@ pathMap *GraphMap::shortestPath(string nodeTitle) {
 string GraphMap::showVertices() {
     stringstream message;
 
-    // Comma-separated list of vertices, each one's name in quotes.
+    // Comma-separated list of vertices, each one's title in quotes.
     for (auto const& [label, _] : vertices) {
         message << "\"" << label << "\", ";
     }
