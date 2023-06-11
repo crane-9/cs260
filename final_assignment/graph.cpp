@@ -90,7 +90,7 @@ void StoryNode::removeArc(StoryNode *branch) {
 }
 
 
-// MapGraph implementations.
+// GraphMap implementations.
 
 MapGraph::MapGraph() {
     size = 0;
