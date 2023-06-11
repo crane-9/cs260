@@ -8,7 +8,7 @@ namespace story {
      * Get a graph of the implemented story.
      * @return A graph loaded with a game's data.
     */
-    MapGraph *getGraph();
+    GraphMap *getGraph();
 }
 
 #endif

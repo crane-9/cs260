@@ -12,8 +12,8 @@ using namespace std;
 
 
 // Complex graph generator.
-MapGraph *makeSampleGraph() {
-    auto graph = new MapGraph();
+GraphMap *makeSampleGraph() {
+    auto graph = new GraphMap();
 
     graph->addVertex(new StoryNode("", "A"));
     graph->addVertex(new StoryNode("", "B"));
@@ -52,7 +52,7 @@ MapGraph *makeSampleGraph() {
 // Unit tests
 
 /// @brief Tests a graph's addVertex() method, returns pass/fail message.
-string addVertexTest(MapGraph *graph) {
+string addVertexTest(GraphMap *graph) {
     graph->addVertex(new StoryNode("data", "A"));
     graph->addVertex(new StoryNode("data", "B"));
     graph->addVertex(new StoryNode("data", "C"));
@@ -69,18 +69,18 @@ string addVertexTest(MapGraph *graph) {
 
 
 /// @brief Tests a graph's addArc() method, returns a pass/fail message.
-string addArcTest(MapGraph *graph) {
+string addArcTest(GraphMap *graph) {
     return "";
 }
 
 
 /// @brief Tests a graph addVertices() method, returns pass/fail message.
-string addVerticesTest(MapGraph *graph) {
+string addVerticesTest(GraphMap *graph) {
     return "";
 }
 
 
-string shortestPathTest(MapGraph *sampleGraph) {
+string shortestPathTest(GraphMap *sampleGraph) {
     pathMap *shortestPaths = sampleGraph->shortestPath("C");
 
     stringstream results;
@@ -109,14 +109,14 @@ string shortestPathTest(MapGraph *sampleGraph) {
 }
 
 
-string minSpanTreeTest(MapGraph *sampleGraph) {
+string minSpanTreeTest(GraphMap *sampleGraph) {
     return sampleGraph->minSpanTree();
 }
 
 
 
 int main() {
-    MapGraph *graph = new MapGraph();
+    GraphMap *graph = new GraphMap();
 
     cout << addVertexTest(graph) << endl;
     cout << addArcTest(graph) << endl;
@@ -125,7 +125,7 @@ int main() {
     delete graph;
 
     // Build complex graph. Tree tests.
-    MapGraph *compGraph = makeSampleGraph();
+    GraphMap *compGraph = makeSampleGraph();
 
     cout << shortestPathTest(compGraph) << endl;    
     cout << minSpanTreeTest(compGraph) << endl;    

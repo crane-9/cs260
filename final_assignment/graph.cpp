@@ -12,7 +12,7 @@
 using std::cout, std::endl, std::pair, std::string, std::stringstream;
 
 
-string callbacks::eCB(StoryNode *n, MapGraph *g, Player *p) { return ""; }
+string callbacks::eCB(StoryNode *n, GraphMap *g, Player *p) { return ""; }
 
 // Exception implementations.
 
@@ -39,7 +39,7 @@ string VertexNotFound::what() {
 
 // StoryNode implementations.
 
-StoryNode::StoryNode(string (* _callback)(StoryNode *, MapGraph *, Player *), string _description, string _title, string _tag) {
+StoryNode::StoryNode(string (* _callback)(StoryNode *, GraphMap *, Player *), string _description, string _title, string _tag) {
     callback = _callback;
     description = _description;
     title = _title;
@@ -90,31 +90,31 @@ void StoryNode::removeArc(StoryNode *branch) {
 }
 
 
-// MapGraph implementations.
+// GraphMap implementations.
 
-MapGraph::MapGraph() {
+GraphMap::GraphMap() {
     size = 0;
 }
 
-MapGraph::~MapGraph() {
+GraphMap::~GraphMap() {
     for (auto const& [label, node] : vertices) {
         delete node;
     }
     vertices.clear();
 }
 
-void MapGraph::addArc(StoryNode *source, StoryNode *destination, string text) {
+void GraphMap::addArc(StoryNode *source, StoryNode *destination, string text) {
     source->addArc(destination, text);
 }
 
-void MapGraph::addArc(string source, string destination, string text) {
+void GraphMap::addArc(string source, string destination, string text) {
     StoryNode *sourceNode = getByTitle(source);
     StoryNode *destinationNode = getByTitle(destination);
 
     sourceNode->addArc(destinationNode, text);
 }
 
-void MapGraph::addVertex(StoryNode *newVertex) {
+void GraphMap::addVertex(StoryNode *newVertex) {
     // Check this doesn't override. Improper check because a value is going to be created here anyhow.
     if (vertices[newVertex->title] != 0) {
         throw VertexTitleConflict(newVertex->title);
@@ -125,7 +125,7 @@ void MapGraph::addVertex(StoryNode *newVertex) {
     ++size;
 }
 
-void MapGraph::addVertices(StoryNode *rootVertex) {
+void GraphMap::addVertices(StoryNode *rootVertex) {
     // Let addVertex() do the work, just to avoid a double check.
     try {
         addVertex(rootVertex);
@@ -137,7 +137,7 @@ void MapGraph::addVertices(StoryNode *rootVertex) {
     }
 }
 
-StoryNode *MapGraph::getByTitle(string title) {
+StoryNode *GraphMap::getByTitle(string title) {
     // Check it.
     if (vertices.find(title) == vertices.end()) throw VertexNotFound(title);
     
@@ -145,7 +145,7 @@ StoryNode *MapGraph::getByTitle(string title) {
     return vertices[title];
 }
 
-string MapGraph::minSpanTree() {
+string GraphMap::minSpanTree() {
     // This is going to be a mess--i don't want it and it doesn't want me.
     // Chu-Liu's algorithm.
 
@@ -160,7 +160,7 @@ string MapGraph::minSpanTree() {
     return "";
 }
 
-pathMap *MapGraph::shortestPath(string nodeTitle) {
+pathMap *GraphMap::shortestPath(string nodeTitle) {
     std::map<string, bool> visited; // Tracks which nodes have been visited
     
     // This map holds path info. Node name mapped to the total distance and parent node.
@@ -213,7 +213,7 @@ pathMap *MapGraph::shortestPath(string nodeTitle) {
     return paths;
 }
 
-string MapGraph::showVertices() {
+string GraphMap::showVertices() {
     stringstream message;
 
     // Comma-separated list of vertices, each one's name in quotes.

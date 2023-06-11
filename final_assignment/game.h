@@ -15,14 +15,14 @@ class EndProgram : public std::exception {
 
 class Game {
     private:
-        MapGraph *graph;
+        GraphMap *graph;
         Player player;
 
     public:
         /**
          * Constructs the game using the current graph.
         */
-        Game(MapGraph *_graph);
+        Game(GraphMap *_graph);
 
         ~Game();
 

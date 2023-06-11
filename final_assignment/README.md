@@ -55,10 +55,10 @@ A simple version of a story node (with no concern for player inventory or condit
 
 ```cpp
 struct StoryNode {
-    StoryNode *paths[5]; // Setting a limit of 5 for simplicity
+    StoryNode *paths[5]; // Setting a limit of 5 for simplicity.
 
     // Narrative text
-    string narration;
+    string description;
     string title; // A unique name for the node/page/location. 
 };
 ```
@@ -67,33 +67,36 @@ While a more complex node may look like this:
 
 ```cpp
 struct StoryNode {
-    StoryNode *paths[5];
+    // List of pairs of nodes and narrative text describing the option
+    vector<pair<StoryNode *, string>> paths;
 
     string narration;
     string title;
     
-    // A special tag may tell a game-handling object how to handle this node. For example: "Start" or "End"
+    // A special tag may tell a game-handling object how to handle this node. For example: "Start", "End", or even "Checkpoint"
     string tag;
     // A possible callback that interacts with the Player object, or uses the Player object to modify itself.
-    void (* callback)(StoryNode *, Player *);
+    void (* callback)(StoryNode *, Graph *, Player *);
     // Some games may want to count if the player has visited before, or how many times.
     int visits = 0; 
+
+    // ... Plus methods for construction and adding an arc.
 };
 ```
 
-In both proposed node versions, I've modelled a connection between two nodes as one having a pointer to another--a one-directional relationship. This would thereby be a directioned graph, which I find appropriate for the purpose.
+A connection between two nodes is directional--a pointer to a destination stored on the source node. This makes a directioned graph, which is appropriate for a text adventure.
 
-As for unlockable routes, I believe it would be appropriate to place that logic in a node's callback like so:
+Unlockable routes would be implemented in a node's callback like so:
 
 ```cpp
-void myCallback(StoryNode *node, Player *player) {
+void myCallback(StoryNode *node, Graph *graph, Player *player) {
     if (player->hasItem("silver-key")) {
-        // Where `OTHER_NODE_PTR` is a defined node, and `graph` is the globally defined graph. (Or, possibly, a third parameter, we will see.)
-        graph->addPath(node, OTHER_NODE_PTR);
+        // Where `graph->addArc()` makes a connection between two nodes, indicate by title.
+        graph->addArc(node->title, "otherNode", "Open the door.");
     }
 }
 
-// Connect later like so:
+// Pass into node consctructor, or connect like so:
 myNode->callback = myCallback;
 ```
 
@@ -122,15 +125,13 @@ Written within the following files:
 
 I wrote an informal game loop test [here](..\in_class\june1.cpp) during the development of my design.
 
-> Note: I've decided that `addArc()` and `addVertex()` will take pointers to actual nodes, rather than just the node's name or data. I made this decision because of the complexity of a `StoryNode`--there is more data than just a single string variable.
-
-> Additionally, it helps to have a pointer variable to each node for use in callbacks. For example: a secret passage opening, or a bridge crumbling. Within my design, adding or destroying these connections requires individual and specific pointers.
+> Note: I've decided that `addVertex()` will take pointers to actual nodes, rather than just the node's name or data. I made this decision because of the complexity of a `StoryNode`--there is more data than just a single string variable.
 
 
 ---
 ## Tests
 
-Putting application aside and refocusing on the structure of a graph, there are a few unit tests I would like to run to prove graph functionality. 
+Putting application aside and refocusing on the structure of a graph, there are a few unit tests I would like to run to prove graph functionality. These tests will be written in `driver_tests.cpp`.
 
 The following examples use a Graph pointer called `graph`, and nodes of various simple names.
 
@@ -140,28 +141,26 @@ The following examples use a Graph pointer called `graph`, and nodes of various 
 Create a new node with a value, and add to the graph:
 
 ```cpp
-GraphNode *node = new StoryNode("Hello.");
-
-graph->addVertex(node);
+// Where the first argument in node construction is the node's narrative,
+// And the second is the node's unique title.
+graph->addVertex(new StoryNode("data", "A"));
+graph->addVertex(new StoryNode("other data", "B"));
+graph->addVertex(new StoryNode("more data", "C"));
 ```
 
-Repeat with multiple values, and check graph contents.
-
-In advanced tests, once proven and stable, `shortestPath()` will be used to check contents. Before then, I will write a more simplistic function to print the graph's contents.
+Checking graph contents will be done automatically, and generate a pass/fail message.
 
 - For `addArc()`:
 
 Using previously created nodes, create an arc/edge between them, directioned from point A to B.
 
 ```cpp
-graph->addArc(nodeA, nodeB);
-// OR...
-nodeA->addArc(nodeB);
+// Refers to nodes by unique title.
+graph->addArc("A", "B", "");
+// Note: for graph-testing purposes, I will forego giving the connection a narration.
 ```
 
 A node will have a method which returns an indexed list of its arcs. This will be used to manually test and validate the existence of an arc.
-
-Because my design currently has a limited number of arcs, I will test cases in which the connection limit has been exceeded, and ensure the expected error is thrown.
 
 - For `shortestPath()`:
 
@@ -169,25 +168,26 @@ To test `shortestPath()` (and `minSpanTree()`), I will manually code a graph lik
 
 ![Sample graph](../readme_src/sample_graph.png)
 
-Testing with this graph will test the algorithm's ability to handle variable directionality, non-connected nodes, and cycles.
+Testing with this graph will test the algorithm's ability to handle variable directionality, isolated nodes, and cycles.
 
-I plan for `shortestPath()` to return a string describing its shortest paths to various nodes like so:
+I plan for `shortestPath()` to return a string describing its shortest paths to various nodes. Something like this:
+```
+SHORTEST PATH FROM NODE 'B'
+    A - 1 STEP
+    C - 1 STEP
+    D - 2 STEPS [PARENT C]
+    E - 3 STEPS [PARENT D]
+    F - 4 STEPS [PARENT E]
+    G - 2 STEPS [PARENT C]
+    H - 3 STEPS [PARENT G]
+    I - 4 STEPS [PARENT H]
+    J - 5 STEPS [PARENT I]
+    X - NO PATH
+    Y - NO PATH
+    Z - NO PATH
+```
 
-    SHORTEST PATH FROM NODE 'B'
-        A - 1 STEP
-        C - 1 STEP
-        D - 2 STEPS [PARENT C]
-        E - 3 STEPS [PARENT D]
-        F - 4 STEPS [PARENT E]
-        G - 2 STEPS [PARENT C]
-        H - 3 STEPS [PARENT G]
-        I - 4 STEPS [PARENT H]
-        J - 5 STEPS [PARENT I]
-        X - NO PATH
-        Y - NO PATH
-        Z - NO PATH
-
-I will manually assess the output for accuracy.
+I will compare output to expected output for a couple different nodes.
 
 
 - For `minSpanTree()`:
@@ -198,15 +198,18 @@ I will use the same sample graph to test `minSpanTree()`. Here is the graph's ex
 *I think there are multiple valid minimum spanning trees, so I need to decide what the flow's expected output will be.
 
 The method's output will be expressed as a string, listing the edges included in the minimum spanning tree. Example: 
+```
+BC, CD, DA, DE, EF, CG, GH, HI, IJ, XY
+```
 
-    BC, CD, DA, DE, EF, CG, GH, HI, IJ, XY
-
-This will be manually checked (or compared against the expected string), just as `shortestPath()`.
+This will be manually checked (or compared against the expected output), just as `shortestPath()`.
 
 
-### Test run design
+### Demo run design
 
-Along with unit tests, I will have a complete demo in `demo.cpp`. This will test the complete game loop with a simplified story made up of three total decisions.
+Along with unit tests, I will have a proof-of-concept in `driver_demo.cpp`. This will test the complete game loop with a simplified story made up of three total decisions--the player will only face two in a single playthrough. 
+
+The structure of this proof-of-concept will resemble a decision tree more than a game like Zork.
 
 
 ---

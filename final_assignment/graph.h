@@ -13,12 +13,12 @@ using std::string;
 
 
 typedef std::map<string, std::pair<int, string> *> pathMap;
-class MapGraph;
+class GraphMap;
 struct StoryNode;
 
 // Empty callback
 namespace callbacks {
-    string eCB(StoryNode *n, MapGraph *g, Player *p);
+    string eCB(StoryNode *n, GraphMap *g, Player *p);
 }
 
 
@@ -46,7 +46,7 @@ class VertexNotFound : public std::exception {
 
 /// @brief Single node.
 struct StoryNode {
-    string (* callback)(StoryNode *, MapGraph *, Player *);
+    string (* callback)(StoryNode *, GraphMap *, Player *);
     std::vector<std::pair<string, StoryNode *> *> connections;
 
     string title; // Short, unique.
@@ -63,7 +63,7 @@ struct StoryNode {
      * @param _tag Optional tag for the node. Non-unique. Example: "END" to mark an ending.
      * @overload One overload that constructs node with empty callback.
     */
-    StoryNode(string (* _callback)(StoryNode *, MapGraph *, Player *), string _description, string _title, string _tag = "");
+    StoryNode(string (* _callback)(StoryNode *, GraphMap *, Player *), string _description, string _title, string _tag = "");
     
     /**
      * Constructs node with empty callback.
@@ -103,8 +103,8 @@ struct StoryNode {
 
 
 
-/// @brief MapGraph class, manages story map.
-class MapGraph {
+/// @brief GraphMap class, manages story map.
+class GraphMap {
     private:
         int size;
         std::map<string, StoryNode *> vertices;
@@ -113,12 +113,12 @@ class MapGraph {
         /**
          * Constructs an empty graph.
         */
-        MapGraph();
+        GraphMap();
 
         /**
          * Safely destructs graph and graph data.
         */
-        ~MapGraph();
+        ~GraphMap();
 
         /**
          * Adds a directioned arc between two nodes on the graph, from source to destination.

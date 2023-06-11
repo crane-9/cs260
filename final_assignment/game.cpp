@@ -14,7 +14,7 @@ string EndProgram::what() {
 }
 
 
-Game::Game(MapGraph *_graph) {
+Game::Game(GraphMap *_graph) {
     graph = _graph;
 }
 
