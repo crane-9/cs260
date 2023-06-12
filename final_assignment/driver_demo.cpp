@@ -46,6 +46,6 @@ int main() {
         cout << e.what() << endl;
     }
 
-    cout << "Bye bye!" << endl;
+    cout << "Thank you for playing!" << endl;
     return 0;
 }
