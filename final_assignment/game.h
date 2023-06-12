@@ -18,14 +18,6 @@ class Game {
         MapGraph *graph;
         Player player;
 
-    public:
-        /**
-         * Constructs the game using the current graph.
-        */
-        Game(MapGraph *_graph);
-
-        ~Game();
-
         /**
          * Validates a player's input. "Valid" being input that selects the next page in the story.
          * @param options The number of options to pick from.
@@ -49,6 +41,17 @@ class Game {
         */
         StoryNode *pickNextNode(StoryNode *node);
 
+    public:
+        // Configurable text separator between nodes' text.
+        std::string textPartition = ". . . . . . . . . . . . . . . . . . . . . . . . . . . . .";
+
+        /**
+         * Constructs the game using the current graph.
+        */
+        Game(MapGraph *_graph);
+
+        ~Game();
+
         /**
          * Main game loop.
          * @param game Pointer to the mapgraph containing game data.
@@ -61,5 +64,6 @@ class Game {
         */
         void runGame(std::string startTitle);
 };
+
 
 #endif

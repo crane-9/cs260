@@ -47,7 +47,11 @@ int Game::getInput(int options) {
 
         if (playerInput == "q" || playerInput == "Q") {
             throw EndProgram();
-        } 
+        } else if (playerInput == "h" || playerInput == "H") {
+            cout << "Enter...\n\t'h' for help\n\t'i' for game inventory\n\t'q' to quit" << endl;
+        } else if (playerInput == "i" || playerInput == "I") {
+            cout << "Current inventory:\n" << player.showInventory() << endl;
+        }
     }
 
     return stoi(playerInput);
@@ -79,10 +83,9 @@ void Game::gameLoop(StoryNode *start) {
 
         // Next iteration.
         current = pickNextNode(current);
-        cout << endl << "+ +   +     +       +         +       +     +   + +" << endl << endl;
+        cout << endl << textPartition << endl << endl;
     }
 }
-
 
 void Game::runGame(string startTitle) {
     gameLoop(graph->getByTitle(startTitle));
