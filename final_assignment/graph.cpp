@@ -81,7 +81,6 @@ void StoryNode::removeArc(StoryNode *branch) {
     for (int i = 0; i < connections.size(); ++i) {
         if (connections[i]->second == branch) {
             // Delete connection, and remove from list.
-            delete connections[i]->second;
             delete connections[i];
             connections.erase(connections.begin() + i);
             return;
