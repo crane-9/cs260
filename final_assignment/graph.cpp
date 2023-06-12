@@ -1,6 +1,8 @@
 #include "graph.h"
 
+#include <algorithm>
 #include <iostream>
+// #include <list>
 #include <map>
 #include <queue>
 #include <sstream>
@@ -55,8 +57,8 @@ StoryNode::StoryNode(string _description, string _title, string _tag) {
 }
 
 StoryNode::~StoryNode() {
-    for (auto arc : connections) {
-        delete arc;
+    for (auto pathData : connections) {
+        delete pathData;
     }
     connections.clear();
 }
@@ -66,18 +68,33 @@ void StoryNode::addArc(StoryNode *branch, string text) {
     connections.push_back(new pair<string, StoryNode *>(text, branch));
 }
 
-string StoryNode::getPaths() {
-    stringstream menu;
+string StoryNode::getPathMenu() {
+    if (!connections.size()) {
+        return "NO PATHS FORWARD.";
+    }
 
-    for (int i = 0; i < connections.size(); ++i) {
+    stringstream menu;
+    int i = 0;
+
+    for (auto pathData : connections) {
         // +1 to keep options > 0.
-        menu << "\n[" << i + 1 << "] " << connections[i]->first;
+        menu << "\n[" << i + 1 << "] " << pathData->first;
+        i++;
     }
 
     return menu.str();
 }
 
-void StoryNode::removeArc(StoryNode *branch) {
+path *StoryNode::getConnection(int idx) {
+    // list<path *>::iterator iter = connections.begin();
+    // for (int i = 0; i < idx; ++i) ++iter;
+
+    // return *iter;
+
+    return connections[idx];
+}
+
+void StoryNode::removePath(StoryNode *branch) {
     for (int i = 0; i < connections.size(); ++i) {
         if (connections[i]->second == branch) {
             // Delete connection, and remove from list.
@@ -118,7 +135,7 @@ void MapGraph::deleteArc(string source, string destination) {
     StoryNode *sourceNode = getByTitle(source);
     StoryNode *destinationNode = getByTitle(destination);
 
-    sourceNode->removeArc(destinationNode);
+    sourceNode->removePath(destinationNode);
 }
 
 void MapGraph::addVertex(StoryNode *newVertex) {
@@ -130,18 +147,6 @@ void MapGraph::addVertex(StoryNode *newVertex) {
     // Add and increase size.
     vertices[newVertex->title] = (newVertex);
     ++size;
-}
-
-void MapGraph::addVertices(StoryNode *rootVertex) {
-    // Let addVertex() do the work, just to avoid a double check.
-    try {
-        addVertex(rootVertex);
-    } catch (VertexTitleConflict e) {}
-
-    // Add all connections.
-    for (auto connection : rootVertex->connections) {
-        addVertices(connection->second);
-    }
 }
 
 StoryNode *MapGraph::getByTitle(string title) {
@@ -161,7 +166,6 @@ std::vector<arborEdge *> *MapGraph::arborescence(string sourceTitle) {
     auto edges = new std::vector<arborEdge *>;
 
     StoryNode *current;
-
     std::queue<StoryNode *> nodeQueue;
     nodeQueue.push(vertices[sourceTitle]);
 
@@ -172,10 +176,31 @@ std::vector<arborEdge *> *MapGraph::arborescence(string sourceTitle) {
             continue;
         }
 
+        // Add unvisited connections to queue.
+        // for (auto connection : current->connections) {
+        //     StoryNode *node = connection->second;
+        //     // Skip visited--possibly redundant, but this is safety.
+        //     if (visited[node->title]) {
+        //         continue;
+        //     }
+            
+        //     // New distance based on parent node's distance.
+        //     int distance = (*paths)[current->title]->first + 1;
 
-    } // check in w jess, then finish this.
+        //     // Compare.
+        //     if ((*paths)[node->title]->first > distance) {
+        //         // Update distance and parent.
+        //         (*paths)[node->title]->first = distance;
+        //         (*paths)[node->title]->second = current->title;
+        //     }
+
+        //     nodeQueue.push(node);
+        // }
 
 
+        // Mark as visited.
+        visited[current->title] = true;
+    }
 
     return edges;
 }

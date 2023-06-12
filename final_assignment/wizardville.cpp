@@ -137,6 +137,8 @@ void createGame(MapGraph *graph) {
     
     graph->addArc("hill.house.bedroom", "hill.house.bedroom.hat", "Don hat.");
     graph->addArc("hill.house.bedroom", "hill.house.kitchen", "Enter kitchen.");
+
+    graph->addArc("hill.house.bedroom.hat", "hill.house.bedroom", "(Continue.)");
     
     graph->addArc("hill.house.kitchen", "hill.house.bedroom", "Enter bedroom.");
     graph->addArc("hill.house.kitchen", "hill.house.living", "Enter living room.");
