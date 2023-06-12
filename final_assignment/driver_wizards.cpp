@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     // Argument flag `-t` skips tutorial.
     if (!(argc == 2 && string(argv[1]) == "-t")) {
         game.runGame("TUTORIAL");
-        cout << endl << "[ [   [     [       [         ]       ]     ]   ] ]" << endl  << endl << endl;
+        cout << endl << game.textPartition << endl << game.textPartition << endl  << endl << endl;
     }
 
     // Play game.

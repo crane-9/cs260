@@ -1,39 +1,67 @@
+/* This file is the script for wizardville. Most of the file is writing. I suggest enabling softwrap. */
 #include "story.h"
 
 #include <string>
 
+#include "game.h"
 #include "graph.h"
 
 using namespace std;
 
-// Callbacks
+
+// Callbacks -- tutorial
 
 string tutDoubt(StoryNode *n, MapGraph *m, Player *p) { p->addFlag("tutorialDoubt"); return ""; }
 
 string tutAssurance(StoryNode *n, MapGraph *m, Player *p) {
     if (p->checkFlag("tutorialDoubt")) {
-        return "Remember: just enter the number. I believe in you.";
-    } else {
-        return "";
+        return "I believe in you.";
     }
+    return "";
 }
 
+
+// Callbacks -- story
+
+string bedroom(StoryNode *n, MapGraph *m, Player *p) {
+    if (!n->visits) {
+        return "You get out of bed, and to your feet.";
+    } else if (n->visits == 1) {
+        n->description = "Your bedroom is a quiet mess. Barnaby is curled up on the corner of your bed, napping the day away."; // Update node description.
+    } 
+
+    return ""; 
+}
+
+string bedroomHat(StoryNode *n, MapGraph *m, Player *p) {
+    if (!n->visits) {
+        p->addItem("Your hat");
+    }
+
+    m->deleteArc("hill.house.bedroom", n->title);
+
+    return "You take it off the dresser, and put it on your head.";
+}
+
+
+// Graph/game assembly
 
 // Creates the tutorial.
 void createTutorial(MapGraph *graph) {
     graph->addVertex(new StoryNode(
         "Welcome to Wizardville.\n\nTo play the game, you will be given a simple menu of options. To make your selection, you will enter the corresponding number.\n\nHere is your first test:", 
-        "TUTORIAL" // Node title.
+        "TUTORIAL"
     ));
 
     graph->addVertex(new StoryNode(
-        "Great. The input parser for this game is picky, and will not accept '   2 ' when you mean to select option '2'. You will have unlimited attempts to enter valid input.\n\nIn addition to the provided options, you may enter:\n\t- 'h' for help\n\t- 'i' for game inventory\n\t- 'q' to quit",
+
+        "Great. The input parser for this game is picky, and will not accept '   2 ' when you mean to select option '2'. You will have unlimited attempts to enter valid input.\n\nIn addition to the provided options, you may enter:",
         "tut.1"
     ));
 
     graph->addVertex(new StoryNode(
         tutDoubt,
-        "You will figure it out.",
+        "You'll figure it out.",
         "tut.1.b"
     ));
 
@@ -63,11 +91,66 @@ void createTutorial(MapGraph *graph) {
 
 // Creates the narrative game nodes.
 void createGame(MapGraph *graph) {
+    // Opening
     graph->addVertex(new StoryNode(
-        "I love wizards :] bye now",
-        "START",
-        "END"
+        "It is morning, and you are asleep, face down in your stack of quilts. ",
+        "START"
     ));
+
+    // THE HILL
+    // Alchemist's home
+    graph->addVertex(new StoryNode(
+        bedroom,
+        "",
+        "hill.house.bedroom"
+    ));
+    
+    graph->addVertex(new StoryNode(
+        bedroomHat,
+        "Your hat is a worn old thing, embellished with years of patchwork. An embroidered hummingbird curves around the peak of the hat. Colorful glass beads dangle off the rim, each handcrafted by your friend, the Illusionist.",
+        "hill.house.bedroom.hat"
+    ));
+    
+    graph->addVertex(new StoryNode(
+        "",
+        "hill.house.kitchen"
+    ));
+    
+    graph->addVertex(new StoryNode(
+        "",
+        "hill.house.living"
+    ));
+
+    // Outdoors
+    graph->addVertex(new StoryNode(
+        "",
+        "hill.house.exterior"
+    ));
+
+    graph->addVertex(new StoryNode(
+        "",
+        "hill.trail"
+    ));
+
+    // Hill location connections
+    graph->addArc("START", "hill.house.bedroom", "Wake up.");
+    
+    graph->addArc("hill.house.bedroom", "hill.house.bedroom.hat", "Don hat.");
+    graph->addArc("hill.house.bedroom", "hill.house.kitchen", "Enter kitchen.");
+    
+    graph->addArc("hill.house.kitchen", "hill.house.bedroom", "Enter bedroom.");
+    graph->addArc("hill.house.kitchen", "hill.house.living", "Enter living room.");
+    graph->addArc("hill.house.kitchen", "hill.house.exterior", "Go outside.");
+    
+    graph->addArc("hill.house.living", "hill.house.living", "Enter kitchen.");
+    graph->addArc("hill.house.living", "hill.house.exterior", "Go outside.");
+
+    graph->addArc("hill.house.exterior", "hill.house.living", "Go inside.");
+    graph->addArc("hill.house.exterior", "hill.trail", "Head into town.");
+
+
+    // TOWN
+
 }
 
 
