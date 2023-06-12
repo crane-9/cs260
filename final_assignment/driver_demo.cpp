@@ -1,4 +1,4 @@
-// Trial run for functionality and flow. Note: this does not actually use the GraphMap!
+// Test run file, tests the StoryNodes without the MapGraph.
 #include <iostream>
 #include <string>
 

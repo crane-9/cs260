@@ -19,14 +19,18 @@ int main(int argc, char *argv[]) {
 
     Game game(story::getGraph());
 
-    // Argument flag `-t` skips tutorial.
-    if (!(argc == 2 && string(argv[1]) == "-t")) {
-        game.runGame("TUTORIAL");
-        cout << endl << game.textPartition << endl << game.textPartition << endl  << endl << endl;
-    }
+    try {
+        // Argument flag `-t` skips tutorial.
+        if (!(argc == 2 && string(argv[1]) == "-t")) {
+            game.runGame("TUTORIAL");
+            cout << endl << game.textPartition << endl << game.textPartition << endl  << endl << endl;
+        }
 
-    // Play game.
-    game.runGame("START");
+        // Play game.
+        game.runGame("START");
+    } catch (EndProgram) {
+        cout << "Ending game." << endl << endl;
+    }
 
     return 0;
 }

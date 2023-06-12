@@ -8,7 +8,7 @@ To compile game:
 g++ driver_game.cpp game.cpp graph.cpp player.cpp wizardville.cpp -o WIZARDVILLE
 ```
 
-To compile demo game:
+To compile a demo game:
 ```
 g++ driver_demo.cpp game.cpp graph.cpp player.cpp -o DEMO
 ```
@@ -205,7 +205,15 @@ Along with unit tests, I will have a proof-of-concept in `driver_demo.cpp`. This
 
 ### Test run design
 
-Along with unit tests, I will have a complete demo in `demo.cpp`. This will test the complete game loop with a simplified story made up of three total decisions.
+Along with unit tests, I will have two games. 
+
+One will be a brief demo in `driver_demo.cpp`. This will test the complete game loop with a simplified story made up of three total decisions. Additionally, this demo will only test the `StoryNode` struct on their own, without use of the `MapGraph` class. I made this decision for the sake of debugging and troubleshooting. If there's an issue, I can use this demo game to help locate it.
+
+The second, in `driver_game.cpp` will be a (slightly) longer game with more complex paths. It will also use callbacks to change connections between nodes/vertices as the player progresses.
+
+To visualize:
+
+![Example maps](../readme_src/game_map_examples.png)
 
 
 ---
