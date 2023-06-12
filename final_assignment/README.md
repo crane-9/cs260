@@ -136,7 +136,7 @@ Putting application aside and refocusing on the structure of a graph, there are 
 The following examples use a Graph pointer called `graph`, and nodes of various simple names.
 
 ### Unit tests
-- For `addVertex()`:
+#### For `addVertex()`:
 
 Create a new node with a value, and add to the graph:
 
@@ -150,7 +150,7 @@ graph->addVertex(new StoryNode("more data", "C"));
 
 Checking graph contents will be done automatically, and generate a pass/fail message.
 
-- For `addArc()`:
+#### For `addArc()`:
 
 Using previously created nodes, create an arc/edge between them, directioned from point A to B.
 
@@ -162,9 +162,9 @@ graph->addArc("A", "B", "");
 
 A node will have a method which returns an indexed list of its arcs. This will be used to manually test and validate the existence of an arc.
 
-- For `shortestPath()`:
+#### For `shortestPath()`:
 
-To test `shortestPath()` (and `minSpanTree()`), I will manually code a graph like so:
+To test `shortestPath()` (and `arborescence()`), I will manually code a graph like so:
 
 ![Sample graph](../readme_src/sample_graph.png)
 
@@ -189,7 +189,7 @@ SHORTEST PATH FROM NODE 'B'
 
 I will compare output to expected output for a couple different nodes.
 
-- For `arborescence()`:
+#### For `arborescence()`:
 
 > Note: A "minimum spanning tree" by definition, is undirected (and most often weighted). A directed equivalent would be a minimum [arborescence](https://en.wikipedia.org/wiki/Arborescence_(graph_theory)). I found [this video](https://www.youtube.com/watch?v=B5H1qlv9hrg) on deciding the minimum arborescence. In working to adapt this for a non-weighted graph, I realized I reinvented the shortest path algorithm. I will talk about this more under [Meeting Requirements](#meeting-requirements).
 
