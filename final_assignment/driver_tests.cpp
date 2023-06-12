@@ -54,9 +54,9 @@ MapGraph *makeSampleGraph() {
 
 /// @brief Tests a graph's addVertex() method, returns pass/fail message.
 string addVertexTest(MapGraph *graph) {
-    graph->addVertex(new StoryNode("data", "A"));
-    graph->addVertex(new StoryNode("data", "B"));
-    graph->addVertex(new StoryNode("data", "C"));
+    graph->addVertex(new StoryNode("a node data", "A"));
+    graph->addVertex(new StoryNode("b node data", "B"));
+    graph->addVertex(new StoryNode("c node data", "C"));
 
     string result = graph->showVertices();
     if (result == "\"A\", \"B\", \"C\", ") {
@@ -68,16 +68,92 @@ string addVertexTest(MapGraph *graph) {
     return message.str();
 }
 
+/// @brief Tests the getByTitle() method of a graph. 
+string getByTitleTest(MapGraph *graph) {
+    stringstream message;
+    StoryNode *nodeB, *nodeX;
 
-/// @brief Tests a graph's addArc() method, returns a pass/fail message.
-string addArcTest(MapGraph *graph) {
-    return "";
+    // Get an existing node.
+    try {
+        nodeB = graph->getByTitle("B");
+    } catch (VertexNotFound) {
+        message << "FAILED getByTitle() could not retrieve existing vertex.\n";
+    }
+
+    if (nodeB->description == "b node data") {
+        message << "PASSED Existing vertex successfully retrieved.\n";
+    } else {
+        message << "FAILED getByTitle() failed to retrieve existing vertex; did not throw error.\n";
+    }
+
+    // Get a non-existent node.
+    try {
+        nodeX = graph->getByTitle("X");
+        message << "FAILED Did not throw error on finding nonexistent vertex. getByTitle() returned: " << nodeX->title << "";
+    } catch (VertexNotFound) {
+        message << "PASSED Threw error on finding nonexistent vertex.";
+    }
+
+    return message.str();
 }
 
+/// @brief Tests a graph's addArc() method, returns pass/fail messages.
+string addArcTest(MapGraph *graph) {
+    stringstream message;
 
-/// @brief Tests a graph addVertices() method, returns pass/fail message.
-string addVerticesTest(MapGraph *graph) {
-    return "";
+    // Add arc from A->B.
+    graph->addArc("A", "B", "ab");
+
+    StoryNode *nodeA, *nodeB;
+    nodeA = graph->getByTitle("A");
+    nodeB = graph->getByTitle("B");
+    // Check A's connections. First connection should be B.
+
+    if (!nodeA->connections.size()) {
+        message << "FAILED Node A has no connections, graph.addArc() must have failed.\n";
+    } else if (nodeA->connections[0]->first != "ab" || nodeA->connections[0]->second != nodeB) {
+        message << "FAILED Node A's connection to node B is not as expected. Expected name 'ab': '" << nodeA->connections[0]->first << "' Expected connected node title 'B': '" << nodeA->connections[0]->second->title << "'\n";
+    } else {
+        message << "PASSED Node A connects to B as expected.\n";
+    }
+
+    // Check B's connections. Should be empty.
+    if (!nodeB->connections.size()) {
+        message << "PASSED Node B has no connections, as expected.\n";
+    } else {
+        message << "FAILED Node B has " << nodeB->connections.size() << " connections, when it should have 0.\n";
+    }
+
+    // Add arc from A->C
+    graph->addArc("A", "C", "ac");
+
+    if (nodeA->connections.size() == 2) {
+        message << "PASSED Node A holds multiple connections to nodes: '" << nodeA->connections[0]->second->title << "' and '" << nodeA->connections[1]->second->title << "'";
+    } else {
+        message << "FAILED Node A should have 2 connections (to B and C). Instead: " << nodeA->connections.size();
+    }
+
+
+    return message.str();
+}
+
+/// @brief Tests a graph's deleteArc() method. 
+string deleteArcTest(MapGraph *graph) {
+    stringstream message;
+
+    StoryNode *nodeA = graph->getByTitle("A");
+
+    // Remove arc AB
+    graph->deleteArc("A", "B");
+
+    if (nodeA->connections.size() == 1 && nodeA->connections[0]->first == "ac") {
+        message << "PASSED Node A is no longer connected to node B, but is connected to node C.";
+    } else {
+        message << "FAILED Node A has " << nodeA->connections.size() << " connections.";
+    }
+
+
+    return message.str();
 }
 
 
@@ -129,8 +205,9 @@ int main() {
     MapGraph *graph = new MapGraph();
 
     cout << addVertexTest(graph) << endl;
+    cout << getByTitleTest(graph) << endl;
     cout << addArcTest(graph) << endl;
-    cout << addVerticesTest(graph) << endl;
+    cout << deleteArcTest(graph) << endl;
 
     delete graph;
 

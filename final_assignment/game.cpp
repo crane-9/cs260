@@ -60,7 +60,7 @@ int Game::getInput(int options) {
 StoryNode *Game::pickNextNode(StoryNode *node) {
     // Convert player input to 0-index.
     int idx = getInput(node->connections.size()) - 1;
-    return node->connections[idx]->second;
+    return node->getConnection(idx)->second;
 }
 
 void Game::gameLoop(StoryNode *start) {
@@ -73,13 +73,15 @@ void Game::gameLoop(StoryNode *start) {
         callbackText = current->callback(current, graph, &player);
         ++current->visits;
 
-        // Print narration and menu.
+        // Print narration(s).
         cout << current->description << endl;
         if (callbackText != "") cout << endl << callbackText << endl;
-        cout << current->getPaths() << endl;
 
         // Break loop here. 
         if (current->tag == "END") break;
+
+        // Print menu.
+        cout << current->getPathMenu() << endl;
 
         // Next iteration.
         current = pickNextNode(current);
