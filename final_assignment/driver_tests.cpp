@@ -4,6 +4,7 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <tuple>
 #include <utility>
 
 #include "graph.h"
@@ -114,8 +115,8 @@ string arborescenceTest(MapGraph *sampleGraph) {
     stringstream message;
 
     // Return a list of all edge names.
-    for (auto const& [_, __, edgeName] : (*information)) {
-        message << "'" << edgeName << "', ";
+    for (auto edgeTuple : (*information)) {
+        message << "'" << std::get<2>((*edgeTuple)) << "', ";
     }
 
     delete information;
@@ -137,7 +138,7 @@ int main() {
     MapGraph *compGraph = makeSampleGraph();
 
     cout << shortestPathTest(compGraph) << endl;    
-    // cout << arborescenceTest(compGraph) << endl;    
+    cout << arborescenceTest(compGraph) << endl;    
 
     delete compGraph;
 
