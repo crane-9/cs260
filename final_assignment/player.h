@@ -3,13 +3,12 @@
 
 #include <map>
 #include <string>
-#include <vector>
 
 
 class Player {
     private:
         std::map<std::string, bool> flags;
-        std::vector<std::string> inventory;
+        std::map<std::string, int> inventory;
 
     public:
         std::string name;
@@ -40,6 +39,19 @@ class Player {
          * @return True if player has item, false other.
         */
         bool hasItem(std::string item);
+
+        /**
+         * Removes an item from the player's inventory.
+         * @param item The item to remove from inventory.
+         * @return Returns false if the item was not present in inventory. True if it was, and is now removed.
+        */
+        bool removeItem(std::string item);
+
+        /**
+         * Lists all items in the player's inventory.
+         * @return A string naming all items in a player's inventory.
+        */
+        std::string showInventory();
 };
 
 
