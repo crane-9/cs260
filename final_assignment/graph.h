@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -19,9 +20,10 @@ struct StoryNode;
 // An edge only for use in MapGraph.arborescence()
 typedef std::tuple<StoryNode *, StoryNode *, string> arborEdge;
 
-// Empty callback
+
 namespace callbacks {
-    string eCB(StoryNode *n, MapGraph *g, Player *p);
+    // Empty callback
+    string eCB(StoryNode *n, MapGraph *m, Player *p);
 }
 
 
@@ -133,6 +135,14 @@ class MapGraph {
         */
         void addArc(StoryNode *source, StoryNode *destination, string text = "");
         void addArc(string source, string destination, string text = "");
+
+        /**
+         * Removes an arc between two nodes of the given names.
+         * @param source The title of the source node of the arc.
+         * @param destination The title of the arc's destination.
+         * @return No return value.
+        */
+        void deleteArc(string source, string destination);
 
         /**
          * Adds a vertex to the graph.

@@ -5,6 +5,7 @@
 #include <queue>
 #include <sstream>
 #include <string>
+#include <tuple>
 #include <utility>
 
 #include "player.h"
@@ -114,6 +115,13 @@ void MapGraph::addArc(string source, string destination, string text) {
     sourceNode->addArc(destinationNode, text);
 }
 
+void MapGraph::deleteArc(string source, string destination) {
+    StoryNode *sourceNode = getByTitle(source);
+    StoryNode *destinationNode = getByTitle(destination);
+
+    sourceNode->removeArc(destinationNode);
+}
+
 void MapGraph::addVertex(StoryNode *newVertex) {
     // Check this doesn't override. Improper check because a value is going to be created here anyhow.
     if (vertices[newVertex->title] != 0) {
@@ -146,10 +154,27 @@ StoryNode *MapGraph::getByTitle(string title) {
 }
 
 std::vector<arborEdge *> *MapGraph::arborescence(string sourceTitle) {
-    // This path map has the information for all 
-    pathMap *paths = shortestPath(sourceTitle);
+    // Note: this method is very similar to shortestPath(). The only difference is with the data gathered and returned.
     
+    std::map<string, bool> visited;
+
+    // Holds edges that are part of the arborescence.
     auto edges = new std::vector<arborEdge *>;
+
+    StoryNode *current;
+
+    std::queue<StoryNode *> nodeQueue;
+    nodeQueue.push(vertices[sourceTitle]);
+
+    while (!nodeQueue.empty()) {
+        current = nodeQueue.front(); nodeQueue.pop();
+
+        if (visited[current->title]) {
+            continue;
+        }
+
+
+    } // check in w jess, then finish this.
 
 
 
