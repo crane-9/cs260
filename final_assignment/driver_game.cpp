@@ -1,7 +1,4 @@
-/**
- * This driver runs a game.
-*/
-
+// This driver runs a game.
 #include <iostream>
 #include <string>
 

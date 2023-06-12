@@ -1,4 +1,4 @@
-// Test run file, tests the StoryNodes without the MapGraph.
+// Test run file, tests the StoryNodes without the MapGraph, and without story.h
 #include <iostream>
 #include <string>
 

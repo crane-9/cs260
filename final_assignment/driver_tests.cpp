@@ -1,4 +1,4 @@
-// Tests for graph.h/cpp
+// Tests for graph.h/.cpp
 
 #include <iostream>
 #include <map>
