@@ -5,7 +5,7 @@ This file contains design notes for my final project and game.
 
 To compile game:
 ```
-g++ driver_wizards.cpp game.cpp graph.cpp player.cpp wizardville.cpp -o WIZARDVILLE
+g++ driver_game.cpp game.cpp graph.cpp player.cpp wizardville.cpp -o WIZARDVILLE
 ```
 
 To compile demo game:
