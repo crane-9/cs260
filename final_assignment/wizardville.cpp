@@ -36,13 +36,19 @@ string bedroom(StoryNode *n, MapGraph *m, Player *p) {
 string bedroomHat(StoryNode *n, MapGraph *m, Player *p) {
     if (!n->visits) {
         p->addItem("Your hat");
+        m->deleteArc("hill.house.bedroom", n->title); // Theoretically, there will only be one visit to this node.
     }
-
-    m->deleteArc("hill.house.bedroom", n->title);
-
     return "You take it off the dresser, and put it on your head.";
 }
 
+
+string trail(StoryNode *n, MapGraph *m, Player *p) {
+    if (!n->visits) {
+        return "You can see the town in the distance, distant figures in the town square.";
+    }
+
+    return "";
+}
 
 // Graph/game assembly
 
@@ -93,7 +99,7 @@ void createTutorial(MapGraph *graph) {
 void createGame(MapGraph *graph) {
     // Opening
     graph->addVertex(new StoryNode(
-        "It is morning, and you are asleep, face down in your stack of quilts. ",
+        "[ you are in bed asleep and your cat wakes you up and you are an alchemist very committed to your townly duties. ]",
         "START"
     ));
 
@@ -101,7 +107,7 @@ void createGame(MapGraph *graph) {
     // Alchemist's home
     graph->addVertex(new StoryNode(
         bedroom,
-        "",
+        "[ this is your bedroom and barnaby is your cat. you are a bit of a mess internally but you save that mess inside and keep it together outside. ]",
         "hill.house.bedroom"
     ));
     
@@ -112,23 +118,23 @@ void createGame(MapGraph *graph) {
     ));
     
     graph->addVertex(new StoryNode(
-        "",
+        "[ your kitchen is populated with equipment for your chemistry things. you sort of cook sometimes, but for some reason you're just not very good at it. ]",
         "hill.house.kitchen"
     ));
     
     graph->addVertex(new StoryNode(
-        "",
+        "[ this is your living room it is tiny and cluttered. barnaby spends more time here than you do. ]",
         "hill.house.living"
     ));
 
     // Outdoors
     graph->addVertex(new StoryNode(
-        "",
+        "the hill",
         "hill.house.exterior"
     ));
 
     graph->addVertex(new StoryNode(
-        "",
+        "The trail into town weaves through bushes and trees. It is marked by broken fence posts and neglected lanterns no one bothers lighting anymore.",
         "hill.trail"
     ));
 
