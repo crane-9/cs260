@@ -1,7 +1,6 @@
 #ifndef GRAPH_HEADER
 #define GRAPH_HEADER
 
-// #include <list>
 #include <map>
 #include <string>
 #include <tuple>
@@ -96,13 +95,6 @@ struct StoryNode {
      * @return No return value.
     */
     void addArc(StoryNode *branch, string text);
-
-    /**
-     * Get a connection at the given index.
-     * @param index Index of the connection.
-     * @return Returns the path information.
-    */
-    path *getConnection(int idx);
 
     /**
      * Get all connections' reference messages.

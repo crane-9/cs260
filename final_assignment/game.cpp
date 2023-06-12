@@ -60,7 +60,7 @@ int Game::getInput(int options) {
 StoryNode *Game::pickNextNode(StoryNode *node) {
     // Convert player input to 0-index.
     int idx = getInput(node->connections.size()) - 1;
-    return node->getConnection(idx)->second;
+    return node->connections[idx]->second;
 }
 
 void Game::gameLoop(StoryNode *start) {

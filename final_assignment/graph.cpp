@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <iostream>
-// #include <list>
 #include <map>
 #include <queue>
 #include <sstream>
@@ -83,15 +82,6 @@ string StoryNode::getPathMenu() {
     }
 
     return menu.str();
-}
-
-path *StoryNode::getConnection(int idx) {
-    // list<path *>::iterator iter = connections.begin();
-    // for (int i = 0; i < idx; ++i) ++iter;
-
-    // return *iter;
-
-    return connections[idx];
 }
 
 void StoryNode::removePath(StoryNode *branch) {
