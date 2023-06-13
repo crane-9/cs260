@@ -5,10 +5,10 @@ This file contains design notes for my final project and game.
 
 To compile game:
 ```
-g++ driver_wizards.cpp game.cpp graph.cpp player.cpp wizardville.cpp -o WIZARDVILLE
+g++ driver_game.cpp game.cpp graph.cpp player.cpp wizardville.cpp -o WIZARDVILLE
 ```
 
-To compile demo game:
+To compile a demo game:
 ```
 g++ driver_demo.cpp game.cpp graph.cpp player.cpp -o DEMO
 ```
@@ -136,7 +136,7 @@ Putting application aside and refocusing on the structure of a graph, there are 
 The following examples use a Graph pointer called `graph`, and nodes of various simple names.
 
 ### Unit tests
-- For `addVertex()`:
+#### For `addVertex()`:
 
 Create a new node with a value, and add to the graph:
 
@@ -150,7 +150,7 @@ graph->addVertex(new StoryNode("more data", "C"));
 
 Checking graph contents will be done automatically, and generate a pass/fail message.
 
-- For `addArc()`:
+#### For `addArc()`:
 
 Using previously created nodes, create an arc/edge between them, directioned from point A to B.
 
@@ -162,9 +162,9 @@ graph->addArc("A", "B", "");
 
 A node will have a method which returns an indexed list of its arcs. This will be used to manually test and validate the existence of an arc.
 
-- For `shortestPath()`:
+#### For `shortestPath()`:
 
-To test `shortestPath()` (and `minSpanTree()`), I will manually code a graph like so:
+To test `shortestPath()` (and `arborescence()`), I will manually code a graph like so:
 
 ![Sample graph](../readme_src/sample_graph.png)
 
@@ -189,27 +189,31 @@ SHORTEST PATH FROM NODE 'B'
 
 I will compare output to expected output for a couple different nodes.
 
+#### For `arborescence()`:
 
-- For `minSpanTree()`:
+> Note: A "minimum spanning tree" by definition, is undirected (and most often weighted). A directed equivalent would be a minimum [arborescence](https://en.wikipedia.org/wiki/Arborescence_(graph_theory)). I found [this video](https://www.youtube.com/watch?v=B5H1qlv9hrg) on deciding the minimum arborescence. In working to adapt this for a non-weighted graph, I realized I reinvented the shortest path algorithm. I will talk about this more under [Meeting Requirements](#meeting-requirements).
 
-I will use the same sample graph to test `minSpanTree()`. Here is the graph's expected minimum spanning tree:
+> I plan for my `arborescence()` (directioned MST equivalent) to return a vector of tuples, each tuple representing an edge. The first value of each tuple being the source node, the second being the destination node, and the third being the text associated with the edge. This is not how I normally store edges, however it is necessary for the arborescence.
 
-![Minimum spanning tree of sample graph](../readme_src/sample_graph_min.png)
-*I think there are multiple valid minimum spanning trees, so I need to decide what the flow's expected output will be.
+For the arborescence, I will generate a list of all edge names from the return value of the method, and manually check them in early stages of testing. In later stages, this will be automatically evaluated against the expected strings.
 
-The method's output will be expressed as a string, listing the edges included in the minimum spanning tree. Example: 
-```
-BC, CD, DA, DE, EF, CG, GH, HI, IJ, XY
-```
+The expected arborescence for my sample graph (with root node "B") includes these edges:
 
-This will be manually checked (or compared against the expected output), just as `shortestPath()`.
-
-
-### Demo run design
+![Sample arborescence graph](../readme_src/sample_graph_arborescence.png)
 
 Along with unit tests, I will have a proof-of-concept in `driver_demo.cpp`. This will test the complete game loop with a simplified story made up of three total decisions--the player will only face two in a single playthrough. 
 
-The structure of this proof-of-concept will resemble a decision tree more than a game like Zork.
+### Test run design
+
+Along with unit tests, I will have two games. 
+
+One will be a brief demo in `driver_demo.cpp`. This will test the complete game loop with a simplified story made up of three total decisions. Additionally, this demo will only test the `StoryNode` struct on their own, without use of the `MapGraph` class. I made this decision for the sake of debugging and troubleshooting. If there's an issue, I can use this demo game to help locate it.
+
+The second, in `driver_game.cpp` will be a (slightly) longer game with more complex paths. It will also use callbacks to change connections between nodes/vertices as the player progresses.
+
+To visualize:
+
+![Example maps](../readme_src/game_map_examples.png)
 
 
 ---
@@ -217,4 +221,4 @@ The structure of this proof-of-concept will resemble a decision tree more than a
 
 
 ---
-## [ meeting requirements ]
+## Meeting Requirements

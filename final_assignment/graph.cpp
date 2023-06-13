@@ -1,10 +1,12 @@
 #include "graph.h"
 
+#include <algorithm>
 #include <iostream>
 #include <map>
 #include <queue>
 #include <sstream>
 #include <string>
+#include <tuple>
 #include <utility>
 
 #include "player.h"
@@ -12,7 +14,7 @@
 using std::cout, std::endl, std::pair, std::string, std::stringstream;
 
 
-string callbacks::eCB(StoryNode *n, GraphMap *g, Player *p) { return ""; }
+string callbacks::eCB(StoryNode *n, MapGraph *g, Player *p) { return ""; }
 
 
 // Exception implementations.
@@ -40,7 +42,7 @@ string VertexNotFound::what() {
 
 // StoryNode implementations.
 
-StoryNode::StoryNode(string (* _callback)(StoryNode *, GraphMap *, Player *), string _description, string _title, string _tag) {
+StoryNode::StoryNode(string (* _callback)(StoryNode *, MapGraph *, Player *), string _description, string _title, string _tag) {
     callback = _callback;
     description = _description;
     title = _title;
@@ -55,8 +57,8 @@ StoryNode::StoryNode(string _description, string _title, string _tag) {
 }
 
 StoryNode::~StoryNode() {
-    for (auto arc : connections) {
-        delete arc;
+    for (auto pathData : connections) {
+        delete pathData;
     }
     connections.clear();
 }
@@ -66,22 +68,27 @@ void StoryNode::addArc(StoryNode *branch, string text) {
     connections.push_back(new pair<string, StoryNode *>(text, branch));
 }
 
-string StoryNode::getPaths() {
-    stringstream menu;
+string StoryNode::getPathMenu() {
+    if (!connections.size()) {
+        return "NO PATHS FORWARD.";
+    }
 
-    for (int i = 0; i < connections.size(); ++i) {
+    stringstream menu;
+    int i = 0;
+
+    for (auto pathData : connections) {
         // +1 to keep options > 0.
-        menu << "\n[" << i + 1 << "] " << connections[i]->first;
+        menu << "\n[" << i + 1 << "] " << pathData->first;
+        i++;
     }
 
     return menu.str();
 }
 
-void StoryNode::removeArc(StoryNode *branch) {
+void StoryNode::removePath(StoryNode *branch) {
     for (int i = 0; i < connections.size(); ++i) {
         if (connections[i]->second == branch) {
             // Delete connection, and remove from list.
-            delete connections[i]->second;
             delete connections[i];
             connections.erase(connections.begin() + i);
             return;
@@ -93,29 +100,36 @@ void StoryNode::removeArc(StoryNode *branch) {
 
 // GraphMap implementations.
 
-GraphMap::GraphMap() {
+MapGraph::MapGraph() {
     size = 0;
 }
 
-GraphMap::~GraphMap() {
+MapGraph::~MapGraph() {
     for (auto const& [label, node] : vertices) {
         delete node;
     }
     vertices.clear();
 }
 
-void GraphMap::addArc(StoryNode *source, StoryNode *destination, string text) {
+void MapGraph::addArc(StoryNode *source, StoryNode *destination, string text) {
     source->addArc(destination, text);
 }
 
-void GraphMap::addArc(string source, string destination, string text) {
+void MapGraph::addArc(string source, string destination, string text) {
     StoryNode *sourceNode = getByTitle(source);
     StoryNode *destinationNode = getByTitle(destination);
 
     sourceNode->addArc(destinationNode, text);
 }
 
-void GraphMap::addVertex(StoryNode *newVertex) {
+void MapGraph::deleteArc(string source, string destination) {
+    StoryNode *sourceNode = getByTitle(source);
+    StoryNode *destinationNode = getByTitle(destination);
+
+    sourceNode->removePath(destinationNode);
+}
+
+void MapGraph::addVertex(StoryNode *newVertex) {
     // Check this doesn't override. Improper check because a value is going to be created here anyhow.
     if (vertices[newVertex->title] != 0) {
         throw VertexTitleConflict(newVertex->title);
@@ -126,19 +140,7 @@ void GraphMap::addVertex(StoryNode *newVertex) {
     ++size;
 }
 
-void GraphMap::addVertices(StoryNode *rootVertex) {
-    // Let addVertex() do the work, just to avoid a double check.
-    try {
-        addVertex(rootVertex);
-    } catch (VertexTitleConflict e) {}
-
-    // Add all connections.
-    for (auto connection : rootVertex->connections) {
-        addVertices(connection->second);
-    }
-}
-
-StoryNode *GraphMap::getByTitle(string title) {
+StoryNode *MapGraph::getByTitle(string title) {
     // Check it.
     if (vertices.find(title) == vertices.end()) throw VertexNotFound(title);
     
@@ -146,22 +148,55 @@ StoryNode *GraphMap::getByTitle(string title) {
     return vertices[title];
 }
 
-string GraphMap::minSpanTree() {
-    // This is going to be a mess--i don't want it and it doesn't want me.
-    // Chu-Liu's algorithm.
+std::vector<arborEdge *> *MapGraph::arborescence(string sourceTitle) {
+    // Note: this method is very similar to shortestPath(). The only difference is with the data gathered and returned.
+    
+    std::map<string, bool> visited;
 
-    // Create a list of all edges--do i do a pair<source, dest>? probably
-    // To do this i will have to run through all nodes recursively, and there could be a lot of repeat edges. this will suck but that's ok.
-    // While building the list, i can ignore an edge if it is parallel [from the same source to the same dest]
+    // Holds edges that are part of the arborescence.
+    auto edges = new std::vector<arborEdge *>;
 
-    // "arbitrary root node". i will remove any edge with a detination to this root node. pick the next root and repeat? [O(n * n * n * n). super cool.]
+    StoryNode *current;
+    std::queue<StoryNode *> nodeQueue;
+    nodeQueue.push(vertices[sourceTitle]);
 
-    // https://en.wikipedia.org/wiki/Edmonds%27_algorithm this describes how to handle cycles and i'm scared :(
+    while (!nodeQueue.empty()) {
+        current = nodeQueue.front(); nodeQueue.pop();
 
-    return "";
+        if (visited[current->title]) {
+            continue;
+        }
+
+        // Add unvisited connections to queue.
+        // for (auto connection : current->connections) {
+        //     StoryNode *node = connection->second;
+        //     // Skip visited--possibly redundant, but this is safety.
+        //     if (visited[node->title]) {
+        //         continue;
+        //     }
+            
+        //     // New distance based on parent node's distance.
+        //     int distance = (*paths)[current->title]->first + 1;
+
+        //     // Compare.
+        //     if ((*paths)[node->title]->first > distance) {
+        //         // Update distance and parent.
+        //         (*paths)[node->title]->first = distance;
+        //         (*paths)[node->title]->second = current->title;
+        //     }
+
+        //     nodeQueue.push(node);
+        // }
+
+
+        // Mark as visited.
+        visited[current->title] = true;
+    }
+
+    return edges;
 }
 
-pathMap *GraphMap::shortestPath(string nodeTitle) {
+pathMap *MapGraph::shortestPath(string nodeTitle) {
     std::map<string, bool> visited; // Tracks which nodes have been visited
     
     // This map holds path info. Node name mapped to the total distance and parent node.
@@ -214,7 +249,7 @@ pathMap *GraphMap::shortestPath(string nodeTitle) {
     return paths;
 }
 
-string GraphMap::showVertices() {
+string MapGraph::showVertices() {
     stringstream message;
 
     // Comma-separated list of vertices, each one's title in quotes.

@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -12,13 +13,22 @@
 using std::string;
 
 
-typedef std::map<string, std::pair<int, string> *> pathMap;
-class GraphMap;
+class MapGraph;
 struct StoryNode;
 
-// Empty callback
+// How a directioned edge is stored. First member is the descriptive text ("Turn left.", "Go North.").
+typedef std::pair<string, StoryNode *> path;
+
+// Map of paths for use in MapGraph.shortestPath()
+typedef std::map<string, std::pair<int, string> *> pathMap;
+
+// An edge only for use in MapGraph.arborescence()
+typedef std::tuple<StoryNode *, StoryNode *, string> arborEdge;
+
+
 namespace callbacks {
-    string eCB(StoryNode *n, GraphMap *g, Player *p);
+    // Empty callback
+    string eCB(StoryNode *n, MapGraph *m, Player *p);
 }
 
 
@@ -46,8 +56,8 @@ class VertexNotFound : public std::exception {
 
 /// @brief Single node.
 struct StoryNode {
-    string (* callback)(StoryNode *, GraphMap *, Player *);
-    std::vector<std::pair<string, StoryNode *> *> connections;
+    string (* callback)(StoryNode *, MapGraph *, Player *);
+    std::vector<path *> connections;
 
     string title; // Short, unique.
     string description; // Long, doesn't need to be unique, likely will be.
@@ -63,7 +73,7 @@ struct StoryNode {
      * @param _tag Optional tag for the node. Non-unique. Example: "END" to mark an ending.
      * @overload One overload that constructs node with empty callback.
     */
-    StoryNode(string (* _callback)(StoryNode *, GraphMap *, Player *), string _description, string _title, string _tag = "");
+    StoryNode(string (* _callback)(StoryNode *, MapGraph *, Player *), string _description, string _title, string _tag = "");
     
     /**
      * Constructs node with empty callback.
@@ -87,10 +97,10 @@ struct StoryNode {
     void addArc(StoryNode *branch, string text);
 
     /**
-     * Get all connections and their reference message.
+     * Get all connections' reference messages.
      * @return A menu of options for the player to refer to.
     */
-    string getPaths();
+    string getPathMenu();
 
     /**
      * Removes a branch from the current node's connections.
@@ -98,13 +108,13 @@ struct StoryNode {
      * @param branch The old connection to break.
      * @return No return value.
     */
-    void removeArc(StoryNode *branch);
+    void removePath(StoryNode *branch);
 };
 
 
 
-/// @brief GraphMap class, manages story map.
-class GraphMap {
+/// @brief MapGraph class, manages story map.
+class MapGraph {
     private:
         int size;
         std::map<string, StoryNode *> vertices;
@@ -113,12 +123,12 @@ class GraphMap {
         /**
          * Constructs an empty graph.
         */
-        GraphMap();
+        MapGraph();
 
         /**
          * Safely destructs graph and graph data.
         */
-        ~GraphMap();
+        ~MapGraph();
 
         /**
          * Adds a directioned arc between two nodes on the graph, from source to destination.
@@ -132,19 +142,20 @@ class GraphMap {
         void addArc(string source, string destination, string text = "");
 
         /**
+         * Removes an arc between two nodes of the given names.
+         * @param source The title of the source node of the arc.
+         * @param destination The title of the arc's destination.
+         * @return No return value.
+        */
+        void deleteArc(string source, string destination);
+
+        /**
          * Adds a vertex to the graph.
          * @param newVertex The new vertex to add to the graph.
          * @throws VertexTitleConflict if the given node's title conflicts with an existing vertex in the graph. 
          * @return No return value.
         */
         void addVertex(StoryNode *newVertex);
-
-        /**
-         * Adds many vertices to the graph, starting at the root and adding all recursively.
-         * @param rootVertex The root node, or starting node.
-         * @return No return value.
-        */
-        void addVertices(StoryNode *rootVertex);
 
         /**
          * Gets a node by its unique title.
@@ -161,11 +172,11 @@ class GraphMap {
         inline int getSize() const { return size; }
 
         /**
-         * Calculates the graph's minimum spanning tree starting at the given node.
-         * @param source The node to begin with.
-         * @return A string describing the graph's minimum spanning tree.
+         * Calculates the graph's minimum arborescence starting at the given node.
+         * @param sourceTitle Title of the node to begin with.
+         * @return A vector of tuples representing each edge (source, destination, descriptive text).
         */
-        string minSpanTree();
+        std::vector<arborEdge *> *arborescence(string sourceTitle);
 
         /**
          * Calculates the shortest path to every (accessible) node from the given node.

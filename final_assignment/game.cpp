@@ -14,7 +14,7 @@ string EndProgram::what() {
 }
 
 
-Game::Game(GraphMap *_graph) {
+Game::Game(MapGraph *_graph) {
     graph = _graph;
 }
 
@@ -47,7 +47,11 @@ int Game::getInput(int options) {
 
         if (playerInput == "q" || playerInput == "Q") {
             throw EndProgram();
-        } 
+        } else if (playerInput == "h" || playerInput == "H") {
+            cout << "Enter...\n\t'h' for help\n\t'i' for game inventory\n\t'q' to quit" << endl;
+        } else if (playerInput == "i" || playerInput == "I") {
+            cout << "Current inventory:\n" << player.showInventory() << endl;
+        }
     }
 
     return stoi(playerInput);
@@ -69,20 +73,21 @@ void Game::gameLoop(StoryNode *start) {
         callbackText = current->callback(current, graph, &player);
         ++current->visits;
 
-        // Print narration and menu.
+        // Print narration(s).
         cout << current->description << endl;
         if (callbackText != "") cout << endl << callbackText << endl;
-        cout << current->getPaths() << endl;
 
         // Break loop here. 
         if (current->tag == "END") break;
 
+        // Print menu.
+        cout << current->getPathMenu() << endl;
+
         // Next iteration.
         current = pickNextNode(current);
-        cout << endl << "+ +   +     +       +         +       +     +   + +" << endl << endl;
+        cout << endl << textPartition << endl << endl;
     }
 }
-
 
 void Game::runGame(string startTitle) {
     gameLoop(graph->getByTitle(startTitle));

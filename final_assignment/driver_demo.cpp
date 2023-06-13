@@ -1,4 +1,4 @@
-// Trial run for functionality and flow. Note: this does not actually use the GraphMap!
+// Test run file, tests the StoryNodes without the MapGraph, and without story.h
 #include <iostream>
 #include <string>
 
@@ -37,7 +37,7 @@ StoryNode *sampleStory() {
 
 int main() {
     StoryNode *storyRoot = sampleStory();
-    Game game(new GraphMap()); // Enter empty graph to make the constructor happy. Use the generated story node. 
+    Game game(new MapGraph()); // Enter empty graph to make the constructor happy. Use the generated story node. 
 
     try {
         game.gameLoop(storyRoot);
@@ -46,6 +46,6 @@ int main() {
         cout << e.what() << endl;
     }
 
-    cout << "Bye bye!" << endl;
+    cout << "Thank you for playing!" << endl;
     return 0;
 }
