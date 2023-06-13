@@ -10,7 +10,7 @@ using namespace std;
 
 StoryNode *sampleStory() {
     // Create story tree.
-    StoryNode *firstNode = new StoryNode("Once upon a time..", "START");
+    StoryNode *firstNode = new StoryNode("Once upon a time...", "START");
     
     StoryNode *princessRoute = new StoryNode("There was a princess, and she wore a magical gown.", "");
     StoryNode *dragonRoute = new StoryNode("There was a raging dragon, a beast!", "");
@@ -22,14 +22,14 @@ StoryNode *sampleStory() {
     StoryNode *dragonEndingTwo = new StoryNode("It clawed at the stone of its cave lair until its nails frayed and broke. It could not contain its hunger. It fled to the nearest castle in a fury, and sprayed its flame.", "", "END");
 
     // Map connections.
-    firstNode->addArc(princessRoute, "there was a princess!");
-    firstNode->addArc(dragonRoute, "there was a dragon!");
+    firstNode->addPath(princessRoute, "there was a princess!");
+    firstNode->addPath(dragonRoute, "there was a dragon!");
 
-    princessRoute->addArc(princessEndingOne, "be happy!");
-    princessRoute->addArc(princessEndingTwo, "get attacked by a dragon!");
+    princessRoute->addPath(princessEndingOne, "be happy!");
+    princessRoute->addPath(princessEndingTwo, "get attacked by a dragon!");
 
-    dragonRoute->addArc(dragonEndingOne, "take a nap, dragon!");
-    dragonRoute->addArc(dragonEndingTwo, "go do something scary! and mean!");
+    dragonRoute->addPath(dragonEndingOne, "take a nap, dragon!");
+    dragonRoute->addPath(dragonEndingTwo, "go do something scary! and mean!");
 
     return firstNode;
 }

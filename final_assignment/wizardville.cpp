@@ -119,7 +119,7 @@ string errandList(StoryNode *n, MapGraph *m, Player *p) {
 string livingRoom(StoryNode *n, MapGraph *m, Player *p) {
     if (!n->visits) {
         p->addItem("my paperwork");
-        return "Your paperwork waits on your desk, the one part of this room you sometimes claim. You go ahead and grab it.";
+        return "Your paperwork waits on your desk, the one part of this room you sometimes claim. You go ahead and grab it.\n\n[ Paperwork added to inventory. ]";
     }
 
     return "";
@@ -208,7 +208,7 @@ void createGame(MapGraph *graph) {
 
     graph->addArc("hill.house.kitchen.errandList", "hill.house.kitchen", "(Continue.)");
     
-    graph->addArc("hill.house.living", "hill.house.living", "Enter kitchen.");
+    graph->addArc("hill.house.living", "hill.house.kitchen", "Enter kitchen.");
     graph->addArc("hill.house.living", "hill.house.exterior", "Go outside.");
 
     graph->addArc("hill.house.exterior", "hill.house.living", "Go inside.");
@@ -218,15 +218,19 @@ void createGame(MapGraph *graph) {
     graph->addArc("hill.house.exterior.garden", "hill.house.living", "Go inside.");
     graph->addArc("hill.house.exterior.garden", "hill.trail", "Head into town.");
 
-
     graph->addArc("hill.trail", "hill.house.exterior", "Go home.");
-    // graph->addArc("hill.trail", "town.edge", "Go into town.");
 
     // TOWN
+    graph->addVertex(new StoryNode(
+        "A stone fence surrounds the town. It isn't very high, nor thick, but it makes the town feel stronger, safer.\n\nYou never know what could happen.\n\nThe fence breaks for an open archway, here at the South entrance/exit. Inside, townspeople wander about. You can hear the racket of children playing.",
+        "town.edge", 
+        "END"
+    ));
 
 }
 
 
+// Filling the getGraph() method declared by story.h. This provides the driver with game data.
 MapGraph *story::getGraph() {
     auto graph = new MapGraph();
 

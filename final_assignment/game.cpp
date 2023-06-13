@@ -48,11 +48,11 @@ int Game::getInput(int options) {
         if (playerInput == "q" || playerInput == "Q") {
             throw EndProgram();
         } else if (playerInput == "h" || playerInput == "H") {
-            cout << "Enter...\n\t'h' for help\n\t'i' for game inventory\n\t'o' to view objectives\n\t'q' to quit" << endl;
+            cout << "\nEnter...\n\t'h' for help\n\t'i' for game inventory\n\t'o' to view objectives\n\t'q' to quit" << endl;
         } else if (playerInput == "i" || playerInput == "I") {
-            cout << "Current inventory:\n" << player.showInventory() << endl;
+            cout << "\nCurrent inventory:\n" << player.showInventory() << endl;
         } else if (playerInput == "o" || playerInput == "O") {
-            cout << "Objectives:\n" << player.readObjectives() << endl;
+            cout << "\nObjectives:\n" << player.readObjectives() << endl;
         }
     }
 

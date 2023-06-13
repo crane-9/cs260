@@ -94,7 +94,7 @@ struct StoryNode {
      * @param text The text to display for the player.
      * @return No return value.
     */
-    void addArc(StoryNode *branch, string text);
+    void addPath(StoryNode *branch, string text);
 
     /**
      * Get all connections' reference messages.

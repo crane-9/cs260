@@ -3,19 +3,19 @@
 ## Quickstart
 This file contains design notes for my final project and game.
 
-To compile game:
+To compile game demo (not to be confused with demo game):
 ```
-g++ driver_game.cpp game.cpp graph.cpp player.cpp wizardville.cpp -o WIZARDVILLE
+g++ driver_game.cpp game.cpp graph.cpp player.cpp wizardville.cpp -o game
 ```
 
 To compile a demo game:
 ```
-g++ driver_demo.cpp game.cpp graph.cpp player.cpp -o DEMO
+g++ driver_demo.cpp game.cpp graph.cpp player.cpp -o demo
 ```
 
 To compile graph class unit tests: 
 ```
-g++ driver_tests.cpp graph.cpp -o TESTS
+g++ driver_tests.cpp graph.cpp -o tests
 ```
 
 ### Shortcuts
@@ -26,19 +26,19 @@ g++ driver_tests.cpp graph.cpp -o TESTS
     * [Design outline](#design-outline)
 * [Tests](#tests)
     * [Unit tests](#unit-tests)
-    * [Test run design](#test-run-design)
+    * [Test run designs](#test-run-designs)
 
 
 ## Design
 
 ### Inspiration
 
-The first application I saw for a graph data structure is the skeleton for a text-based adventure game. For example, Zork. 
+The first application I saw for a graph data structure is the skeleton for a non-linear text-based adventure game. For example, Zork. 
 
 ![Map of Zork I](../readme_src/zork_map.png) 
 Found on [archive.org](https://archive.org/details/zork-i-ii-iii-maps/)
 
-In Zork, the player navigates the world by entering a direction (north/east/south/west) into the console. Each location behaves as a node, as it has its own unique data and connections to other locations. Connections between locations can even be one-way passages, similar to the directionality of graph nodes.
+In Zork, the player navigates the world by entering a direction (north/east/south/west) into the console. Each location is like a node, as it has its own unique data and connections to other locations. Connections between locations can even be one-way passages, similar to the directionality of graph nodes, or unlockable.
 
 Another example and point of inspiration is [Twine](https://twinery.org/), a tool for building non-linear, text-based adventure games. The tool's editor interface is a graph that holds story nodes, all of which are connected by directional arcs.
 
@@ -47,9 +47,7 @@ Another example and point of inspiration is [Twine](https://twinery.org/), a too
 
 ### Solving a problem
 
-As (hopefully) illustrated by my previous points, a graph is an ideal structure for modelling a non-linear story tree for a text adventure game. Each story node may hold the data for its represented "page" or location. 
-
-In practice, this becomes more complicated, as games like Zork require a player inventory system in order for the create puzzles for the player to solve. This issue, however, is more about how each story node, or the rest of the program, works. A graph solves the problem of how to create branching story paths.
+As (hopefully) illustrated by my previous points, a graph is an ideal structure for modelling a non-linear story tree for a text adventure game. Each story node may hold the data for its represented "page" or location.
 
 A simple version of a story node (with no concern for player inventory or conditional elements) might look like this:
 
@@ -80,7 +78,7 @@ struct StoryNode {
     // Some games may want to count if the player has visited before, or how many times.
     int visits = 0; 
 
-    // ... Plus methods for construction and adding an arc.
+    // ... Plus methods for construction and adding or removing an arc.
 };
 ```
 
@@ -96,14 +94,16 @@ void myCallback(StoryNode *node, Graph *graph, Player *player) {
     }
 }
 
-// Pass into node consctructor, or connect like so:
+// Later pass into node consctructor, or connect like so:
 myNode->callback = myCallback;
 ```
+
+> `driver_demo.cpp` contains a driver for a brief game which only implements nodes. I used this to test and modify the structure of a node.
 
 
 ### Design outline
 
-Above, I've explored and outlined a couple iterations of what a `StoryNode` could look like in order to provide common adventure game mechanics. As for the program's complete structural design, I plan for something like this:
+Above, I've explored and outlined a couple iterations of what a `StoryNode` could look like in order to provide common adventure game mechanics. As for the program's complete structural design, I developed this:
 
 ![Current UML Design](../readme_src/uml_design.png)
 
@@ -118,12 +118,12 @@ Written within the following files:
     + `Player` class.
 - `story.h` & `wizardville.cpp`
     + `getStory()` function.
-    - `wizardville.cpp` contains the implementation expected by `story.h`.
+    - `wizardville.cpp` contains the implementation expected by `story.h`. However any `.cpp` that implements `getStory()` could be substituted and run instead.
 - `game.h` & `game.cpp`
     + `Game` class.
     + `EndProgram` error.
 
-I wrote an informal game loop test [here](..\in_class\june1.cpp) during the development of my design.
+> I wrote an informal game loop test [here](..\in_class\june1.cpp) during the development of my design. I believe this pre-dates `driver_demo.cpp`.
 
 > Note: I've decided that `addVertex()` will take pointers to actual nodes, rather than just the node's name or data. I made this decision because of the complexity of a `StoryNode`--there is more data than just a single string variable.
 
@@ -149,6 +149,14 @@ graph->addVertex(new StoryNode("more data", "C"));
 ```
 
 Checking graph contents will be done automatically, and generate a pass/fail message.
+
+
+#### For `getByTitle()`:
+
+This method is needed in order to use `addArc()` (at least the overload that takes two string inputs).
+
+I will first attempt to get an existing node, and verify that its data is as expected. Then I will try to get a non-existant node, and verify that the expected error is raised.
+
 
 #### For `addArc()`:
 
@@ -203,7 +211,7 @@ The expected arborescence for my sample graph (with root node "B") includes thes
 
 Along with unit tests, I will have a proof-of-concept in `driver_demo.cpp`. This will test the complete game loop with a simplified story made up of three total decisions--the player will only face two in a single playthrough. 
 
-### Test run design
+### Test run designs
 
 Along with unit tests, I will have two games. 
 
@@ -214,11 +222,13 @@ The second, in `driver_game.cpp` will be a (slightly) longer game with more comp
 To visualize:
 
 ![Example maps](../readme_src/game_map_examples.png)
+> Note: The game world map is intended to show the complexity of routes. In reality, the game ended up restricted to only the hill zone, however dynamic routes and functionality are still present.
 
 
 ---
 ## [ complexity analysis ]
 
+In analyzing the complexity of my graph's behaviors...
 
 ---
 ## Meeting Requirements

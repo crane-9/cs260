@@ -59,7 +59,7 @@ StoryNode::~StoryNode() {
     connections.clear();
 }
 
-void StoryNode::addArc(StoryNode *branch, string text) {
+void StoryNode::addPath(StoryNode *branch, string text) {
     // I will allow duplicates.
     connections.push_back(new pair<string, StoryNode *>(text, branch));
 }
@@ -108,14 +108,14 @@ MapGraph::~MapGraph() {
 }
 
 void MapGraph::addArc(StoryNode *source, StoryNode *destination, string text) {
-    source->addArc(destination, text);
+    source->addPath(destination, text);
 }
 
 void MapGraph::addArc(string source, string destination, string text) {
     StoryNode *sourceNode = getByTitle(source);
     StoryNode *destinationNode = getByTitle(destination);
 
-    sourceNode->addArc(destinationNode, text);
+    sourceNode->addPath(destinationNode, text);
 }
 
 void MapGraph::deleteArc(string source, string destination) {
