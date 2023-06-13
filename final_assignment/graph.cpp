@@ -24,9 +24,7 @@ VertexTitleConflict::VertexTitleConflict(string title) {
 }
 
 string VertexTitleConflict::what() {
-    stringstream message;
-    message << "Node '" << hint << "' already exists.";
-    return message.str();
+    return hint;
 }
 
 VertexNotFound::VertexNotFound(string title) {
@@ -34,9 +32,7 @@ VertexNotFound::VertexNotFound(string title) {
 }
 
 string VertexNotFound::what() {
-    stringstream message;
-    message << "Node '" << hint << "' could not be found within the graph.";
-    return message.str();
+    return hint;
 }
 
 

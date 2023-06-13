@@ -23,8 +23,31 @@ bool Player::checkFlag(string flag) {
     return flags[flag];
 }
 
+bool Player::checkObjectives() {
+    if (objectives.empty()) return false;
+
+    for (auto const& objectiveData : objectives) {
+        if (!flags[objectiveData.first]) return false;
+    }
+
+    return true;
+}
+
 bool Player::hasItem(string item) {
     return inventory[item] != 0;
+}
+
+string Player::readObjectives() {
+    if (objectives.empty()) return "You have no quest yet!";
+
+    stringstream message;
+
+    for (auto const& [flag, text] : objectives) {
+        string checkBox = (flags[flag]) ? "[x] " : "[ ] ";
+        message << "\t" << checkBox << text << "\n";
+    }
+
+    return message.str();
 }
 
 bool Player::removeItem(string item) {
@@ -37,6 +60,9 @@ bool Player::removeItem(string item) {
     return hadItem;
 }
 
+void Player::setObjective(string flagName, string objectiveText) {
+    objectives[flagName] = objectiveText;
+}
 
 string Player::showInventory() {
     if (inventory.empty()) {

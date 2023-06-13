@@ -9,7 +9,9 @@
 using namespace std;
 
 
-// Callbacks -- tutorial
+// Creating the tutorial
+// Callbacks
+
 string tutDoubt(StoryNode *n, MapGraph *m, Player *p) {
     p->addFlag("tutorialDoubt");
     return "";
@@ -22,54 +24,21 @@ string tutAssurance(StoryNode *n, MapGraph *m, Player *p) {
     return "";
 }
 
-
-// Callbacks -- story
-
-string bedroom(StoryNode *n, MapGraph *m, Player *p) {
-    if (!n->visits) {
-        return "You get out of bed, and to your feet.";
-    } else if (n->visits == 1) {
-        n->description = "Your bedroom is a quiet mess. Barnaby is curled up on the corner of your bed, napping the day away."; // Update node description.
-    } 
-
-    return ""; 
-}
-
-string bedroomHat(StoryNode *n, MapGraph *m, Player *p) {
-    if (!n->visits) {
-        p->addItem("Your hat");
-        m->deleteArc("hill.house.bedroom", n->title); // Theoretically, there will only be one visit to this node.
-    }
-    return "You take it off the dresser, and put it on your head.";
-}
-
-
-string trail(StoryNode *n, MapGraph *m, Player *p) {
-    if (!n->visits) {
-        return "You can see the town up ahead. Distant figures roam the town square.";
-    }
-
-    return "";
-}
-
-// Graph/game assembly
-
-// Creates the tutorial.
+// Tutorial subgraph.
 void createTutorial(MapGraph *graph) {
     graph->addVertex(new StoryNode(
-        "Welcome to Wizardville.\n\nTo play the game, you will be given a simple menu of options. To make your selection, you will enter the corresponding number.\n\nHere is your first test:", 
+        "This is a nonlinear text adventure. To play, you will be given a simple menu of options to pick from. To make your selection, you will enter the corresponding number.\n\nHere is your first test:", 
         "TUTORIAL"
     ));
 
     graph->addVertex(new StoryNode(
-
-        "Great. The input parser for this game is picky, and will not accept '   2 ' when you mean to select option '2'. You will have unlimited attempts to enter valid input.\n\nIn addition to the provided options, you may enter:",
+        "Great. The input parser for this game is picky, and will not accept '   2 ' when you mean to select option '2'. You will have unlimited attempts to enter valid input.\n\nIn addition to the provided options, you may enter:\n\t'h' for help\n\t'i' for game inventory\n\t'o' to view objectives\n\t'q' to quit",
         "tut.1"
     ));
 
     graph->addVertex(new StoryNode(
         tutDoubt,
-        "You'll figure it out.",
+        "You'll get it eventually.",
         "tut.1.b"
     ));
 
@@ -97,11 +66,81 @@ void createTutorial(MapGraph *graph) {
 }
 
 
-// Creates the narrative game nodes.
+// Creating the story.
+// Callbacks 
+
+string bedroom(StoryNode *n, MapGraph *m, Player *p) {
+    if (!n->visits) {
+        return "\"It's good you're up,\" Simon meows. \"You have a busy day today.\"\n\nYou should have a to-do list on the kitchen counter.";
+    }
+    return ""; 
+}
+
+string bedroomHat(StoryNode *n, MapGraph *m, Player *p) {
+    if (!n->visits) {
+        p->addFlag("wizardHat");
+        m->deleteArc("hill.house.bedroom", n->title); // Theoretically, there will only be one visit to this node.
+    }
+    return "You put it on your head.";
+}
+
+string kitchen(StoryNode *n, MapGraph *m, Player *p) {
+    if (n->visits == 1) { // On the second visit, shorten the descriptive text.
+        n->description = "Your kitchen is cluttered, countertops decorated with all kinds of science-y equipment.";
+    }
+    
+    if (!p->checkFlag("errandList")) { // If the player hasn't checked the list yet, prompt that it's here.
+        return "Amidst the mess is your to-do list. You've written it in a glitter gel pen.";
+    }
+
+    return "";
+}
+
+string errandList(StoryNode *n, MapGraph *m, Player *p) {
+    if (n->visits == 1) { // Second visit, change descriptive text.
+        n->description = "You check in on your list...";
+    }
+
+    if (!p->checkFlag("errandList")) { // If player hasn't checked the list before, add the objectives, set the flag.
+        p->setObjective("wizardHat", "wear my favorite hat c:");
+        p->setObjective("paperworkDelivered", "deliver paperwork to the bookkeeper (important!!!)");
+        p->setObjective("herbalistPickup", "pickup from the herbalist");
+        p->setObjective("bakeryTrade", "trade @ the bakery");
+        p->setObjective("tailorDelivery", "deliver order to tailor");
+        p->setObjective("illusionistCheck", "check on the illusionist....");
+
+        p->addFlag("errandList");
+    }
+
+    // Print the updated objectives menu.
+    return p->readObjectives() + "\n(You can enter 'o' to view this list again at any time.)";
+}
+
+string livingRoom(StoryNode *n, MapGraph *m, Player *p) {
+    if (!n->visits) {
+        p->addItem("my paperwork");
+        return "Your paperwork waits on your desk, the one part of this room you sometimes claim. You go ahead and grab it.";
+    }
+
+    return "";
+}
+
+string trail(StoryNode *n, MapGraph *m, Player *p) {
+    if (!p->checkFlag("wizardHat")) {
+        return "Hold on, you forgot your hat! You can't be seen without your hat!";
+    } else {
+        m->addArc(n->title, "town.edge", "Go into town.");
+    }
+
+    return "";
+}
+
+
+// Creates story subgraph.
 void createGame(MapGraph *graph) {
     // Opening
     graph->addVertex(new StoryNode(
-        "[ you are in bed asleep and your cat wakes you up and you are an alchemist very committed to your townly duties. ]",
+        "You live atop a forested hill, in a small and cluttered home. You live alone, with the exception of Simon, a three-legged cat.\n\nAt the base of the hill is a town, and in this town is your potion shop. You are the potion master, the Alchemist.\n\nIt is early morning, and you are awoken by Simon's three paws.",
         "START"
     ));
 
@@ -109,55 +148,79 @@ void createGame(MapGraph *graph) {
     // Alchemist's home
     graph->addVertex(new StoryNode(
         bedroom,
-        "[ this is your bedroom and barnaby is your cat. you are a bit of a mess internally but you save that mess inside and keep it together outside. ]",
+        "Your bedroom is draped in quilts, tapestries, and rugs. It is not a very organized space, but you need to keep a mess somewhere to keep the rest of your life in order.",
         "hill.house.bedroom"
     ));
     
     graph->addVertex(new StoryNode(
         bedroomHat,
-        "Your hat is a worn old thing, embellished with years of patchwork. An embroidered hummingbird curves around the peak of the hat. Colorful glass beads dangle off the rim, each handcrafted by your friend, the Illusionist.",
+        "You can't leave without your hat. Bright pink and sparkling. Patched and worn. Embroidered and tasteful. Wide-rimmed. Glass beads dangle off the edge, each bead handcrafted by your friend, the Illusionist.",
         "hill.house.bedroom.hat"
     ));
     
     graph->addVertex(new StoryNode(
-        "[ your kitchen is populated with equipment for your chemistry things. you sort of cook sometimes, but for some reason you're just not very good at it. ]",
+        kitchen,
+        "You enter the kitchen. You may have a shop dedicated to your potion activities, but that doesn't stop the business from spilling over. Your countertops are decorated with all kinds of science-y equipment.\n\nYou cook sometimes too, but it never comes out very good. It's important you keep on good terms with the town's baker.",
         "hill.house.kitchen"
+    ));
+
+    graph->addVertex(new StoryNode(
+        errandList,
+        "Your list reads:",
+        "hill.house.kitchen.errandList"
     ));
     
     graph->addVertex(new StoryNode(
-        "[ this is your living room it is tiny and cluttered. barnaby spends more time here than you do. ]",
+        livingRoom,
+        "You enter the living room. You don't use this room much. It's fair to call it Simon's nest at this point.",
         "hill.house.living"
     ));
 
     // Outdoors
     graph->addVertex(new StoryNode(
-        "the hill",
+        "Outside your home is shaded and green. Your home looks a little lop-sided.\n\nIn your yard rests the remains of many an attempt to garden. Alas, the Gardener lost all hope in you long ago.",
         "hill.house.exterior"
     ));
 
     graph->addVertex(new StoryNode(
-        "The trail into town weaves through bushes and trees. It is marked by broken fence posts and neglected lanterns no one bothers lighting anymore.",
+        "Yep, they're dead.",
+        "hill.house.exterior.garden"
+    ));
+
+    graph->addVertex(new StoryNode(
+        trail,
+        "A dirt path weaves through the trees between town and your home. Broken fence posts and lanterns lead the way, though the lights haven't been lit in years.",
         "hill.trail"
     ));
 
     // Hill location connections
-    graph->addArc("START", "hill.house.bedroom", "Wake up.");
+    graph->addArc("START", "hill.house.bedroom", "Get up.");
     
-    graph->addArc("hill.house.bedroom", "hill.house.bedroom.hat", "Don hat.");
+    graph->addArc("hill.house.bedroom", "hill.house.bedroom.hat", "Don wizard hat.");
     graph->addArc("hill.house.bedroom", "hill.house.kitchen", "Enter kitchen.");
 
     graph->addArc("hill.house.bedroom.hat", "hill.house.bedroom", "(Continue.)");
     
+    graph->addArc("hill.house.kitchen", "hill.house.kitchen.errandList", "Check errand list.");
     graph->addArc("hill.house.kitchen", "hill.house.bedroom", "Enter bedroom.");
     graph->addArc("hill.house.kitchen", "hill.house.living", "Enter living room.");
     graph->addArc("hill.house.kitchen", "hill.house.exterior", "Go outside.");
+
+    graph->addArc("hill.house.kitchen.errandList", "hill.house.kitchen", "(Continue.)");
     
     graph->addArc("hill.house.living", "hill.house.living", "Enter kitchen.");
     graph->addArc("hill.house.living", "hill.house.exterior", "Go outside.");
 
     graph->addArc("hill.house.exterior", "hill.house.living", "Go inside.");
+    graph->addArc("hill.house.exterior", "hill.house.exterior.garden", "Inspect garden.");
     graph->addArc("hill.house.exterior", "hill.trail", "Head into town.");
 
+    graph->addArc("hill.house.exterior.garden", "hill.house.living", "Go inside.");
+    graph->addArc("hill.house.exterior.garden", "hill.trail", "Head into town.");
+
+
+    graph->addArc("hill.trail", "hill.house.exterior", "Go home.");
+    // graph->addArc("hill.trail", "town.edge", "Go into town.");
 
     // TOWN
 
