@@ -128,7 +128,7 @@ string livingRoom(StoryNode *n, MapGraph *m, Player *p) {
 string trail(StoryNode *n, MapGraph *m, Player *p) {
     if (!p->checkFlag("wizardHat")) {
         return "Hold on, you forgot your hat! You can't be seen without your hat!";
-    } else {
+    } else if (n->connections.size() == 1) {
         m->addArc(n->title, "town.edge", "Go into town.");
     }
 
