@@ -25,10 +25,14 @@ int main(int argc, char *argv[]) {
 
         // Play game.
         game.runGame("START");
-        cout << "Your journey must end here. Thank you for playing what is only the beginning." << endl << endl;
+        cout << "\nYour journey must end here. Thank you for playing what is only the beginning." << endl << endl;
     } catch (EndProgram) {
         cout << "\nEnding game." << endl << endl;
     }
+
+    string doorStop;
+    cout << "[ Enter any key to close. ]";
+    cin >> doorStop;
 
     return 0;
 }

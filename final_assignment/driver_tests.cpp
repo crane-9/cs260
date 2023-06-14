@@ -187,13 +187,17 @@ string shortestPathTest(MapGraph *sampleGraph) {
 
 
 string arborescenceTest(MapGraph *sampleGraph) {
+    // An arborescence is a tree that has only exactly path to every accessible node from the root node.
     auto information = sampleGraph->arborescence("B");
     stringstream message;
+    message << "EDGES INCLUDED IN NODE 'B' ARBORESCENCE:\n";
 
     // Return a list of all edge names.
     for (auto edgeTuple : (*information)) {
         message << "'" << std::get<2>((*edgeTuple)) << "', ";
     }
+
+    message << "\ntotal weight: " << information->size();
 
     delete information;
     return message.str();
@@ -207,15 +211,16 @@ int main() {
     cout << addVertexTest(graph) << endl;
     cout << getByTitleTest(graph) << endl;
     cout << addArcTest(graph) << endl;
-    cout << deleteArcTest(graph) << endl;
+    cout << deleteArcTest(graph) << endl << endl;
 
     delete graph;
 
     // Build complex graph. Tree tests.
     MapGraph *compGraph = makeSampleGraph();
 
-    cout << shortestPathTest(compGraph) << endl;    
+    cout << shortestPathTest(compGraph) << endl; 
     cout << arborescenceTest(compGraph) << endl;    
+
 
     delete compGraph;
 

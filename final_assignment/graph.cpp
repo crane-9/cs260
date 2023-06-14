@@ -1,7 +1,6 @@
 #include "graph.h"
 
 #include <algorithm>
-#include <iostream>
 #include <map>
 #include <queue>
 #include <sstream>
@@ -11,7 +10,7 @@
 
 #include "player.h"
 
-using std::cout, std::endl, std::pair, std::string, std::stringstream;
+using std::pair, std::string, std::stringstream;
 
 
 string callbacks::eCB(StoryNode *n, MapGraph *g, Player *p) { return ""; }
@@ -38,41 +37,41 @@ string VertexNotFound::what() {
 
 // StoryNode implementations.
 
-StoryNode::StoryNode(string (* _callback)(StoryNode *, MapGraph *, Player *), string _description, string _title, string _tag) {
+StoryNode::StoryNode(string (* _callback)(StoryNode *, MapGraph *, Player *), string _description, string _title, string _tag) { // O(1)
     callback = _callback;
     description = _description;
     title = _title;
     tag = _tag;
 }
 
-StoryNode::StoryNode(string _description, string _title, string _tag) {
+StoryNode::StoryNode(string _description, string _title, string _tag) { // O(1)
     callback = callbacks::eCB;
     description = _description;
     title = _title;
     tag = _tag;
 }
 
-StoryNode::~StoryNode() {
-    for (auto pathData : connections) {
+StoryNode::~StoryNode() { // O(m)
+    for (auto pathData : connections) { // O(m)
         delete pathData;
     }
     connections.clear();
 }
 
-void StoryNode::addPath(StoryNode *branch, string text) {
+void StoryNode::addPath(StoryNode *branch, string text) { // O(1)
     // I will allow duplicates.
-    connections.push_back(new pair<string, StoryNode *>(text, branch));
+    connections.push_back(new pair<string, StoryNode *>(text, branch)); // O(1)
 }
 
-string StoryNode::getPathMenu() {
-    if (!connections.size()) {
+string StoryNode::getPathMenu() { // O(m)
+    if (!connections.size()) { // O(1)
         return "NO PATHS FORWARD.";
     }
 
     stringstream menu;
     int i = 0;
 
-    for (auto pathData : connections) {
+    for (auto pathData : connections) { // O(m)
         // +1 to keep options > 0.
         menu << "\n[" << i + 1 << "] " << pathData->first;
         i++;
@@ -81,7 +80,16 @@ string StoryNode::getPathMenu() {
     return menu.str();
 }
 
-void StoryNode::removePath(StoryNode *branch) {
+string StoryNode::getPathName(StoryNode *branch) { // O(m), if this method were more important, I would maybe use a map instead of a vector.
+    for (auto pathData : connections) {
+        if (branch == pathData->second) {
+            return pathData->first;
+        }
+    } 
+    return "";
+}
+
+void StoryNode::removePath(StoryNode *branch) { // O(m)
     for (int i = 0; i < connections.size(); ++i) {
         if (connections[i]->second == branch) {
             // Delete connection, and remove from list.
@@ -96,36 +104,36 @@ void StoryNode::removePath(StoryNode *branch) {
 
 // GraphMap implementations.
 
-MapGraph::MapGraph() {
+MapGraph::MapGraph() { // O(1)
     size = 0;
 }
 
-MapGraph::~MapGraph() {
-    for (auto const& [label, node] : vertices) {
+MapGraph::~MapGraph() { // O(n)
+    for (auto const& [label, node] : vertices) { // O(n)
         delete node;
     }
     vertices.clear();
 }
 
-void MapGraph::addArc(StoryNode *source, StoryNode *destination, string text) {
+void MapGraph::addArc(StoryNode *source, StoryNode *destination, string text) { // O(1)
     source->addPath(destination, text);
 }
 
-void MapGraph::addArc(string source, string destination, string text) {
+void MapGraph::addArc(string source, string destination, string text) { // O(1)
     StoryNode *sourceNode = getByTitle(source);
     StoryNode *destinationNode = getByTitle(destination);
 
     sourceNode->addPath(destinationNode, text);
 }
 
-void MapGraph::deleteArc(string source, string destination) {
+void MapGraph::deleteArc(string source, string destination) { // O(m), m being the node's connections rather than graph size.
     StoryNode *sourceNode = getByTitle(source);
     StoryNode *destinationNode = getByTitle(destination);
 
     sourceNode->removePath(destinationNode);
 }
 
-void MapGraph::addVertex(StoryNode *newVertex) {
+void MapGraph::addVertex(StoryNode *newVertex) { // O(1)
     // Check this doesn't override. Improper check because a value is going to be created here anyhow.
     if (vertices[newVertex->title] != 0) {
         throw VertexTitleConflict(newVertex->title);
@@ -136,7 +144,7 @@ void MapGraph::addVertex(StoryNode *newVertex) {
     ++size;
 }
 
-StoryNode *MapGraph::getByTitle(string title) {
+StoryNode *MapGraph::getByTitle(string title) { // O(1)
     // Check it.
     if (vertices.find(title) == vertices.end()) throw VertexNotFound(title);
     
@@ -144,60 +152,36 @@ StoryNode *MapGraph::getByTitle(string title) {
     return vertices[title];
 }
 
-std::vector<arborEdge *> *MapGraph::arborescence(string sourceTitle) {
-    // Note: this method is very similar to shortestPath(). The only difference is with the data gathered and returned.
-    
-    std::map<string, bool> visited;
+std::vector<arborEdge *> *MapGraph::arborescence(string sourceTitle) { // O(3n * m)
+    pathMap *paths = shortestPath(sourceTitle); // O(2n * m)?
 
-    // Holds edges that are part of the arborescence.
     auto edges = new std::vector<arborEdge *>;
 
-    StoryNode *current;
-    std::queue<StoryNode *> nodeQueue;
-    nodeQueue.push(vertices[sourceTitle]);
+    for (auto const& [destination, data] : (*paths)) { // O(n), as one entry per node.
+        // Skip the source node, skip any inaccessible nodes.
+        if (destination == sourceTitle || data->second == "") continue;
 
-    while (!nodeQueue.empty()) {
-        current = nodeQueue.front(); nodeQueue.pop();
+        // Get source and destination nodes
+        StoryNode *sourceNode = getByTitle(data->second);
+        StoryNode *destinationNode = getByTitle(destination);
 
-        if (visited[current->title]) {
-            continue;
-        }
-
-        // Add unvisited connections to queue.
-        // for (auto connection : current->connections) {
-        //     StoryNode *node = connection->second;
-        //     // Skip visited--possibly redundant, but this is safety.
-        //     if (visited[node->title]) {
-        //         continue;
-        //     }
-            
-        //     // New distance based on parent node's distance.
-        //     int distance = (*paths)[current->title]->first + 1;
-
-        //     // Compare.
-        //     if ((*paths)[node->title]->first > distance) {
-        //         // Update distance and parent.
-        //         (*paths)[node->title]->first = distance;
-        //         (*paths)[node->title]->second = current->title;
-        //     }
-
-        //     nodeQueue.push(node);
-        // }
-
-
-        // Mark as visited.
-        visited[current->title] = true;
+        // Create an arborEdge object to describe the edge.
+        edges->push_back(new arborEdge(
+            sourceNode, destinationNode, sourceNode->getPathName(destinationNode)
+        ));
     }
 
+    // Delete the path information, return edges.
+    delete paths;
     return edges;
 }
 
-pathMap *MapGraph::shortestPath(string nodeTitle) {
+pathMap *MapGraph::shortestPath(string nodeTitle) { // O(2n * m) ??
     std::map<string, bool> visited; // Tracks which nodes have been visited
     
     // This map holds path info. Node name mapped to the total distance and parent node.
     auto paths = new pathMap;
-    for (auto items : vertices) {
+    for (auto items : vertices) { // O(n)
         // "Infinite" distance (larger than anything expected) and no parent.
         (*paths)[items.first] = new pair<int, string>(size + 1, "");
     }
@@ -209,16 +193,16 @@ pathMap *MapGraph::shortestPath(string nodeTitle) {
     std::queue<StoryNode *> nodeQueue;
     nodeQueue.push(vertices[nodeTitle]);
 
-    while (!nodeQueue.empty()) {
+    while (!nodeQueue.empty()) { // O(n)
         current = nodeQueue.front(); nodeQueue.pop(); // Retrieve next node.
 
         // Skip if it has been visited.
-        if (visited[current->title]) {
+        if (visited[current->title]) { // O(1)
             continue;
         }
 
         // Add unvisited connections to queue.
-        for (auto connection : current->connections) {
+        for (auto connection : current->connections) { // O(m)
             StoryNode *node = connection->second;
             // Skip visited--possibly redundant, but this is safety.
             if (visited[node->title]) {
@@ -245,11 +229,11 @@ pathMap *MapGraph::shortestPath(string nodeTitle) {
     return paths;
 }
 
-string MapGraph::showVertices() {
+string MapGraph::showVertices() { // O(n)
     stringstream message;
 
     // Comma-separated list of vertices, each one's title in quotes.
-    for (auto const& [label, _] : vertices) {
+    for (auto const& [label, _] : vertices) { // O(n)
         message << "\"" << label << "\", ";
     }
 

@@ -1,14 +1,16 @@
 # CS 260 Final Project: Graph
 
+This file contains design and testing notes for my final project and game.
+
+
 ## Quickstart
-This file contains design notes for my final project and game.
 
 To compile game demo (not to be confused with demo game):
 ```
-g++ driver_game.cpp game.cpp graph.cpp player.cpp wizardville.cpp -o game
+g++ driver_game.cpp game.cpp graph.cpp player.cpp wizardville.cpp -o wizardville
 ```
 
-To compile a demo game:
+To compile the shorter demo game:
 ```
 g++ driver_demo.cpp game.cpp graph.cpp player.cpp -o demo
 ```
@@ -27,6 +29,10 @@ g++ driver_tests.cpp graph.cpp -o tests
 * [Tests](#tests)
     * [Unit tests](#unit-tests)
     * [Test run designs](#test-run-designs)
+* [Complexity Analysis](#complexity-analysis)
+    * [Node analysis](#storynode-behavior)
+    * [Graph analysis](#mapgraph-behavior)
+* [Meeting requirements](#meeting-requirements)
 
 
 ## Design
@@ -226,9 +232,137 @@ To visualize:
 
 
 ---
-## [ complexity analysis ]
+## Complexity Analysis
 
-In analyzing the complexity of my graph's behaviors...
+
+### `StoryNode` behavior:
+
+| Method            | Complexity | Notes                                                     |
+|:----------------  |:----------:|:----------------------------------------------------------|
+| `StoryNode()`     | O(1)       | Both `StoryNode` constructors have the same complexity.
+| `~StoryNode()`    | O(n)       | Where 'n' is the number of connections.
+| `addPath()`       | O(1)       |
+| `getPathMenu()`   | O(n)       | 
+| `getPathName()`   | O(n)       | 
+| `removePath()`    | O(n)       |
+
+
+### `MapGraph` behavior:
+
+| Method            | Complexity | Notes                                                     |
+|:----------------  |:----------:|:----------------------------------------------------------|
+| `MapGraph()`      | O(1)       |
+| `~MapGraph()`     | O(n)       | 
+| `addArc()`        | O(1)       | Both overloads have the same complexity.
+| `deleteArc()`     | O(m)       | 'm' being the relevant node's number of connections.
+| `addVertex()`     | O(1)       | 
+| `getByTitle()`    | O(1)       | I actually don't know what the efficiency for accessing a map is. I assumed average case from [Big-O cheat sheet](https://www.bigocheatsheet.com/).
+| `arborescence()`  | O(3n * m)  | Uses shortest path, iterates through the information another time.
+| `shortestPath()`  | O(2n * m)  |
+| `showVertices()`  | O(n)       | Necessary to visit all nodes. 
+
+Generally speaking, I'm not super satisfied by my time complexities.
+
+One optimization I have in mind is for my node. Currently connections are stored in a vector, however it could help to instead keep them in a map. If I could access a connection based on the node it points toward, this would save time on deleting and getting the associated name. However, that would create more complexity when the `Game` class accesses the player's next selected node.
+
 
 ---
 ## Meeting Requirements
+
+
+My graph class is called `MapGraph`, and it lives in `graph.cpp` & `graph.h`. I called it `MapGraph` because it works to model a map of a virtual world, using the graph structure.
+
+Here is my method to add a vertex. A vertex/node is a `StoryNode` struct, and they are stored within a `std::map` object, with strings as keys and nodes as values.
+```cpp
+// graph.cpp, lines 136 - 145
+
+void MapGraph::addVertex(StoryNode *newVertex) {
+    // Improper check because a value is going to be created here anyhow.
+    if (vertices[newVertex->title] != 0) {
+        throw VertexTitleConflict(newVertex->title);
+    }
+
+    // Add and increase size.
+    vertices[newVertex->title] = (newVertex);
+    ++size;
+}
+```
+
+The graph's method to add an arc between two vertices has two different versions: one takes the source and destination as nodes, and the other takes their titles as strings. Either way, the method call's on the source node's `addPath()` method, shown here. Connections to other nodes are stored in a vector, the node pointer paired with the narrative text, which narrates the decision the player would make to reach the given node.
+```cpp
+// graph.cpp, lines 61 - 64.
+
+void StoryNode::addPath(StoryNode *branch, string text) {
+    // I allow duplicates.
+    connections.push_back(new pair<string, StoryNode *>(text, branch));
+}
+```
+
+Here is how I implemented Dijkstra's algorithm for my `shortestPath()` method. 
+* `nodeTitle` is a parameter string that names the source node--the node from which all shortest paths are calculated.
+* `visited` is a map (`string`, `bool`) that tracks which node has been visited by title.
+```cpp
+// graph.cpp excerpt from MapGraph::shortestPath(), lines 192 - 226
+
+StoryNode *current;
+std::queue<StoryNode *> nodeQueue;
+nodeQueue.push(vertices[nodeTitle]);
+
+while (!nodeQueue.empty()) { // O(n)
+    current = nodeQueue.front(); nodeQueue.pop(); // Retrieve next node.
+
+    // Skip if it has been visited.
+    if (visited[current->title]) { // O(1)
+        continue;
+    }
+
+    // Add unvisited connections to queue.
+    for (auto connection : current->connections) { // O(m)
+        StoryNode *node = connection->second;
+        // Skip visited--possibly redundant, but this is safety.
+        if (visited[node->title]) {
+            continue;
+        }
+        
+        // New distance based on parent node's distance.
+        int distance = (*paths)[current->title]->first + 1;
+
+        // Compare.
+        if ((*paths)[node->title]->first > distance) {
+            // Update distance and parent.
+            (*paths)[node->title]->first = distance;
+            (*paths)[node->title]->second = current->title;
+        }
+
+        nodeQueue.push(node);
+    }
+
+    // Mark as visited.
+    visited[current->title] = true;
+}
+```
+
+By definition, my directioned graph sadly cannot have a minimum spanning tree. The directioned equivalent is an *arborescence*. An arborescence is a tree with a root vertex, and exactly one path to every accessible node.
+
+I calculate an arborescence by using the shortest path algorithm. The output from `shortestPath()` is reorganized into a vector of tuples representing edges.
+
+[Earlier](#for-arborescence) in this readme, I illustrate the expected arborescence starting from node "B". Here is my testing output:
+
+![Arborescence console output](../readme_src/arborescence_output.png)
+
+The `arborescence()` method itself creates a tuple representing the included edges like so:
+```cpp
+// graph.cpp, lines 164 - 171, excerpt from arborescence()'s "for" loop
+
+// Get source and destination nodes
+StoryNode *sourceNode = getByTitle(data->second);
+StoryNode *destinationNode = getByTitle(destination);
+
+// Create an arborEdge object to describe the edge.
+edges->push_back(new arborEdge(
+    sourceNode, destinationNode, sourceNode->getPathName(destinationNode)
+));
+```
+(Where `data` is a pair, `data->second` is the name of the source node, and `destination` is the name of the destination.)
+
+Because my graph is weightless, the total weight of an arborescence is the number of edges included.

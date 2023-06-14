@@ -9,7 +9,6 @@
 
 #include "player.h"
 
-
 using std::string;
 
 
@@ -57,7 +56,7 @@ class VertexNotFound : public std::exception {
 /// @brief Single node.
 struct StoryNode {
     string (* callback)(StoryNode *, MapGraph *, Player *);
-    std::vector<path *> connections;
+    std::vector<path *> connections; // Vector, so that player input accesses desired node by index.
 
     string title; // Short, unique.
     string description; // Long, doesn't need to be unique, likely will be.
@@ -103,6 +102,14 @@ struct StoryNode {
     string getPathMenu();
 
     /**
+     * Get the name of a node's connection to another node.
+     * @param branch The other node.
+     * @return The name/narrative text of the connection.
+     * @note Returns a blank string if there is no connection. This may be confused with an unnamed connection. I am making this decision because this method is only needed for the graph's arborescence() method.
+    */
+    string getPathName(StoryNode *branch);
+
+    /**
      * Removes a branch from the current node's connections.
      * @throws No error thrown if the desired branch isn't found.
      * @param branch The old connection to break.
@@ -110,7 +117,6 @@ struct StoryNode {
     */
     void removePath(StoryNode *branch);
 };
-
 
 
 /// @brief MapGraph class, manages story map.
@@ -169,7 +175,7 @@ class MapGraph {
          * Get the size of graph.
          * @return The number of vertices in the graph.
         */
-        inline int getSize() const { return size; }
+        inline int getSize() const { return size; } // O(1)
 
         /**
          * Calculates the graph's minimum arborescence starting at the given node.

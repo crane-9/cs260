@@ -19,7 +19,7 @@ StoryNode *sampleStory() {
     StoryNode *princessEndingTwo = new StoryNode("The princess burst into flames. She burned to ashes, and everyone was very sad.", "", "END");
 
     StoryNode *dragonEndingOne = new StoryNode("It laid down for a nap in its hoard, and it rested. It had a salad when it woke again.", "", "END");
-    StoryNode *dragonEndingTwo = new StoryNode("It clawed at the stone of its cave lair until its nails frayed and broke. It could not contain its hunger. It fled to the nearest castle in a fury, and sprayed its flame.", "", "END");
+    StoryNode *dragonEndingTwo = new StoryNode("It clawed at the stone of its cave lair until its nails frayed and broke. It could not contain its hunger. It fled to the nearest castle in a fury, and spewed flame carelessly.", "", "END");
 
     // Map connections.
     firstNode->addPath(princessRoute, "there was a princess!");

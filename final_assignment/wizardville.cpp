@@ -119,7 +119,7 @@ string errandList(StoryNode *n, MapGraph *m, Player *p) {
 string livingRoom(StoryNode *n, MapGraph *m, Player *p) {
     if (!n->visits) {
         p->addItem("my paperwork");
-        return "Your paperwork waits on your desk, the one part of this room you sometimes claim. You go ahead and grab it.\n\n[ Paperwork added to inventory. ]";
+        return "Your paperwork waits on your desk, the one part of this room you sometimes claim. You go ahead and grab it.\n\n* Paperwork added to inventory. *";
     }
 
     return "";
@@ -222,7 +222,7 @@ void createGame(MapGraph *graph) {
 
     // TOWN
     graph->addVertex(new StoryNode(
-        "A stone fence surrounds the town. It isn't very high, nor thick, but it makes the town feel stronger, safer.\n\nYou never know what could happen.\n\nThe fence breaks for an open archway, here at the South entrance/exit. Inside, townspeople wander about. You can hear the racket of children playing.",
+        "A stone fence surrounds the town. It isn't very high, nor thick, but it makes the town feel stronger, safer.\n\nYou never know what could happen.\n\nThe fence breaks for an open archway, here at the South entrance. Inside, townspeople wander about. You can hear the racket of children playing.",
         "town.edge", 
         "END"
     ));
